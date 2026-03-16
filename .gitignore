@@ -1,0 +1,16 @@
+__history/
+__recovery/
+*.dcu
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.stat
+Win32/
+Win64/
+Android/
+Android64/
+iOSDevice32/
+iOSDevice64/
+*.env
+*.ini
