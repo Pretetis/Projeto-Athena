@@ -14,3 +14,4 @@ iOSDevice32/
 iOSDevice64/
 *.env
 *.ini
+node_modules/
