@@ -28,26 +28,20 @@ implementation
 
 constructor TModelConnection.Create;
 begin
-  FConn := TFDConnection.Create(nil);
-  FMongoLink := TFDPhysMongoDriverLink.Create(nil);
-
-  // Configuração base do driver
-  FConn.DriverName := 'Mongo';
-  FConn.LoginPrompt := False;
-
-  // Carrega as credenciais dinamicamente
-  LerConfiguracoes;
-
-  // Estabelece a ligação ao MongoDB
-  FConn.Connected := True;
+    FConn := TFDConnection.Create(nil);
+    FMongoLink := TFDPhysMongoDriverLink.Create(nil);
+    FConn.DriverName := 'Mongo';
+    FConn.LoginPrompt := False;
+    LerConfiguracoes;
+    FConn.Connected := True;
 end;
 
 destructor TModelConnection.Destroy;
 begin
-  FConn.Connected := False;
-  FConn.Free;
-  FMongoLink.Free;
-  inherited;
+    FConn.Connected := False;
+    FConn.Free;
+    FMongoLink.Free;
+    inherited;
 end;
 
 procedure TModelConnection.LerConfiguracoes;
@@ -55,24 +49,19 @@ var
   LIniFile: TIniFile;
   LCaminhoIni: string;
 begin
-  LCaminhoIni := TPath.Combine(TPath.GetDirectoryName(ParamStr(0)), 'config.ini');
-  LIniFile := TIniFile.Create(LCaminhoIni);
-  try
-    // Passamos a lista de servidores reais (os 3 endereços)
-    FConn.Params.Values['Server'] := LIniFile.ReadString('BancoDeDados', 'Servidores', '');
-
-    // Passamos o nome do ReplicaSet do Atlas
-    FConn.Params.Values['ReplicaSet'] := LIniFile.ReadString('BancoDeDados', 'ReplicaSet', '');
-
-    FConn.Params.Values['Database'] := LIniFile.ReadString('BancoDeDados', 'Database', 'AthenaDocs');
-    FConn.Params.Values['User_Name'] := LIniFile.ReadString('BancoDeDados', 'Usuario', '');
-    FConn.Params.Values['Password'] := LIniFile.ReadString('BancoDeDados', 'Senha', '');
-    FConn.Params.Values['MongoAdvanced'] := 'authSource=admin';
-    // O TLS é obrigatório para a nuvem
-    FConn.Params.Values['UseTLS'] := 'True';
-  finally
-    LIniFile.Free;
-  end;
+    LCaminhoIni := TPath.Combine(TPath.GetDirectoryName(ParamStr(0)), 'config.ini');
+    LIniFile := TIniFile.Create(LCaminhoIni);
+    try
+        FConn.Params.Values['Server'] := LIniFile.ReadString('BancoDeDados', 'Servidores', '');
+        FConn.Params.Values['ReplicaSet'] := LIniFile.ReadString('BancoDeDados', 'ReplicaSet', '');
+        FConn.Params.Values['Database'] := LIniFile.ReadString('BancoDeDados', 'Database', 'AthenaDocs');
+        FConn.Params.Values['User_Name'] := LIniFile.ReadString('BancoDeDados', 'Usuario', '');
+        FConn.Params.Values['Password'] := LIniFile.ReadString('BancoDeDados', 'Senha', '');
+        FConn.Params.Values['MongoAdvanced'] := 'authSource=admin';
+        FConn.Params.Values['UseTLS'] := 'True';
+    finally
+        LIniFile.Free;
+    end;
 end;
 
 end.
