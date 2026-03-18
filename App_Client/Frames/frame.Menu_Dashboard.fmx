@@ -1,0 +1,695 @@
+object Frame1: TFrame1
+  Size.Width = 1220.000000000000000000
+  Size.Height = 800.000000000000000000
+  Size.PlatformDefault = False
+  object recFundo: TRectangle
+    Align = Client
+    Fill.Color = xF0F8FAFC
+    Size.Width = 1220.000000000000000000
+    Size.Height = 800.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Thickness = 0.000000000000000000
+    object layTitulo: TLayout
+      Align = Top
+      Margins.Left = 35.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Position.X = 35.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 1185.000000000000000000
+      Size.Height = 80.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object lbSubTitulo: TLabel
+        Align = Top
+        StyledSettings = [Family]
+        Position.Y = 35.000000000000000000
+        Size.Width = 1185.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.FontColor = xF064748B
+        Text = 'Vis'#227'o geral do status de conformidade da empresa.'
+        TabOrder = 1
+      end
+      object lbTitulo: TLabel
+        Align = Top
+        StyledSettings = [Family]
+        Size.Width = 1185.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 26.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF0F172A
+        Text = 'Dashboard de Documentos'
+        TabOrder = 0
+      end
+    end
+    object LayDadosDocs: TLayout
+      Align = Top
+      Margins.Left = 35.000000000000000000
+      Margins.Right = 35.000000000000000000
+      Position.X = 35.000000000000000000
+      Position.Y = 90.000000000000000000
+      Size.Width = 1150.000000000000000000
+      Size.Height = 110.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object GridPanelLayout1: TGridPanelLayout
+        Align = Client
+        Size.Width = 1150.000000000000000000
+        Size.Height = 110.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        ColumnCollection = <
+          item
+            Value = 33.333333333333340000
+          end
+          item
+            Value = 33.333333333333340000
+          end
+          item
+            Value = 33.333333333333340000
+          end>
+        ControlCollection = <
+          item
+            Column = 0
+            Control = recDocsValidos
+            Row = 0
+          end
+          item
+            Column = 2
+            Control = recDocumentosExpirados
+            Row = 0
+          end
+          item
+            Column = 1
+            Control = recDocumentosExpirando
+            Row = 0
+          end>
+        RowCollection = <
+          item
+            Value = 100.000000000000000000
+          end
+          item
+            SizeStyle = Auto
+          end>
+        object recDocsValidos: TRectangle
+          Align = Client
+          ClipChildren = True
+          ClipParent = True
+          Fill.Color = claWhite
+          Padding.Left = 1.000000000000000000
+          Padding.Top = 1.000000000000000000
+          Padding.Right = 1.000000000000000000
+          Padding.Bottom = 1.000000000000000000
+          Margins.Right = 17.500000000000000000
+          Size.Width = 365.833343505859400000
+          Size.Height = 110.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = claCornflowerblue
+          XRadius = 20.000000000000000000
+          YRadius = 20.000000000000000000
+          object recCorValido: TRectangle
+            Align = Left
+            Fill.Color = claBlue
+            Position.X = 1.000000000000000000
+            Position.Y = 1.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+          end
+          object layIconeValido: TLayout
+            Align = MostRight
+            Margins.Right = 15.000000000000000000
+            Position.X = 281.833343505859400000
+            Position.Y = 1.000000000000000000
+            Size.Width = 68.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object cirIconeValido: TCircle
+              Align = Center
+              Fill.Color = xFFE0E7FF
+              Size.Width = 60.000000000000000000
+              Size.Height = 60.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Thickness = 0.000000000000000000
+              object Path1: TPath
+                Align = Client
+                Data.Path = {
+                  21000000000000000000C0400000B041020000005EA79C400000B04102000000
+                  0000804029D6A84102000000000080400000A041010000000000804000008040
+                  0200000000008040BA4E3940020000005EA79C40FEFFFF3F020000000100C040
+                  0000004001000000000060410000004002000000D73A6A4108DEFF3F02000000
+                  1F0B74418F3210400200000096437B41192F2D400100000004569A417268C940
+                  0200000018F89D41ACDAD740020000002102A0414882EB40020000000000A041
+                  00000041010000000000A0410000A041020000000000A04129D6A84102000000
+                  29D698410000B04102000000000090410000B041030000000000C0400000B041
+                  00000000000060410000004001000000000060410000E0400200000000006041
+                  51ACF14002000000D72967410000004102000000000070410000004101000000
+                  0000A04100000041000000000000204100001041010000000000004100001041
+                  0000000000008041000050410100000000000041000050410000000000008041
+                  00008841010000000000004100008841}
+                Fill.Kind = None
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 10.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Margins.Bottom = 10.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Color = claBlue
+                Stroke.Thickness = 2.000000000000000000
+                Stroke.Cap = Round
+                Stroke.Join = Round
+                WrapMode = Fit
+              end
+            end
+          end
+          object recQntdValido: TRectangle
+            Align = Client
+            Fill.Color = claWhite
+            Margins.Left = -35.000000000000000000
+            Size.Width = 275.833343505859400000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+            object lbTituloValido: TLabel
+              Align = Top
+              StyledSettings = [Family]
+              Margins.Left = 10.000000000000000000
+              Margins.Top = 15.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Position.X = 10.000000000000000000
+              Position.Y = 15.000000000000000000
+              Size.Width = 255.833343505859400000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'Documentos V'#225'lidos'
+              TabOrder = 0
+            end
+            object lbInfoValido: TLabel
+              Align = Bottom
+              StyledSettings = [Family]
+              Margins.Left = 30.000000000000000000
+              Margins.Right = 20.000000000000000000
+              Margins.Bottom = 20.000000000000000000
+              Position.X = 30.000000000000000000
+              Position.Y = 48.000000000000000000
+              Size.Width = 225.833343505859400000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 45.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claBlue
+              Text = '9'
+              TabOrder = 1
+            end
+          end
+          object ShadowAzul: TShadowEffect
+            Distance = 2.500000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.500000000000000000
+            Opacity = 0.400000005960464500
+            ShadowColor = claCornflowerblue
+          end
+        end
+        object recDocumentosExpirados: TRectangle
+          Align = Client
+          ClipChildren = True
+          ClipParent = True
+          Fill.Color = claWhite
+          Padding.Left = 1.000000000000000000
+          Padding.Top = 1.000000000000000000
+          Padding.Right = 1.000000000000000000
+          Padding.Bottom = 1.000000000000000000
+          Margins.Right = 17.500000000000000000
+          Size.Width = 365.833312988281300000
+          Size.Height = 110.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFEF4444
+          XRadius = 20.000000000000000000
+          YRadius = 20.000000000000000000
+          object recCorExpirado: TRectangle
+            Align = Left
+            Fill.Color = xFFEF4444
+            Position.X = 1.000000000000000000
+            Position.Y = 1.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+          end
+          object layIconeExpirado: TLayout
+            Align = MostRight
+            Margins.Right = 15.000000000000000000
+            Position.X = 281.833343505859400000
+            Position.Y = 1.000000000000000000
+            Size.Width = 68.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object cirIconeExpirado: TCircle
+              Align = Center
+              Fill.Color = xFFFEE2E2
+              Size.Width = 60.000000000000000000
+              Size.Height = 60.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Thickness = 0.000000000000000000
+              object pathExpirado: TPath
+                Align = Client
+                Data.Path = {
+                  1F000000000000000000A04100005041020000000000A0410000904102000000
+                  000084410000A44102000000A47045419A99AF410200000061F44141C730B041
+                  020000002A2B3E418B29B0410200000053B83A411E85AF41020000000000F040
+                  0000A44102000000000080400000904102000000000080400000504101000000
+                  000080400000C0400200000000008040AE53AE4002000000AF538E400000A040
+                  020000000000A0400000A040020000000000E0400000A0400200000000001841
+                  33337340020000000AD7334185EB114002000000C0D73A4101FAF33F02000000
+                  4028454100FAF33F02000000F6284C4184EB114002000000F62868410AD77340
+                  02000000000088410000A04002000000000098410000A04002000000146B9C41
+                  0000A040020000000000A041AF53AE40020000000000A0410000C04003000000
+                  0000A04100005041000000000000404100000041010000000000404100004041
+                  00000000000040410000804101000000F628404100008041}
+                Fill.Kind = None
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 10.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Margins.Bottom = 10.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Color = xFFDC2626
+                Stroke.Thickness = 2.500000000000000000
+                Stroke.Join = Round
+                WrapMode = Fit
+              end
+            end
+          end
+          object recQntdExpirado: TRectangle
+            Align = Client
+            Fill.Color = claWhite
+            Margins.Left = -35.000000000000000000
+            Size.Width = 275.833312988281300000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+            object lbTituloExpirado: TLabel
+              Align = Top
+              StyledSettings = [Family]
+              Margins.Left = 10.000000000000000000
+              Margins.Top = 15.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Position.X = 10.000000000000000000
+              Position.Y = 15.000000000000000000
+              Size.Width = 255.833343505859400000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'Total Expirados'
+              TabOrder = 0
+            end
+            object lbInfoExpirado: TLabel
+              Align = Bottom
+              StyledSettings = [Family]
+              Margins.Left = 30.000000000000000000
+              Margins.Right = 20.000000000000000000
+              Margins.Bottom = 20.000000000000000000
+              Position.X = 30.000000000000000000
+              Position.Y = 48.000000000000000000
+              Size.Width = 225.833343505859400000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 45.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFFDC2626
+              Text = '2'
+              TabOrder = 1
+            end
+          end
+          object shadowVermelho: TShadowEffect
+            Distance = 2.500000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.500000000000000000
+            Opacity = 0.400000005960464500
+            ShadowColor = xFFEF4444
+          end
+        end
+        object recDocumentosExpirando: TRectangle
+          Align = Client
+          ClipChildren = True
+          ClipParent = True
+          Fill.Color = claWhite
+          Padding.Left = 1.000000000000000000
+          Padding.Top = 1.000000000000000000
+          Padding.Right = 1.000000000000000000
+          Padding.Bottom = 1.000000000000000000
+          Margins.Right = 17.500000000000000000
+          Size.Width = 365.833343505859400000
+          Size.Height = 110.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFEAB308
+          XRadius = 20.000000000000000000
+          YRadius = 20.000000000000000000
+          object recCorExpirando: TRectangle
+            Align = Left
+            Fill.Color = xFFEAB308
+            Position.X = 1.000000000000000000
+            Position.Y = 1.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+          end
+          object layIconeExpirando: TLayout
+            Align = MostRight
+            Margins.Right = 15.000000000000000000
+            Position.X = 281.833312988281300000
+            Position.Y = 1.000000000000000000
+            Size.Width = 68.000000000000000000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object cirExpirando: TCircle
+              Align = Center
+              Fill.Color = xFFFEF9C3
+              Size.Width = 60.000000000000000000
+              Size.Height = 60.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFFFEF9C3
+              Stroke.Thickness = 0.000000000000000000
+              object pathExpirando: TPath
+                Align = Client
+                Data.Path = {
+                  1A000000000000000AD7AD41000090410100000014AE5B410000804002000000
+                  5BF75241627F4240020000001D703F4147E52C4002000000F50F30412CC04F40
+                  0200000030062B41F42B5B4002000000F2DA2641EED86B400200000000002441
+                  0000804001000000000010400000904102000000464DD93F08A7974102000000
+                  909F01402370A14102000000D5D73E404FDBA5410200000020A452401F49A741
+                  02000000B82369409506A84102000000000080400000A841010000000000A041
+                  0000A8410200000028D6A841AFFDA741020000001EFEAF41F6D1A04102000000
+                  CCFBAF41CEFB97410200000010FBAF413B2E954102000000D43DAF41706D9241
+                  020000000AD7AD41000090410000000000004041000010410100000000004041
+                  0000504100000000000040410000884101000000F628404100008841}
+                Fill.Kind = None
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 10.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Margins.Bottom = 10.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Color = xFFCA8A04
+                Stroke.Thickness = 2.500000000000000000
+                Stroke.Join = Round
+                WrapMode = Fit
+              end
+            end
+          end
+          object recQntdExpirando: TRectangle
+            Align = Client
+            Fill.Color = claWhite
+            Margins.Left = -35.000000000000000000
+            Size.Width = 275.833343505859400000
+            Size.Height = 108.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Thickness = 0.000000000000000000
+            XRadius = 20.000000000000000000
+            YRadius = 20.000000000000000000
+            object lbTituloExpirando: TLabel
+              Align = Top
+              StyledSettings = [Family]
+              Margins.Left = 10.000000000000000000
+              Margins.Top = 15.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Position.X = 10.000000000000000000
+              Position.Y = 15.000000000000000000
+              Size.Width = 255.833312988281300000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'Total A Expirar'
+              TabOrder = 0
+            end
+            object lbInfoExpirando: TLabel
+              Align = Bottom
+              StyledSettings = [Family]
+              Margins.Left = 30.000000000000000000
+              Margins.Right = 20.000000000000000000
+              Margins.Bottom = 20.000000000000000000
+              Position.X = 30.000000000000000000
+              Position.Y = 48.000000000000000000
+              Size.Width = 225.833312988281300000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 45.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFFCA8A04
+              Text = '7'
+              TabOrder = 1
+            end
+          end
+          object shadowAmarelo: TShadowEffect
+            Distance = 2.500000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.500000000000000000
+            Opacity = 0.400000005960464500
+            ShadowColor = xFFEAB308
+          end
+        end
+      end
+    end
+    object recPlanilhaAlertas: TRectangle
+      Align = Client
+      Fill.Color = claWhite
+      Margins.Left = 35.000000000000000000
+      Margins.Top = 35.000000000000000000
+      Margins.Right = 35.000000000000000000
+      Margins.Bottom = 35.000000000000000000
+      Size.Width = 1150.000000000000000000
+      Size.Height = 530.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Thickness = 0.200000002980232200
+      XRadius = 18.000000000000000000
+      YRadius = 18.000000000000000000
+      object ShadowEffect1: TShadowEffect
+        Distance = 2.000000000000000000
+        Direction = 45.000000000000000000
+        Softness = 0.500000000000000000
+        Opacity = 0.400000005960464500
+        ShadowColor = claBlack
+      end
+      object layTituloPlanilhaAlerta: TLayout
+        Align = Top
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 20.000000000000000000
+        Margins.Right = 20.000000000000000000
+        Position.X = 20.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 1110.000000000000000000
+        Size.Height = 80.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object lbTituloPlanilhaAlerta: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 1110.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          Text = 'Painel de Alertas e Auditoria'
+          TabOrder = 1
+        end
+        object Label1: TLabel
+          Align = Top
+          StyledSettings = [Family]
+          Position.Y = 17.000000000000000000
+          Size.Width = 1110.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xF064748B
+          Text = 'Documentos que exigem aten'#231#227'o imediata.'#13#10
+          TabOrder = 0
+        end
+      end
+      object Layout1: TLayout
+        Align = Top
+        Position.Y = 100.000000000000000000
+        Size.Width = 1150.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Rectangle1: TRectangle
+          Align = Client
+          Size.Width = 1150.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          object GridPanelLayout2: TGridPanelLayout
+            Align = Client
+            Size.Width = 1150.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            ColumnCollection = <
+              item
+                Value = 19.999989905541420000
+              end
+              item
+                Value = 19.999991011624210000
+              end
+              item
+                Value = 20.000005850624170000
+              end
+              item
+                Value = 20.000009383522600000
+              end
+              item
+                Value = 20.000003848687580000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = Rectangle2
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = Rectangle3
+                Row = 0
+              end
+              item
+                Column = 2
+                Control = Rectangle4
+                Row = 0
+              end
+              item
+                Column = 3
+                Control = Rectangle5
+                Row = 0
+              end
+              item
+                Column = 4
+                Control = Rectangle6
+                Row = 0
+              end>
+            RowCollection = <
+              item
+                Value = 100.000000000000000000
+              end
+              item
+                SizeStyle = Auto
+              end>
+            object Rectangle2: TRectangle
+              Align = Client
+              Fill.Kind = None
+              Margins.Top = 2.000000000000000000
+              Margins.Bottom = 2.000000000000000000
+              Sides = [Right]
+              Size.Width = 229.999877929687500000
+              Size.Height = 46.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Thickness = 0.200000002980232200
+              object lbStatus: TLabel
+                Align = Client
+                Margins.Left = 15.000000000000000000
+                Margins.Top = 2.000000000000000000
+                Margins.Bottom = 2.000000000000000000
+                Size.Width = 214.999877929687500000
+                Size.Height = 42.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'lbStatus'
+                TabOrder = 0
+              end
+            end
+            object Rectangle3: TRectangle
+              Align = Client
+              Sides = [Right]
+              Size.Width = 229.999877929687500000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              object Label2: TLabel
+                Align = Client
+                Size.Width = 229.999877929687500000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Label1'
+                TabOrder = 0
+              end
+            end
+            object Rectangle4: TRectangle
+              Align = Client
+              Sides = [Right]
+              Size.Width = 230.000061035156300000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              object Label3: TLabel
+                Align = Client
+                Size.Width = 230.000061035156300000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Label1'
+                TabOrder = 0
+              end
+            end
+            object Rectangle5: TRectangle
+              Align = Client
+              Sides = [Right]
+              Size.Width = 230.000122070312500000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              object Label4: TLabel
+                Align = Client
+                Size.Width = 230.000122070312500000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Label1'
+                TabOrder = 0
+              end
+            end
+            object Rectangle6: TRectangle
+              Align = Client
+              Sides = [Right]
+              Size.Width = 230.000061035156300000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              object Label5: TLabel
+                Align = Client
+                Size.Width = 230.000061035156300000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Label1'
+                TabOrder = 0
+              end
+            end
+          end
+        end
+      end
+      object VertScrollBox1: TVertScrollBox
+        Align = Client
+        Size.Width = 1150.000000000000000000
+        Size.Height = 380.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Viewport.Width = 1150.000000000000000000
+        Viewport.Height = 380.000000000000000000
+      end
+    end
+  end
+end

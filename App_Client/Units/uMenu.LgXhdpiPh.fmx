@@ -1,0 +1,15 @@
+inherited fMenu_LgXhdpiPh: TfMenu_LgXhdpiPh
+  ClientHeight = 695
+  ClientWidth = 450
+  DesignerMasterStyle = 0
+  inherited layMenu: TLayout
+    Size.Height = 695.000000000000000000
+    inherited recMenu: TRectangle
+      Size.Height = 695.000000000000000000
+    end
+  end
+  inherited layContainer: TLayout
+    Size.Width = 170.000000000000000000
+    Size.Height = 695.000000000000000000
+  end
+end

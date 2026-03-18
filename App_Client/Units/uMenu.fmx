@@ -2,10 +2,32 @@ object fMenu: TfMenu
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 480
-  ClientWidth = 640
+  ClientHeight = 800
+  ClientWidth = 1500
+  Fill.Color = claWhitesmoke
+  Fill.Kind = Solid
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   DesignerMasterStyle = 0
+  object layMenu: TLayout
+    Align = Left
+    Size.Width = 280.000000000000000000
+    Size.Height = 800.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object recMenu: TRectangle
+      Align = Client
+      Size.Width = 280.000000000000000000
+      Size.Height = 800.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object layContainer: TLayout
+    Align = Client
+    Size.Width = 1220.000000000000000000
+    Size.Height = 800.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+  end
 end
