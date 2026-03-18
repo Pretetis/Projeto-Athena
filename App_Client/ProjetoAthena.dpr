@@ -11,7 +11,8 @@ uses
   uRequests in 'Modulos\uRequests.pas',
   uMenu in 'Units\uMenu.pas' {fMenu},
   uTelaUtils in 'Modulos\uTelaUtils.pas',
-  uFormConfig in 'Modulos\uFormConfig.pas';
+  uFormConfig in 'Modulos\uFormConfig.pas',
+  frame.Menu_Dashboard in 'Frames\frame.Menu_Dashboard.pas' {Frame1: TFrame};
 
 {$R *.res}
 

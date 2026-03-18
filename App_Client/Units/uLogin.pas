@@ -25,9 +25,6 @@ type
     lineTop: TLine;
     imgLogoEmpresa: TImage;
     lblInformacao: TLabel;
-    layPrincipalBottom: TLayout;
-    lineBottom: TLine;
-    imgSair: TImage;
     OpenDialog: TOpenDialog;
     imgNotificacao: TImage;
     ActionList1: TActionList;
@@ -71,6 +68,7 @@ uses
   uFormConfig, FMX.frame.PopUpToast;
 
 {$R *.fmx}
+{$R *.LgXhdpiPh.fmx ANDROID}
 
 procedure TfLogin.edtSenhaEnter(Sender: TObject);
 begin
