@@ -218,7 +218,7 @@ begin
         end;
 
         imgNotificacao.visible := False;
-        ConfigurarModoTela(Self);
+        // ConfigurarModoTela(Self);
 
         qry.Active := False;
         qry.Params.Clear;
@@ -261,13 +261,23 @@ end;
 
 procedure TfLogin.rectAcessarClick(Sender: TObject);
 begin
-    if (edtUsuario.Text.Trim() = '') or (edtSenha.Text.Trim() = '') then
-    begin
-        TFramePopUp.Show(fLogin, A, 'Verifique Usuário e senha.');
-        Abort;
-    end;
+//    if (edtUsuario.Text.Trim() = '') or (edtSenha.Text.Trim() = '') then
+//    begin
+//        TFramePopUp.Show(fLogin, A, 'Verifique Usuário e senha.');
+//        Abort;
+//    end;
+//
+//    CarregarUsuario(edtUsuario.Text.Trim(), edtSenha.Text.Trim());
 
-    CarregarUsuario(edtUsuario.Text.Trim(), edtSenha.Text.Trim());
+if fMenu <> nil then
+                        FreeAndNil(fMenu);
+                        Application.CreateForm(TfMenu, fMenu);
+                        SalvarConfigForm(Self, edtUsuario.Text.Trim);
+
+                        fMenu.Show;
+
+                        Application.MainForm := fMenu;
+                        fLogin.Close;
 end;
 
 procedure TfLogin.CarregarUsuario(usuario: string; senha: string);

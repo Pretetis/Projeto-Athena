@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Documento = require('./models/Documento');
+const Documento = require('../models/Documento');
 
 // IDs fictícios gerados para simular suas entidades
 const ids = {

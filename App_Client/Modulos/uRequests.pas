@@ -7,9 +7,8 @@ uses
   REST.Client, REST.Types, REST.Authenticator.Basic, System.IOUtils;
 
 type
-  TContextoRequest = (ctxCarregarMaquina, ctxCarregarUtilidades, ctxEnviarParametros,
-                      ctxListarCortes, ctxHistorico, ctxCarregarAlarmes, ctxEditarAlarme,
-                      ctxSolicitarAlarme, ctxConferirUsuarios);
+  TContextoRequest = (ctxDocumentosVencer, ctxEditarAlarme, ctxSolicitarAlarme,
+                      ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -30,32 +29,20 @@ type
     FUltimoMaqIdSolicitado: Integer;
     FCallbackAlarmes: TProc<TJSONArray>;
 
-    procedure ResetarComponentesRest;
-    procedure TratarRetornoJSON;
-    procedure CallbackFimDaThread(Sender: TObject);
-
   public
     property UltimoMaqIdSolicitado: Integer read FUltimoMaqIdSolicitado;
 
+    procedure CallbackFimDaThread(Sender: TObject);
+    procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
+    procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
+    procedure ListarDocumentosVencer;
+    procedure ResetarComponentesRest;
+    procedure SolicitarAlarme(AMaq_id, ACnc_ID, ACnc_cnc: Integer; AMensagem, AProposta: string);
+    procedure ListarTotalDocumentos;
+    procedure TratarRetornoJSON;
+
     constructor Create(AParentForm: TForm; AOnResult: TOnRequestResult);
     destructor Destroy; override;
-
-    procedure CarregarHistoricoCorte(ACncID: Integer; AMaqId: Integer);
-    procedure CarregarMaquina(Apelido: string);
-    procedure CarregarUtilidades(categoria: string);
-    procedure EnviarParametros(AJsonBody: TJSONObject);
-    procedure ListarCortes(maq_id: Integer; status: Integer);
-    procedure ListarCortesMonitoramento(AMaqID: Integer);
-    procedure VerificarAlarmes(ACallback: TProc<TJSONArray>);
-    procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
-    procedure ListarAlarmes(ACallback: TProc<TJSONArray>);
-    procedure SolicitarAlarme(AMaq_id: Integer;
-                             ACnc_ID: Integer;
-                             ACnc_cnc: Integer;
-                             AMensagem: string;
-                             AProposta: string);
-    procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
-    procedure ConsultarTodosAlarmes(ACallback: TProc<TJSONArray>);
   end;
 
 implementation
@@ -102,224 +89,42 @@ begin
     FRESTRequest.SynchronizedEvents := False;
 end;
 
-procedure TModuloRequest.CarregarMaquina(Apelido: string);
+procedure TModuloRequest.ListarDocumentosVencer;
 begin
-    FContexto := ctxCarregarMaquina;
-    TLoading.Show(FParentForm, 'Carregando máquinas...');
+    FContexto := ctxDocumentosVencer;
     ResetarComponentesRest;
 
-    FFieldId := 'maq_id';
-    FFieldNome := 'maq_apelido';
-
-    if (Apelido <> '') then
-      FRESTClient.BaseURL := EndPoint + '/fila_cnc/' + Apelido.Trim() + '/1'
-    else
-      FRESTClient.BaseURL := EndPoint + '/maquina';
-
+    // Utilize a variável global EndPoint que já deve existir na sua uParametros
+    FRESTClient.BaseURL := EndPoint + '/alertas/documentos-a-vencer';
     FRESTRequest.Method := rmGET;
 
     TLoading.ExecuteThread(
       procedure
       begin
           try
-            FRESTRequest.Execute;
+             FRESTRequest.Execute;
           except
-            on Ex: Exception do
-              TThread.Synchronize(nil, procedure begin
-                  TFramePopUp.Show(FParentForm, E, 'Erro request: ' + Ex.Message);
-              end);
           end;
       end,
       CallbackFimDaThread
     );
 end;
 
-procedure TModuloRequest.CarregarUtilidades(categoria: string);
+procedure TModuloRequest.ListarTotalDocumentos;
 begin
-    FContexto := ctxCarregarUtilidades;
-    TLoading.Show(FParentForm, 'Carregando ' + categoria + '...');
+    FContexto := ctxTotalDocumentos;
     ResetarComponentesRest;
 
-    FRESTClient.BaseURL := EndPoint + '/utilidades/' + categoria.Trim();
-    FRESTRequest.Method := rmGET;
-
-    FFieldId := 'pcp_utils_id';
-    FFieldNome := 'pcp_utils_nome';
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure begin
-                    TFramePopUp.Show(FParentForm, E, 'Erro request: ' + Ex.Message);
-                end);
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.EnviarParametros(AJsonBody: TJSONObject);
-begin
-    FContexto := ctxEnviarParametros;
-    TLoading.Show(FParentForm, 'Processando parâmetros...');
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/parametros';
-    FRESTRequest.Method := rmPOST;
-
-    if Assigned(AJsonBody) then
-      FRESTRequest.Body.Add(AJsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-            FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-              TThread.Synchronize(nil, procedure
-              begin
-                  TFramePopUp.Show(FParentForm, E, 'Erro ao enviar parâmetros: ' + Ex.Message);
-              end);
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.ListarCortes(maq_id: Integer; status: Integer);
-begin
-    FContexto := ctxListarCortes;
-    FUltimoMaqIdSolicitado := maq_id;
-
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint +
-                           '/fila_cnc/' +
-                           IntToStr(maq_id) +
-                           '/' + IntToStr(status) +
-                           '/0';
-
+    // Utilize a variável global EndPoint que já deve existir na sua uParametros
+    FRESTClient.BaseURL := EndPoint + '/documentos/resumo/status';
     FRESTRequest.Method := rmGET;
 
     TLoading.ExecuteThread(
       procedure
       begin
           try
-              FRESTRequest.Execute;
+             FRESTRequest.Execute;
           except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure begin
-                   TFramePopUp.Show(FParentForm, E, 'Erro ao listar cortes ID ' + IntToStr(maq_id));
-                end);
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.CarregarHistoricoCorte(ACncID: Integer; AMaqId: Integer);
-var
-    LJsonObject: TJSONObject;
-begin
-    FContexto := ctxHistorico;
-    FUltimoMaqIdSolicitado := AMaqId;
-
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/fila_cnc/historico';
-    FRESTRequest.Method := rmPOST;
-
-    FRESTRequest.Body.ClearBody;
-
-    LJsonObject := TJSONObject.Create;
-    try
-        LJsonObject.AddPair('cnc_id', TJSONNumber.Create(ACncID));
-        FRESTRequest.Body.Add(LJsonObject.ToString, TRESTContentType.ctAPPLICATION_JSON);
-    finally
-        LJsonObject.Free;
-    end;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.ListarCortesMonitoramento(AMaqID: Integer);
-begin
-    FContexto := ctxListarCortes;
-    FUltimoMaqIdSolicitado := AMaqID;
-
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/fila_cnc/monitoramento/' + IntToStr(AMaqID);
-    FRESTRequest.Method := rmGET;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try FRESTRequest.Execute; except end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.VerificarAlarmes(ACallback: TProc<TJSONArray>);
-begin
-    FContexto := ctxCarregarAlarmes;
-    FCallbackAlarmes := ACallback;
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/alarme/listar_alarmes/0';
-    FRESTRequest.Method := rmGET;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure begin
-                  TFramePopUp.Show(FParentForm, E, 'Erro request: ' + Ex.Message);
-                end);
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.ListarAlarmes(ACallback: TProc<TJSONArray>);
-begin
-    FContexto := ctxCarregarAlarmes;
-    FCallbackAlarmes := ACallback;
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/alarme/listar_alarmes/-2';
-    FRESTRequest.Method := rmGET;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure begin
-                    TFramePopUp.Show(FParentForm, E, 'Erro request: ' + Ex.Message);
-                end);
           end;
       end,
       CallbackFimDaThread
@@ -416,31 +221,6 @@ begin
     ResetarComponentesRest;
 
     FRESTClient.BaseURL := EndPoint + '/login/conferir_usuarios';
-    FRESTRequest.Method := rmGET;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure begin
-                  TFramePopUp.Show(FParentForm, E, 'Erro request: ' + Ex.Message);
-                end);
-          end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.ConsultarTodosAlarmes(ACallback: TProc<TJSONArray>);
-begin
-    FContexto := ctxCarregarAlarmes;
-    FCallbackAlarmes := ACallback;
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/alarme/listar_alarmes/-1';
     FRESTRequest.Method := rmGET;
 
     TLoading.ExecuteThread(
