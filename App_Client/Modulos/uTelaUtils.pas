@@ -3,7 +3,7 @@ unit uTelaUtils;
 interface
 
 uses
-    FMX.Forms, FMX.Forms, FMX.Platform;
+    FMX.Forms, FMX.Platform;
 
 implementation
 

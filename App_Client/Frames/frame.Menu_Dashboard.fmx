@@ -1,4 +1,4 @@
-object Frame1: TFrame1
+object FrameMenuDashboard: TFrameMenuDashboard
   Size.Width = 1220.000000000000000000
   Size.Height = 800.000000000000000000
   Size.PlatformDefault = False
@@ -54,7 +54,7 @@ object Frame1: TFrame1
       Size.Height = 110.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      object GridPanelLayout1: TGridPanelLayout
+      object gplDashboard: TGridPanelLayout
         Align = Client
         Size.Width = 1150.000000000000000000
         Size.Height = 110.000000000000000000
@@ -182,12 +182,12 @@ object Frame1: TFrame1
             object lbTituloValido: TLabel
               Align = Top
               StyledSettings = [Family]
-              Margins.Left = 10.000000000000000000
+              Margins.Left = 20.000000000000000000
               Margins.Top = 15.000000000000000000
               Margins.Right = 10.000000000000000000
-              Position.X = 10.000000000000000000
+              Position.X = 20.000000000000000000
               Position.Y = 15.000000000000000000
-              Size.Width = 255.833343505859400000
+              Size.Width = 245.833343505859400000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 16.000000000000000000
@@ -198,12 +198,12 @@ object Frame1: TFrame1
             object lbInfoValido: TLabel
               Align = Bottom
               StyledSettings = [Family]
-              Margins.Left = 30.000000000000000000
+              Margins.Left = 50.000000000000000000
               Margins.Right = 20.000000000000000000
               Margins.Bottom = 20.000000000000000000
-              Position.X = 30.000000000000000000
+              Position.X = 50.000000000000000000
               Position.Y = 48.000000000000000000
-              Size.Width = 225.833343505859400000
+              Size.Width = 205.833343505859400000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 45.000000000000000000
@@ -230,8 +230,7 @@ object Frame1: TFrame1
           Padding.Top = 1.000000000000000000
           Padding.Right = 1.000000000000000000
           Padding.Bottom = 1.000000000000000000
-          Margins.Right = 17.500000000000000000
-          Size.Width = 365.833312988281300000
+          Size.Width = 383.333312988281300000
           Size.Height = 110.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFFEF4444
@@ -252,7 +251,7 @@ object Frame1: TFrame1
           object layIconeExpirado: TLayout
             Align = MostRight
             Margins.Right = 15.000000000000000000
-            Position.X = 281.833343505859400000
+            Position.X = 299.333312988281300000
             Position.Y = 1.000000000000000000
             Size.Width = 68.000000000000000000
             Size.Height = 108.000000000000000000
@@ -299,7 +298,7 @@ object Frame1: TFrame1
             Align = Client
             Fill.Color = claWhite
             Margins.Left = -35.000000000000000000
-            Size.Width = 275.833312988281300000
+            Size.Width = 293.333312988281300000
             Size.Height = 108.000000000000000000
             Size.PlatformDefault = False
             Stroke.Thickness = 0.000000000000000000
@@ -308,12 +307,12 @@ object Frame1: TFrame1
             object lbTituloExpirado: TLabel
               Align = Top
               StyledSettings = [Family]
-              Margins.Left = 10.000000000000000000
+              Margins.Left = 20.000000000000000000
               Margins.Top = 15.000000000000000000
               Margins.Right = 10.000000000000000000
-              Position.X = 10.000000000000000000
+              Position.X = 20.000000000000000000
               Position.Y = 15.000000000000000000
-              Size.Width = 255.833343505859400000
+              Size.Width = 263.333312988281300000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 16.000000000000000000
@@ -324,12 +323,12 @@ object Frame1: TFrame1
             object lbInfoExpirado: TLabel
               Align = Bottom
               StyledSettings = [Family]
-              Margins.Left = 30.000000000000000000
+              Margins.Left = 50.000000000000000000
               Margins.Right = 20.000000000000000000
               Margins.Bottom = 20.000000000000000000
-              Position.X = 30.000000000000000000
+              Position.X = 50.000000000000000000
               Position.Y = 48.000000000000000000
-              Size.Width = 225.833343505859400000
+              Size.Width = 223.333312988281300000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 45.000000000000000000
@@ -433,12 +432,12 @@ object Frame1: TFrame1
             object lbTituloExpirando: TLabel
               Align = Top
               StyledSettings = [Family]
-              Margins.Left = 10.000000000000000000
+              Margins.Left = 20.000000000000000000
               Margins.Top = 15.000000000000000000
               Margins.Right = 10.000000000000000000
-              Position.X = 10.000000000000000000
+              Position.X = 20.000000000000000000
               Position.Y = 15.000000000000000000
-              Size.Width = 255.833312988281300000
+              Size.Width = 245.833343505859400000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 16.000000000000000000
@@ -449,12 +448,12 @@ object Frame1: TFrame1
             object lbInfoExpirando: TLabel
               Align = Bottom
               StyledSettings = [Family]
-              Margins.Left = 30.000000000000000000
+              Margins.Left = 50.000000000000000000
               Margins.Right = 20.000000000000000000
               Margins.Bottom = 20.000000000000000000
-              Position.X = 30.000000000000000000
+              Position.X = 50.000000000000000000
               Position.Y = 48.000000000000000000
-              Size.Width = 225.833312988281300000
+              Size.Width = 205.833343505859400000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 45.000000000000000000
@@ -502,12 +501,13 @@ object Frame1: TFrame1
         Position.X = 20.000000000000000000
         Position.Y = 20.000000000000000000
         Size.Width = 1110.000000000000000000
-        Size.Height = 80.000000000000000000
+        Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object lbTituloPlanilhaAlerta: TLabel
           Align = Top
           StyledSettings = [Family, FontColor]
+          Position.Y = 30.000000000000000000
           Size.Width = 1110.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
@@ -516,10 +516,9 @@ object Frame1: TFrame1
           Text = 'Painel de Alertas e Auditoria'
           TabOrder = 1
         end
-        object Label1: TLabel
+        object lbSubTituloPlanilhaAlerta: TLabel
           Align = Top
           StyledSettings = [Family]
-          Position.Y = 17.000000000000000000
           Size.Width = 1110.000000000000000000
           Size.Height = 30.000000000000000000
           Size.PlatformDefault = False
@@ -529,21 +528,25 @@ object Frame1: TFrame1
           TabOrder = 0
         end
       end
-      object Layout1: TLayout
+      object layCabecalhoPlanilhaAlerta: TLayout
         Align = Top
-        Position.Y = 100.000000000000000000
+        Position.Y = 90.000000000000000000
         Size.Width = 1150.000000000000000000
         Size.Height = 50.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        object Rectangle1: TRectangle
+        object recCabecalhoPlanilha: TRectangle
           Align = Client
-          Size.Width = 1150.000000000000000000
+          Fill.Color = xFFF8FAFC
+          Margins.Left = 1.000000000000000000
+          Margins.Right = 1.000000000000000000
+          Size.Width = 1148.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
-          object GridPanelLayout2: TGridPanelLayout
+          Stroke.Thickness = 0.000000000000000000
+          object gplCabecalhoPlanilhaAlerta: TGridPanelLayout
             Align = Client
-            Size.Width = 1150.000000000000000000
+            Size.Width = 1148.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -566,27 +569,27 @@ object Frame1: TFrame1
             ControlCollection = <
               item
                 Column = 0
-                Control = Rectangle2
+                Control = recCabecalhoStatus
                 Row = 0
               end
               item
                 Column = 1
-                Control = Rectangle3
+                Control = recCabecalhoDoc
                 Row = 0
               end
               item
                 Column = 2
-                Control = Rectangle4
+                Control = recFuncMaq
                 Row = 0
               end
               item
                 Column = 3
-                Control = Rectangle5
+                Control = recVencimento
                 Row = 0
               end
               item
                 Column = 4
-                Control = Rectangle6
+                Control = recVisualizar
                 Row = 0
               end>
             RowCollection = <
@@ -596,99 +599,142 @@ object Frame1: TFrame1
               item
                 SizeStyle = Auto
               end>
-            object Rectangle2: TRectangle
+            object recCabecalhoStatus: TRectangle
               Align = Client
               Fill.Kind = None
-              Margins.Top = 2.000000000000000000
-              Margins.Bottom = 2.000000000000000000
+              Margins.Top = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 229.999877929687500000
-              Size.Height = 46.000000000000000000
+              Size.Width = 229.599884033203100000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              Stroke.Thickness = 0.200000002980232200
+              Stroke.Color = xFF64748B
+              Stroke.Thickness = 0.600000023841857900
               object lbStatus: TLabel
                 Align = Client
-                Margins.Left = 15.000000000000000000
-                Margins.Top = 2.000000000000000000
-                Margins.Bottom = 2.000000000000000000
-                Size.Width = 214.999877929687500000
-                Size.Height = 42.000000000000000000
+                StyledSettings = [Size]
+                Margins.Left = 20.000000000000000000
+                Size.Width = 209.599884033203100000
+                Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
-                Text = 'lbStatus'
+                TextSettings.Font.Family = 'Roboto'
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF64748B
+                Text = 'STATUS'
                 TabOrder = 0
               end
             end
-            object Rectangle3: TRectangle
+            object recCabecalhoDoc: TRectangle
               Align = Client
+              Fill.Kind = None
+              Margins.Top = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 229.999877929687500000
-              Size.Height = 50.000000000000000000
+              Size.Width = 229.599884033203100000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              object Label2: TLabel
+              Stroke.Color = xFF64748B
+              Stroke.Thickness = 0.600000023841857900
+              object lbDoc: TLabel
                 Align = Client
-                Size.Width = 229.999877929687500000
-                Size.Height = 50.000000000000000000
+                StyledSettings = [Size]
+                Margins.Left = 20.000000000000000000
+                Size.Width = 209.599884033203100000
+                Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
-                Text = 'Label1'
+                TextSettings.Font.Family = 'Roboto'
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF64748B
+                Text = 'DOCUMENTO'
                 TabOrder = 0
               end
             end
-            object Rectangle4: TRectangle
+            object recFuncMaq: TRectangle
               Align = Client
+              Fill.Kind = None
+              Margins.Top = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 230.000061035156300000
-              Size.Height = 50.000000000000000000
+              Size.Width = 229.600036621093800000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              object Label3: TLabel
+              Stroke.Color = xFF64748B
+              Stroke.Thickness = 0.600000023841857900
+              object lbFuncMaq: TLabel
                 Align = Client
-                Size.Width = 230.000061035156300000
-                Size.Height = 50.000000000000000000
+                StyledSettings = [Size]
+                Margins.Left = 20.000000000000000000
+                Size.Width = 209.600036621093800000
+                Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
-                Text = 'Label1'
+                TextSettings.Font.Family = 'Roboto'
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF64748B
+                Text = 'FUNCION'#193'RIO / M'#193'QUINA'
                 TabOrder = 0
               end
             end
-            object Rectangle5: TRectangle
+            object recVencimento: TRectangle
               Align = Client
+              Fill.Kind = None
+              Margins.Top = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 230.000122070312500000
-              Size.Height = 50.000000000000000000
+              Size.Width = 229.600097656250000000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              object Label4: TLabel
+              Stroke.Color = xFF64748B
+              Stroke.Thickness = 0.600000023841857900
+              object lbVencimento: TLabel
                 Align = Client
-                Size.Width = 230.000122070312500000
-                Size.Height = 50.000000000000000000
+                StyledSettings = [Size]
+                Margins.Left = 20.000000000000000000
+                Size.Width = 209.600097656250000000
+                Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
-                Text = 'Label1'
+                TextSettings.Font.Family = 'Roboto'
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF64748B
+                Text = 'VENCIMENTO'
                 TabOrder = 0
               end
             end
-            object Rectangle6: TRectangle
+            object recVisualizar: TRectangle
               Align = Client
-              Sides = [Right]
-              Size.Width = 230.000061035156300000
-              Size.Height = 50.000000000000000000
+              Fill.Kind = None
+              Margins.Top = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
+              Sides = []
+              Size.Width = 229.600097656250000000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              object Label5: TLabel
+              Stroke.Color = xFF64748B
+              Stroke.Thickness = 0.600000023841857900
+              object lbVisualizar: TLabel
                 Align = Client
-                Size.Width = 230.000061035156300000
-                Size.Height = 50.000000000000000000
+                StyledSettings = [Size]
+                Margins.Left = 20.000000000000000000
+                Size.Width = 209.600097656250000000
+                Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
-                Text = 'Label1'
+                TextSettings.Font.Family = 'Roboto'
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF64748B
+                Text = 'VISUALIZAR'
                 TabOrder = 0
               end
             end
           end
         end
       end
-      object VertScrollBox1: TVertScrollBox
+      object vscrollboxLinhaPlanilha: TVertScrollBox
         Align = Client
         Size.Width = 1150.000000000000000000
-        Size.Height = 380.000000000000000000
+        Size.Height = 390.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         Viewport.Width = 1150.000000000000000000
-        Viewport.Height = 380.000000000000000000
+        Viewport.Height = 390.000000000000000000
       end
     end
   end

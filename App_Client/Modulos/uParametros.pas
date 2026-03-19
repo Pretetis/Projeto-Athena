@@ -41,7 +41,7 @@ const
 
   endPoint       = 'http://localhost:3000';  //Testes Computador DEV
 
-//    endPoint       = ' ';   //produção
+//    endPoint       = '';   //produção
 
 
 implementation

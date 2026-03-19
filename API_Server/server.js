@@ -97,10 +97,42 @@ app.get('/alertas/documentos-a-vencer', async (req, res) => {
     const trintaDias = new Date();
     trintaDias.setDate(hoje.getDate() + 30);
 
-    const docs = await Documento.find({
-      ativo: true,
-      dataValidade: { $lte: trintaDias }
-    }).sort({ dataValidade: 1 });
+    const docs = await Documento.aggregate([
+      {
+        $match: {
+          ativo: true,
+          dataValidade: { $lte: trintaDias }
+        }
+      },
+      {
+        $lookup: {
+          from: 'funcionarios', // <-- AQUI ESTÁ O SEGREDO DO "JOIN"
+          localField: 'entidadeId',
+          foreignField: '_id',
+          as: 'dadosFuncionario'
+        }
+      },
+      {
+        $unwind: {
+          path: '$dadosFuncionario',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $addFields: {
+          nomeFuncionario: '$dadosFuncionario.nome',
+          funcaoFuncionario: '$dadosFuncionario.funcao'
+        }
+      },
+      {
+        $project: {
+          dadosFuncionario: 0 // Esconde o objeto temporário para deixar o JSON limpo
+        }
+      },
+      { 
+        $sort: { dataValidade: 1 } 
+      }
+    ]);
 
     res.json(docs);
   } catch (err) {
@@ -226,6 +258,48 @@ app.delete('/documentos/:id/fisico', async (req, res) => {
     res.json({ mensagem: 'Documento e ficheiro PDF apagados permanentemente do servidor.' });
   } catch (err) {
     res.status(500).send('Erro ao apagar ficheiro: ' + err.message);
+  }
+});
+
+// 10. resumo para dashboard sobre estados de documentos
+app.get('/documentos/resumo/status', async (req, res) => {
+  try {
+    const hoje = new Date();
+    
+    const trintaDias = new Date();
+    trintaDias.setDate(hoje.getDate() + 30);
+
+    // O Promise.all executa as 3 buscas simultaneamente para maior performance
+    const [total, vencendoEm30Dias, expirados] = await Promise.all([
+      
+      // 1. Total de documentos ativos
+      Documento.countDocuments({ 
+        ativo: true 
+      }),
+      
+      // 2. Vencendo em 30 dias ou menos (mas que ainda não venceram)
+      Documento.countDocuments({ 
+        ativo: true, 
+        dataValidade: { $gte: hoje, $lte: trintaDias } 
+      }),
+      
+      // 3. Documentos já expirados (data de validade ficou para trás)
+      Documento.countDocuments({ 
+        ativo: true, 
+        dataValidade: { $lt: hoje } 
+      })
+
+    ]);
+
+    // Retorna o JSON formatado e mastigado para o Front-end ou Delphi
+    res.json({
+      total: total,
+      vencendoEm30Dias: vencendoEm30Dias,
+      expirados: expirados
+    });
+
+  } catch (err) {
+    res.status(500).send('Erro ao buscar o resumo dos documentos: ' + err.message);
   }
 });
 

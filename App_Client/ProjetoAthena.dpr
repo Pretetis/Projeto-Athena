@@ -12,7 +12,9 @@ uses
   uMenu in 'Units\uMenu.pas' {fMenu},
   uTelaUtils in 'Modulos\uTelaUtils.pas',
   uFormConfig in 'Modulos\uFormConfig.pas',
-  frame.Menu_Dashboard in 'Frames\frame.Menu_Dashboard.pas' {Frame1: TFrame};
+  frame.Menu_Dashboard in 'Frames\frame.Menu_Dashboard.pas' {FrameMenuDashboard: TFrame},
+  frame.Menu_LinhaTabelaAlerta in 'Frames\frame.Menu_LinhaTabelaAlerta.pas' {FrameLinhaPlanilhaAlerta: TFrame},
+  uDesignSystem in 'Modulos\uDesignSystem.pas';
 
 {$R *.res}
 

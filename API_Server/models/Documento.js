@@ -1,24 +1,17 @@
 const mongoose = require('mongoose');
 
 const DocumentoSchema = new mongoose.Schema({
-  // Referência ao ID da Entidade 
-  entidadeId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    required: true 
-  },
-  entidadeTipo: { type: String },
-  tipoDocumento: { type: String },
+  entidadeId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  entidadeTipo: { type: String, required: true }, // Ex: 'Funcionario', 'Maquina'
+  
+  nomeDocumento: { type: String, required: true }, // Ex: 'Licença Sanitária Individual'
+  tipoDocumento: { type: String, required: true }, // Ex: 'Saúde', 'Norma', 'Trabalhista'
+  
   dataValidade: { type: Date, required: true },
-  
-  // Aqui está o segredo: salvamos o ID do arquivo que está lá no GridFS
-  fileId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    required: true 
-  },
-  
+  fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
   ativo: { type: Boolean, default: true }
 }, { 
-  timestamps: true // Isso cria automaticamente os campos 'createdAt' e 'updatedAt'
+  timestamps: true 
 });
 
 module.exports = mongoose.model('Documento', DocumentoSchema);
