@@ -79,7 +79,7 @@ type
   public const
     {$REGION ' SVGs de Status '}
     // Ícone de Alerta / A Expirar
-    Expirando = 'M21.7299995422363,18 L13.7299995422363,4 ' +
+    Expirando = 'M0,0 M24,24 M21.7299995422363,18 L13.7299995422363,4 ' +
                 'C13.1853895187378,3.0390248298645 11.9648714065552,2.70149397850037 ' +
                 '11.0038957595825,3.24610424041748 C10.6890106201172,3.42455768585205 ' +
                 '10.4284534454346,3.68511533737183 10.25,4 L2.25,18 ' +
@@ -91,7 +91,7 @@ type
                 '21.9051895141602,18.3034362792969 21.7299995422363,18 ' +
                 'M12,9 L12,13 M12,17 L12.0100002288818,17';
 
-    Expirado  = 'M20,13 C20,18 16.5,20.5 12.3400001525879,21.9500007629395 ' +
+    Expirado  = 'M0,0 M24,24 M20,13 C20,18 16.5,20.5 12.3400001525879,21.9500007629395 ' +
                 'C12.1221628189087,22.0238170623779 11.8855381011963,22.02028465271 ' +
                 '11.6700010299683,21.939998626709 C7.5,20.5 4,18 4,13 L4,6 ' +
                 'C4,5.44771480560303 4.44771528244019,5 5,5 C7,5 9.5,3.79999995231628 ' +
@@ -99,6 +99,12 @@ type
                 '12.3223266601563,1.90606689453125 12.7600002288818,2.27999973297119 ' +
                 'C14.5100002288818,3.80999994277954 17,5 19,5 C19.5522842407227,5 ' +
                 '20,5.44771528244019 20,6 Z M12,8 L12,12 M12,16 L12.0100002288818,16';
+
+    Download  = 'M0,0 M24,24 M12,15 L12,3 M21,15 L21,19 C21,20.1045703887939 ' +
+                '20.1045703887939,21 19,21 L5,21 C3.89543056488037,21 3,20.1045703887939 ' +
+                '3,19 L3,15 M7,10 L12,15 L17,10';
+
+    Cancelar  = 'M0,0 M24,24 M18 6 6 18 m6 6 12 12';
     {$ENDREGION}
   end;
 
@@ -111,35 +117,35 @@ implementation
 
 class procedure TThemeUI.ApplyFontH1(AFont: TFont; ASmallerScreen: Boolean);
 begin
-  AFont.Family := 'Segoe UI'; // Fallback para Inter
+  AFont.Family := 'Roboto'; // Fallback para Inter
   //AFont.Size := If Then(ASmallerScreen, 24.0, 30.0);
   AFont.Style := [TFontStyle.fsBold];
 end;
 
 class procedure TThemeUI.ApplyFontH2(AFont: TFont);
 begin
-  AFont.Family := 'Segoe UI';
+  AFont.Family := 'Roboto';
   AFont.Size := 24.0;
   AFont.Style := [TFontStyle.fsBold];
 end;
 
 class procedure TThemeUI.ApplyFontH3(AFont: TFont);
 begin
-  AFont.Family := 'Segoe UI';
+  AFont.Family := 'Roboto';
   AFont.Size := 18.0;
   AFont.Style := [TFontStyle.fsBold];
 end;
 
 class procedure TThemeUI.ApplyFontBase(AFont: TFont);
 begin
-  AFont.Family := 'Segoe UI';
+  AFont.Family := 'Roboto';
   AFont.Size := 14.0;
   AFont.Style := []; // Regular
 end;
 
 class procedure TThemeUI.ApplyFontSecondary(AFont: TFont);
 begin
-  AFont.Family := 'Segoe UI';
+  AFont.Family := 'Roboto';
   AFont.Size := 14.0;
   AFont.Style := [];
 end;

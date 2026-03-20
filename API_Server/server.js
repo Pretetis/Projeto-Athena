@@ -64,6 +64,7 @@ app.post('/documentos', upload.single('pdf'), async (req, res) => {
     uploadStream.on('finish', async () => {
       try {
         const novoDoc = new Documento({
+          nomeDocumento: req.body.nomeDocumento,
           entidadeId: req.body.entidadeId,
           entidadeTipo: req.body.entidadeTipo,
           tipoDocumento: req.body.tipoDocumento,
@@ -300,6 +301,73 @@ app.get('/documentos/resumo/status', async (req, res) => {
 
   } catch (err) {
     res.status(500).send('Erro ao buscar o resumo dos documentos: ' + err.message);
+  }
+});
+
+// 11. ROTA DE PESQUISA AVANÇADA DE DOCUMENTOS
+app.get('/documentos/pesquisa', async (req, res) => {
+  try {
+    const { busca, status, ativo } = req.query;
+    
+    // Usar $and explícito garante que o MongoDB avalie tudo em conjunto
+    // sem ignorar o bloco $or dos status.
+    const query = { $and: [] };
+
+    // 1. Filtro Ativo/Inativo
+    if (ativo) {
+      // O .trim() salva a vida caso o Delphi mande "true, false" com espaço
+      const ativoArray = ativo.split(',').map(a => a.trim());
+      const ativoBools = [];
+      
+      if (ativoArray.includes('true')) ativoBools.push(true);
+      if (ativoArray.includes('false')) ativoBools.push(false);
+
+      if (ativoBools.length > 0) {
+        query.$and.push({ ativo: { $in: ativoBools } });
+      }
+    }
+
+    // 2. Filtro de Busca (Texto parcial)
+    if (busca) {
+      query.$and.push({ nomeDocumento: { $regex: busca, $options: 'i' } });
+    }
+
+    // 3. Filtro de Validade
+    if (status) {
+      const statusArray = status.split(',').map(s => s.trim().toLowerCase());
+      const orConditions = [];
+
+      const hoje = new Date();
+      const trintaDias = new Date();
+      trintaDias.setDate(hoje.getDate() + 30);
+
+      // Agrupa as opções marcadas
+      if (statusArray.includes('valido')) {
+        orConditions.push({ dataValidade: { $gte: trintaDias } });
+      }
+      if (statusArray.includes('a_expirar')) {
+        orConditions.push({ dataValidade: { $gte: hoje, $lt: trintaDias } });
+      }
+      if (statusArray.includes('expirado')) {
+        orConditions.push({ dataValidade: { $lt: hoje } });
+      }
+
+      // Injeta o bloco $or apenas se houver filtros de status válidos
+      if (orConditions.length > 0) {
+        query.$and.push({ $or: orConditions });
+      }
+    }
+
+    // Se houver condições no array, usa a query. Se não, passa vazio para trazer a coleção toda.
+    const finalQuery = query.$and.length > 0 ? query : {};
+
+    // DICA: Se quiser ver exatamente o que o Node está buscando, tire o comentário da linha abaixo:
+    // console.log("Query executada:", JSON.stringify(finalQuery, null, 2));
+
+    const docs = await Documento.find(finalQuery).sort({ dataValidade: 1 });
+    res.json(docs);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 

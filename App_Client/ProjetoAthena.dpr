@@ -14,7 +14,10 @@ uses
   uFormConfig in 'Modulos\uFormConfig.pas',
   frame.Menu_Dashboard in 'Frames\frame.Menu_Dashboard.pas' {FrameMenuDashboard: TFrame},
   frame.Menu_LinhaTabelaAlerta in 'Frames\frame.Menu_LinhaTabelaAlerta.pas' {FrameLinhaPlanilhaAlerta: TFrame},
-  uDesignSystem in 'Modulos\uDesignSystem.pas';
+  uDesignSystem in 'Modulos\uDesignSystem.pas',
+  frame.Documentos in 'Frames\frame.Documentos.pas' {FrameDocumentos: TFrame},
+  frame.Documentos_LinhaTabelaDocumentos in 'Frames\frame.Documentos_LinhaTabelaDocumentos.pas' {FrameLinhaPlanilhaDocumento: TFrame},
+  modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame};
 
 {$R *.res}
 
