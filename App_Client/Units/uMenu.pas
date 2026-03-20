@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
-  FMX.Layouts, frame.Menu_Dashboard, FMX.Controls.Presentation, FMX.StdCtrls;
+  FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls,
+  frame.Menu_Dashboard, frame.Documentos;
 
 type
   TfMenu = class(TForm)
@@ -37,10 +38,13 @@ type
 
   public
     procedure CarregarDashboard;
+    procedure CarregarDocumentos;
 
   private
     FFrameDashboard: TFrameMenuDashboard;
+    FFrameDocumentos: TFrameDocumentos;
     FBotaoAtivo: TRectangle;
+    procedure FecharTelasAbertas;
 
   end;
 
@@ -56,6 +60,16 @@ uses
 {$R *.fmx}
 {$R *.LgXhdpiPh.fmx ANDROID}
 
+procedure TfMenu.FecharTelasAbertas;
+begin
+  if Assigned(FFrameDashboard) then
+    FreeAndNil(FFrameDashboard);
+
+  if Assigned(FFrameDocumentos) then
+    FreeAndNil(FFrameDocumentos);
+
+end;
+
 procedure TfMenu.MenuBtnMouseEnter(Sender: TObject);
 var
   Rec: TRectangle;
@@ -64,7 +78,6 @@ begin
   begin
     Rec := TRectangle(Sender);
 
-    // Só aplica o hover se o botão NÃO for o ativo
     if Rec <> FBotaoAtivo then
     begin
       Rec.Fill.Color := TThemeColors.Slate800;
@@ -81,7 +94,6 @@ begin
   begin
     Rec := TRectangle(Sender);
 
-    // Só retira o hover se o botão NÃO for o ativo
     if Rec <> FBotaoAtivo then
     begin
       Rec.Fill.Kind := TBrushKind.None;
@@ -97,27 +109,23 @@ begin
 
   Rec := TRectangle(Sender);
 
-  // Se clicou no botão que já está ativo, não precisa fazer nada
   if Rec = FBotaoAtivo then Exit;
 
-  // 1. Limpa o botão que estava ativo ANTES (se houver algum)
   if Assigned(FBotaoAtivo) then
     FBotaoAtivo.Fill.Kind := TBrushKind.None;
 
-  // 2. Atualiza a "memória" dizendo que este novo botão é o ativo agora
   FBotaoAtivo := Rec;
 
-  // 3. Pinta o NOVO botão ativo
   FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
   FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
 
-  // 4. Executa a ação correspondente à tela
   if Rec.Name = 'recBtnDashboard' then
   begin
     CarregarDashboard;
   end
-  else if Rec.Name = 'recBtnMaquinas' then
+  else if Rec.Name = 'recBtnDocumentos' then
   begin
+    CarregarDocumentos;
     // ShowMessage('Abrir Máquinas');
   end
   else if Rec.Name = 'recBtnFuncionarios' then
@@ -133,19 +141,24 @@ end;
 
 procedure TfMenu.CarregarDashboard;
 begin
-  // Cria e posiciona o frame
-  if not Assigned(FFrameDashboard) then
-  begin
-    FFrameDashboard := TFrameMenuDashboard.Create(Self);
-    FFrameDashboard.Parent := layContainer;
-    FFrameDashboard.Align := TAlignLayout.Client;
-  end;
+  FecharTelasAbertas;
 
-  // Traz o frame para frente (útil se houver outros frames ocultos no layContainer)
-  FFrameDashboard.BringToFront;
+  FFrameDashboard := TFrameMenuDashboard.Create(Self);
+  FFrameDashboard.Parent := layContainer;
+  FFrameDashboard.Align := TAlignLayout.Client;
 
-  // Manda o frame carregar os dados dele mesmo
   FFrameDashboard.CarregarDados;
+end;
+
+procedure TfMenu.CarregarDocumentos;
+begin
+  FecharTelasAbertas;
+
+  FFrameDocumentos := TFrameDocumentos.Create(Self);
+  FFrameDocumentos.Parent := layContainer;
+  FFrameDocumentos.Align := TAlignLayout.Client;
+
+  FFrameDocumentos.BtnFiltroClick(FFrameDocumentos.recBtnValidos);
 end;
 
 end.

@@ -8,7 +8,8 @@ uses
 
 type
   TContextoRequest = (ctxDocumentosVencer, ctxEditarAlarme, ctxSolicitarAlarme,
-                      ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos);
+                      ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos,
+                      ctxPesquisarDocumentos, ctxEnviarDocumento);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -38,6 +39,8 @@ type
     procedure ListarDocumentosVencer;
     procedure ResetarComponentesRest;
     procedure SolicitarAlarme(AMaq_id, ACnc_ID, ACnc_cnc: Integer; AMensagem, AProposta: string);
+    procedure PesquisarDocumentos(ABusca: string; AStatus: string = ''; AAtivo: string = '');
+    procedure EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -237,6 +240,69 @@ begin
       end,
       CallbackFimDaThread
     );
+end;
+
+procedure TModuloRequest.PesquisarDocumentos(ABusca, AStatus, AAtivo: string);
+begin
+    FContexto := ctxPesquisarDocumentos;
+    ResetarComponentesRest;
+
+    FRESTClient.BaseURL := EndPoint + '/documentos/pesquisa';
+    FRESTRequest.Method := rmGET;
+
+    // Adiciona os parâmetros na URL (?busca=...&status=...&ativo=...)
+    if Trim(ABusca) <> '' then
+      FRESTRequest.AddParameter('busca', ABusca, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(AStatus) <> '' then
+      FRESTRequest.AddParameter('status', AStatus, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(AAtivo) <> '' then
+      FRESTRequest.AddParameter('ativo', AAtivo, TRESTRequestParameterKind.pkQUERY);
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try
+             FRESTRequest.Execute;
+          except
+          end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
+begin
+  FContexto := ctxEnviarDocumento;
+  ResetarComponentesRest;
+
+  FRESTClient.BaseURL := EndPoint + '/documentos';
+  FRESTRequest.Method := rmPOST;
+
+  // Parâmetros de texto (Form-Data)
+  FRESTRequest.AddParameter('entidadeId', AEntidadeId, pkGETorPOST);
+  FRESTRequest.AddParameter('entidadeTipo', AEntidadeTipo, pkGETorPOST);
+  FRESTRequest.AddParameter('tipoDocumento', ATipoDoc, pkGETorPOST);
+  FRESTRequest.AddParameter('nomeDocumento', ANomeDoc, pkGETorPOST); // Caso adicione no Schema do Node
+
+  // O Node.js espera ISO8601 (ex: 2026-03-20T17:00:00.000Z)
+  FRESTRequest.AddParameter('dataValidade', DateToISO8601(ADataValidade), pkGETorPOST);
+
+  // Anexa o arquivo físico. O nome 'pdf' DEVE bater com o upload.single('pdf') do Node
+  FRESTRequest.AddFile('pdf', ACaminhoArquivo, ctAPPLICATION_OCTET_STREAM);
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+         FRESTRequest.Execute;
+      except
+         // Tratamento silencioso ou log de erro interno
+      end;
+    end,
+    CallbackFimDaThread
+  );
 end;
 
 procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);

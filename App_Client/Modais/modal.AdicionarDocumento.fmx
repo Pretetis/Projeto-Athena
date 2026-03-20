@@ -1,0 +1,444 @@
+object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
+  Size.Width = 420.000000000000000000
+  Size.Height = 550.000000000000000000
+  Size.PlatformDefault = False
+  object recFundo: TRectangle
+    Align = Client
+    Fill.Color = claWhite
+    Size.Width = 420.000000000000000000
+    Size.Height = 550.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Thickness = 0.200000002980232200
+    XRadius = 15.000000000000000000
+    YRadius = 15.000000000000000000
+    object layTitulo: TLayout
+      Align = Top
+      Margins.Left = 15.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Position.X = 15.000000000000000000
+      Size.Width = 390.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object lbTitulo: TLabel
+        Align = Client
+        StyledSettings = []
+        Size.Width = 347.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 20.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF0F172A
+        Text = 'Adicionar Novo Documento'
+        TabOrder = 0
+      end
+      object Line1: TLine
+        Align = MostBottom
+        LineType = Bottom
+        Position.Y = 49.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 1.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFFF1F5F9
+      end
+      object Path1: TPath
+        Align = Right
+        Data.Path = {
+          06000000000000000000000000000000000000000000C0410000C04100000000
+          0000A0400000404101000000000098410000404100000000000040410000A040
+          010000000000404100009841}
+        Fill.Kind = None
+        Margins.Left = 10.000000000000000000
+        Margins.Bottom = 2.000000000000000000
+        Position.X = 357.000000000000000000
+        RotationAngle = 45.000000000000000000
+        Size.Width = 33.000000000000000000
+        Size.Height = 47.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF0F172A
+        Stroke.Thickness = 2.000000000000000000
+        Stroke.Cap = Round
+        Stroke.Join = Round
+        WrapMode = Fit
+      end
+    end
+    object layOpcoes: TLayout
+      Align = Client
+      Margins.Left = 15.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Size.Width = 390.000000000000000000
+      Size.Height = 427.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object layTituloDoc: TLayout
+        Align = Top
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        object lbTituloDoc: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'T'#237'tulo do Documento'
+          TabOrder = 0
+        end
+        object recFundoTituloDoc: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Top = 5.000000000000000000
+          Size.Width = 390.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.349999994039535500
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object edtTituloDoc: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 0
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 15.000000000000000000
+            Margins.Left = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Size.Width = 370.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'Ex: ASO Admissional...'
+            StyledSettings = [Style, FontColor]
+          end
+        end
+      end
+      object layTipoDoc: TLayout
+        Align = Top
+        Margins.Top = 15.000000000000000000
+        Position.Y = 85.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object lbTipoDoc: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'T'#237'tulo do Documento'
+          TabOrder = 0
+        end
+        object recTIpoDoc: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Top = 5.000000000000000000
+          Size.Width = 390.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.349999994039535500
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object edtTipoDoc: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 0
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 15.000000000000000000
+            Margins.Left = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Size.Width = 370.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'Ex: ASO, NR-12, Treinamento, Sa'#250'de...'
+            StyledSettings = [Style, FontColor]
+          end
+        end
+      end
+      object layFuncionario: TLayout
+        Align = Top
+        Margins.Top = 15.000000000000000000
+        Position.Y = 170.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object lbFuncionario: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'Nome do Funcion'#225'rio ou M'#225'quina'
+          TabOrder = 0
+        end
+        object recFuncionario: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Top = 5.000000000000000000
+          Size.Width = 390.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.349999994039535500
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object edtFuncionario: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 0
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 15.000000000000000000
+            Margins.Left = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Size.Width = 370.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'EX: Jo'#227'o Silva ou Guindaste T300'
+            StyledSettings = [Style, FontColor]
+          end
+        end
+      end
+      object layVencimento: TLayout
+        Align = Top
+        Margins.Top = 15.000000000000000000
+        Position.Y = 255.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object lbVencimento: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'Data de Vencimento'
+          TabOrder = 0
+        end
+        object recVencimento: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Top = 5.000000000000000000
+          Size.Width = 390.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.349999994039535500
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object DateEdit1: TDateEdit
+            Date = 46101.000000000000000000
+            Align = Client
+            Margins.Left = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Size.Width = 370.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'dateeditstyle'
+            TabOrder = 0
+          end
+        end
+      end
+      object layDropZone: TLayout
+        Align = Top
+        Margins.Top = 15.000000000000000000
+        Position.Y = 340.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object lbDropZone: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'Documento:'
+          TabOrder = 0
+        end
+        object recDropZone: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Top = 5.000000000000000000
+          Size.Width = 390.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.349999994039535500
+          Stroke.Dash = Dash
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          OnDragOver = recDropZoneDragOver
+          OnDragDrop = recDropZoneDragDrop
+          OnClick = recDropZoneClick
+        end
+        object lbInsideDropZone: TLabel
+          Align = Client
+          StyledSettings = []
+          Size.Width = 390.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 15.000000000000000000
+          TextSettings.Font.StyleExt = {00040000000200000004000000}
+          TextSettings.FontColor = xFF64748B
+          TextSettings.HorzAlign = Center
+          Text = 'Arraste aqui ou clique para buscar'
+          TabOrder = 1
+        end
+      end
+    end
+    object Layout3: TLayout
+      Align = Bottom
+      Position.Y = 477.000000000000000000
+      Size.Width = 420.000000000000000000
+      Size.Height = 73.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Rectangle1: TRectangle
+        Align = Bottom
+        Fill.Color = xFFF8FAFC
+        Position.Y = 23.000000000000000000
+        Size.Width = 420.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.000000000000000000
+        XRadius = 15.000000000000000000
+        YRadius = 15.000000000000000000
+      end
+      object Rectangle2: TRectangle
+        Align = Client
+        Fill.Color = xFFF8FAFC
+        Margins.Bottom = -30.000000000000000000
+        Sides = [Top]
+        Size.Width = 420.000000000000000000
+        Size.Height = 53.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.200000002980232200
+      end
+      object Layout1: TLayout
+        Align = Contents
+        Size.Width = 420.000000000000000000
+        Size.Height = 73.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object recBtnAddDocumento: TRectangle
+          Align = Right
+          Fill.Kind = None
+          Margins.Left = 15.000000000000000000
+          Margins.Top = 15.000000000000000000
+          Margins.Bottom = 15.000000000000000000
+          Position.X = 145.000000000000000000
+          Position.Y = 15.000000000000000000
+          Size.Width = 105.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object lbBtnAddDocumento: TLabel
+            Align = Client
+            StyledSettings = []
+            Margins.Left = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Size.Width = 85.000000000000000000
+            Size.Height = 43.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 18.000000000000000000
+            TextSettings.Font.StyleExt = {04040000000000000004000000}
+            TextSettings.HorzAlign = Center
+            Text = 'Cancelar'
+            TabOrder = 1
+          end
+        end
+        object Rectangle3: TRectangle
+          Align = Right
+          Fill.Color = xFF4F46E5
+          Margins.Left = 15.000000000000000000
+          Margins.Top = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Margins.Bottom = 15.000000000000000000
+          Position.X = 265.000000000000000000
+          Position.Y = 15.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          OnClick = Rectangle3Click
+          object Path2: TPath
+            Align = Left
+            Data.Path = {
+              06000000000000000000000000000000000000000000C0410000C04100000000
+              0000A0400000404101000000000098410000404100000000000040410000A040
+              010000000000404100009841}
+            Fill.Kind = None
+            Margins.Left = 10.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Position.X = 10.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 41.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFCBD5E1
+            Stroke.Thickness = 3.000000000000000000
+            Stroke.Cap = Round
+            Stroke.Join = Round
+            WrapMode = Fit
+          end
+          object Label1: TLabel
+            Align = Client
+            StyledSettings = []
+            Margins.Right = 10.000000000000000000
+            Size.Width = 87.000000000000000000
+            Size.Height = 43.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 18.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFFCBD5E1
+            TextSettings.HorzAlign = Center
+            Text = 'Salvar'
+            TabOrder = 1
+          end
+        end
+      end
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 23
+    Top = 2
+  end
+end

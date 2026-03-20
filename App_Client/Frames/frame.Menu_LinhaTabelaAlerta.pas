@@ -28,6 +28,8 @@ type
     lbFuncaoFuncMaq: TLabel;
     recBtnVisualizar: TRectangle;
     recFundoLinha: TRectangle;
+    recBtnDownload: TRectangle;
+    pathDownload: TPath;
   private
     { Private declarations }
   public

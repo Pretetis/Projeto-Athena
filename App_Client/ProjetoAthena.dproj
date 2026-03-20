@@ -368,6 +368,21 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Modulos\uDesignSystem.pas"/>
+        <DCCReference Include="Frames\frame.Documentos.pas">
+            <Form>FrameDocumentos</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\frame.Documentos_LinhaTabelaDocumentos.pas">
+            <Form>FrameLinhaPlanilhaDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\modal.AdicionarDocumento.pas">
+            <Form>FrameModalEnivarDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
