@@ -4,22 +4,79 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
   Size.Height = 50.000000000000000000
   Size.PlatformDefault = False
   OnResize = FrameResize
-  object Layout3: TLayout
+  object gplCabecalhoPlanilhaAlerta: TGridPanelLayout
     Align = Client
     Size.Width = 1150.000000000000000000
     Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 1
+    TabOrder = 0
+    ColumnCollection = <
+      item
+        Value = 8.970698976262913000
+      end
+      item
+        Value = 20.510054469112180000
+      end
+      item
+        Value = 20.510069686553900000
+      end
+      item
+        Value = 20.510073309552490000
+      end
+      item
+        Value = 20.510067633561560000
+      end
+      item
+        Value = 8.989035924956964000
+      end>
+    ControlCollection = <
+      item
+        Column = 5
+        Control = recBtnCancelarDoc
+        Row = 0
+      end
+      item
+        Column = 1
+        Control = recLinhaDoc
+        Row = 0
+      end
+      item
+        Column = 2
+        Control = recLinhaFuncMaq
+        Row = 0
+      end
+      item
+        Column = 0
+        Control = recLinhaStatus
+        Row = 0
+      end
+      item
+        Column = 3
+        Control = recLinhaVencimento
+        Row = 0
+      end
+      item
+        Column = 4
+        Control = recLinhaVisualizar
+        Row = 0
+      end>
+    RowCollection = <
+      item
+        Value = 100.000000000000000000
+      end
+      item
+        SizeStyle = Auto
+      end>
     object recBtnCancelarDoc: TRectangle
       Align = Client
       Cursor = crHandPoint
       Fill.Color = xFFFEE2E2
-      Margins.Left = 10.000000000000000000
-      Margins.Top = 2.000000000000000000
-      Margins.Right = 20.000000000000000000
-      Margins.Bottom = 2.000000000000000000
-      Size.Width = 520.000000000000000000
-      Size.Height = 46.000000000000000000
+      Margins.Left = 25.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 25.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 53.373901367187500000
+      Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       Stroke.Thickness = 0.000000000000000000
       XRadius = 8.000000000000000000
@@ -35,8 +92,8 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         Margins.Top = 4.000000000000000000
         Margins.Right = 4.000000000000000000
         Margins.Bottom = 4.000000000000000000
-        Size.Width = 512.000000000000000000
-        Size.Height = 38.000000000000000000
+        Size.Width = 45.373901367187500000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFFDC2626
         Stroke.Thickness = 2.000000000000000000
@@ -44,22 +101,61 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         WrapMode = Fit
       end
     end
+    object recLinhaDoc: TLayout
+      Align = Client
+      Margins.Top = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 235.865646362304700000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object lbInfoDoc: TLabel
+        Align = Top
+        StyledSettings = []
+        Margins.Left = 20.000000000000000000
+        Position.X = 20.000000000000000000
+        Size.Width = 215.865646362304700000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF0F172A
+        TextSettings.VertAlign = Trailing
+        Text = 'Exame Toxicol'#243'gico'
+        TabOrder = 1
+      end
+      object lbInfoTipoDoc: TLabel
+        Align = Client
+        StyledSettings = []
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 2.000000000000000000
+        Size.Width = 215.865646362304700000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 10.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        TextSettings.VertAlign = Leading
+        Text = 'Sa'#250'de'
+        TabOrder = 0
+      end
+    end
     object recLinhaFuncMaq: TRectangle
-      Align = Left
+      Align = Client
       Fill.Kind = None
       Margins.Top = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Position.X = 200.000000000000000000
-      Position.Y = 5.000000000000000000
       Sides = []
-      Size.Width = 100.000000000000000000
+      Size.Width = 235.865783691406200000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF64748B
       Stroke.Thickness = 0.600000023841857900
       object Layout2: TLayout
         Align = Client
-        Size.Width = 100.000000000000000000
+        Size.Width = 235.865783691406200000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
@@ -68,7 +164,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
           StyledSettings = []
           Margins.Left = 20.000000000000000000
           Position.X = 20.000000000000000000
-          Size.Width = 80.000000000000000000
+          Size.Width = 215.865783691406200000
           Size.Height = 20.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Family = 'Roboto'
@@ -85,7 +181,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
           StyledSettings = []
           Margins.Left = 20.000000000000000000
           Margins.Top = 2.000000000000000000
-          Size.Width = 80.000000000000000000
+          Size.Width = 215.865783691406200000
           Size.Height = 18.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Family = 'Roboto'
@@ -99,13 +195,12 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
       end
     end
     object recLinhaStatus: TRectangle
-      Align = Left
+      Align = Client
       Fill.Kind = None
       Margins.Top = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Position.Y = 5.000000000000000000
       Sides = []
-      Size.Width = 100.000000000000000000
+      Size.Width = 103.163040161132800000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF64748B
@@ -113,7 +208,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
       object layLinhaStatus: TLayout
         Align = Client
         Margins.Left = 20.000000000000000000
-        Size.Width = 80.000000000000000000
+        Size.Width = 83.163040161132810000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
@@ -156,14 +251,12 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
       end
     end
     object recLinhaVencimento: TRectangle
-      Align = Left
+      Align = Client
       Fill.Kind = None
       Margins.Top = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Position.X = 300.000000000000000000
-      Position.Y = 5.000000000000000000
       Sides = []
-      Size.Width = 100.000000000000000000
+      Size.Width = 235.865844726562500000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF64748B
@@ -172,7 +265,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         Align = Client
         StyledSettings = []
         Margins.Left = 20.000000000000000000
-        Size.Width = 80.000000000000000000
+        Size.Width = 215.865844726562500000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Family = 'Roboto'
@@ -184,14 +277,12 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
       end
     end
     object recLinhaVisualizar: TRectangle
-      Align = Left
+      Align = Client
       Fill.Kind = None
       Margins.Top = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Position.X = 400.000000000000000000
-      Position.Y = 5.000000000000000000
       Sides = []
-      Size.Width = 200.000000000000000000
+      Size.Width = 235.865783691406200000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF64748B
@@ -204,17 +295,18 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         Margins.Top = 2.000000000000000000
         Margins.Right = 10.000000000000000000
         Margins.Bottom = 2.000000000000000000
-        Size.Width = 90.000000000000000000
+        Size.Width = 125.865783691406300000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = claNull
         Stroke.Thickness = 0.000000000000000000
         XRadius = 8.000000000000000000
         YRadius = 8.000000000000000000
+        OnClick = recBtnVisualizarClick
         object lbBtnVisualizar: TLabel
           Align = Client
           StyledSettings = [Size]
-          Size.Width = 90.000000000000000000
+          Size.Width = 125.865783691406300000
           Size.Height = 36.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Family = 'Roboto'
@@ -233,7 +325,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         Margins.Top = 2.000000000000000000
         Margins.Right = 20.000000000000000000
         Margins.Bottom = 2.000000000000000000
-        Position.X = 130.000000000000000000
+        Position.X = 165.865783691406200000
         Position.Y = 2.000000000000000000
         Size.Width = 50.000000000000000000
         Size.Height = 36.000000000000000000
@@ -241,6 +333,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
         Stroke.Thickness = 0.000000000000000000
         XRadius = 8.000000000000000000
         YRadius = 8.000000000000000000
+        OnClick = recBtnDownloadClick
         object pathDownload: TPath
           Align = Client
           Data.Path = {
@@ -263,49 +356,6 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
           Stroke.Join = Round
           WrapMode = Fit
         end
-      end
-    end
-    object recLinhaDoc: TLayout
-      Align = Left
-      Margins.Top = 5.000000000000000000
-      Margins.Bottom = 5.000000000000000000
-      Position.X = 100.000000000000000000
-      Position.Y = 5.000000000000000000
-      Size.Width = 100.000000000000000000
-      Size.Height = 40.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 5
-      object lbInfoDoc: TLabel
-        Align = Top
-        StyledSettings = []
-        Margins.Left = 20.000000000000000000
-        Position.X = 20.000000000000000000
-        Size.Width = 80.000000000000000000
-        Size.Height = 20.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Family = 'Roboto'
-        TextSettings.Font.Size = 14.000000000000000000
-        TextSettings.Font.StyleExt = {00070000000000000004000000}
-        TextSettings.FontColor = xFF0F172A
-        TextSettings.VertAlign = Trailing
-        Text = 'Exame Toxicol'#243'gico'
-        TabOrder = 1
-      end
-      object lbInfoTipoDoc: TLabel
-        Align = Client
-        StyledSettings = []
-        Margins.Left = 20.000000000000000000
-        Margins.Top = 2.000000000000000000
-        Size.Width = 80.000000000000000000
-        Size.Height = 18.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Family = 'Roboto'
-        TextSettings.Font.Size = 10.000000000000000000
-        TextSettings.Font.StyleExt = {00070000000000000004000000}
-        TextSettings.FontColor = xFF64748B
-        TextSettings.VertAlign = Leading
-        Text = 'Sa'#250'de'
-        TabOrder = 0
       end
     end
   end

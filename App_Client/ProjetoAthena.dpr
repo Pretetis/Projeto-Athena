@@ -17,7 +17,9 @@ uses
   uDesignSystem in 'Modulos\uDesignSystem.pas',
   frame.Documentos in 'Frames\frame.Documentos.pas' {FrameDocumentos: TFrame},
   frame.Documentos_LinhaTabelaDocumentos in 'Frames\frame.Documentos_LinhaTabelaDocumentos.pas' {FrameLinhaPlanilhaDocumento: TFrame},
-  modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame};
+  modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame},
+  uCatalogos in 'Modulos\uCatalogos.pas',
+  modal.VisualizarDocumento in 'Modais\modal.VisualizarDocumento.pas' {FrameVisualizarDocumento: TFrame};
 
 {$R *.res}
 

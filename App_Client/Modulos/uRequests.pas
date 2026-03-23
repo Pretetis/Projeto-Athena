@@ -4,12 +4,14 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.JSON, FMX.Forms, System.DateUtils,
-  REST.Client, REST.Types, REST.Authenticator.Basic, System.IOUtils;
+  REST.Client, REST.Types, REST.Authenticator.Basic, System.IOUtils, IdHTTP,
+  IdMultipartFormData;
 
 type
   TContextoRequest = (ctxDocumentosVencer, ctxEditarAlarme, ctxSolicitarAlarme,
                       ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos,
-                      ctxPesquisarDocumentos, ctxEnviarDocumento);
+                      ctxPesquisarDocumentos, ctxEnviarDocumento, ctxCarregarFuncionarios,
+                      ctxCarregarMaquinas, ctxCarregarEmpresas);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -21,12 +23,12 @@ type
     FParentForm: TForm;
     FOnResult: TOnRequestResult;
     FContexto: TContextoRequest;
+    FIdResponse: string;
+    FIdStatusCode: Integer;
     FRESTClient: TRESTClient;
     FRESTRequest: TRESTRequest;
     FRESTResponse: TRESTResponse;
     FAuthenticator: THTTPBasicAuthenticator;
-    FFieldId: string;
-    FFieldNome: string;
     FUltimoMaqIdSolicitado: Integer;
     FCallbackAlarmes: TProc<TJSONArray>;
 
@@ -41,6 +43,9 @@ type
     procedure SolicitarAlarme(AMaq_id, ACnc_ID, ACnc_cnc: Integer; AMensagem, AProposta: string);
     procedure PesquisarDocumentos(ABusca: string; AStatus: string = ''; AAtivo: string = '');
     procedure EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
+    procedure CarregarCatalogoFuncionarios;
+    procedure CarregarCatalogoMaquinas;
+    procedure CarregarCatalogoEmpresas;
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -273,34 +278,103 @@ begin
 end;
 
 procedure TModuloRequest.EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
+var
+  LHttp: TIdHTTP;
+  LFormData: TIdMultiPartFormDataStream;
+  LJson: TJSONObject;
+  LJsonStr: string;
+  LField: TIdFormDataField;
 begin
   FContexto := ctxEnviarDocumento;
-  ResetarComponentesRest;
+  FIdResponse := '';
+  FIdStatusCode := 0;
 
-  FRESTClient.BaseURL := EndPoint + '/documentos';
-  FRESTRequest.Method := rmPOST;
+  if Trim(AEntidadeId) = '' then
+    raise Exception.Create('AEntidadeId está vazio!');
 
-  // Parâmetros de texto (Form-Data)
-  FRESTRequest.AddParameter('entidadeId', AEntidadeId, pkGETorPOST);
-  FRESTRequest.AddParameter('entidadeTipo', AEntidadeTipo, pkGETorPOST);
-  FRESTRequest.AddParameter('tipoDocumento', ATipoDoc, pkGETorPOST);
-  FRESTRequest.AddParameter('nomeDocumento', ANomeDoc, pkGETorPOST); // Caso adicione no Schema do Node
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('entidadeId',    AEntidadeId);
+    LJson.AddPair('entidadeTipo',  AEntidadeTipo);
+    LJson.AddPair('tipoDocumento', ATipoDoc);
+    LJson.AddPair('nomeDocumento', ANomeDoc);
+    LJson.AddPair('dataValidade',  FormatDateTime('yyyy-mm-dd', ADataValidade));
+    LJsonStr := LJson.ToString;
+  finally
+    LJson.Free;
+  end;
 
-  // O Node.js espera ISO8601 (ex: 2026-03-20T17:00:00.000Z)
-  FRESTRequest.AddParameter('dataValidade', DateToISO8601(ADataValidade), pkGETorPOST);
+  LHttp := TIdHTTP.Create(nil);
+  LFormData := TIdMultiPartFormDataStream.Create;
 
-  // Anexa o arquivo físico. O nome 'pdf' DEVE bater com o upload.single('pdf') do Node
-  FRESTRequest.AddFile('pdf', ACaminhoArquivo, ctAPPLICATION_OCTET_STREAM);
+  // Sem SSL — HTTP local
+  LHttp.Request.BasicAuthentication := True;
+  LHttp.Request.Username := UserName;
+  LHttp.Request.Password := Password;
+
+  LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+  LField.ContentType := 'application/json';
+  LField.ContentTransfer := '8bit'; // <- impede o quoted-printable
+  LFormData.AddFile('pdf', ACaminhoArquivo);
 
   TLoading.ExecuteThread(
     procedure
     begin
       try
-         FRESTRequest.Execute;
+        FIdResponse   := LHttp.Post(EndPoint + '/documentos', LFormData);
+        FIdStatusCode := LHttp.ResponseCode;
       except
-         // Tratamento silencioso ou log de erro interno
+        on E: EIdHTTPProtocolException do
+        begin
+          FIdResponse   := E.ErrorMessage;
+          FIdStatusCode := LHttp.ResponseCode;
+        end;
+        on E: Exception do
+        begin
+          FIdResponse   := E.Message;
+          FIdStatusCode := 0;
+        end;
       end;
+
+      LFormData.Free;
+      LHttp.Free;
     end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.CarregarCatalogoFuncionarios;
+begin
+  FContexto := ctxCarregarFuncionarios;
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/funcionarios/lookup';
+  FRESTRequest.Method := rmGET;
+  TLoading.ExecuteThread(
+    procedure begin try FRESTRequest.Execute; except end; end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.CarregarCatalogoMaquinas;
+begin
+  FContexto := ctxCarregarMaquinas;
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/maquinas/lookup';
+  FRESTRequest.Method := rmGET;
+  TLoading.ExecuteThread(
+    procedure begin try FRESTRequest.Execute; except end; end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.CarregarCatalogoEmpresas;
+begin
+  FContexto := ctxCarregarEmpresas;
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/empresas/lookup';
+  FRESTRequest.Method := rmGET;
+  TLoading.ExecuteThread(
+    procedure begin try FRESTRequest.Execute; except end; end,
     CallbackFimDaThread
   );
 end;
@@ -321,6 +395,13 @@ var
     LContent: string;
     LJSONArray: TJSONArray;
 begin
+    if FContexto = ctxEnviarDocumento then
+    begin
+        if Assigned(FOnResult) then
+            FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);
+        Exit;
+    end;
+
     if not Assigned(FRESTResponse) then
     begin
         if Assigned(FOnResult) then FOnResult(Self, '', 0, FContexto);
