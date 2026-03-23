@@ -8,7 +8,7 @@ uses
 
 type
   TFrameLinhaPlanilhaDocumento = class(TFrame)
-    Layout3: TLayout;
+    gplCabecalhoPlanilhaAlerta: TGridPanelLayout;
     recBtnCancelarDoc: TRectangle;
     pathCancelar: TPath;
     recLinhaDoc: TLayout;
@@ -30,10 +30,16 @@ type
     recBtnDownload: TRectangle;
     pathDownload: TPath;
     procedure FrameResize(Sender: TObject);
+    procedure recBtnVisualizarClick(Sender: TObject);
+    procedure recBtnDownloadClick(Sender: TObject);
   private
+    procedure BaixarArquivo(const ACaminhoDestino: string);
 
     { Private declarations }
   public
+    FDocId: string;
+    FNomeDoc: string;
+    FNomeEntidade: string;
     procedure TipoStatus(Sender: TObject);
     procedure CarregarDados(ANomeDoc, ATipoDoc, AFuncMaq, AVencimento: string);
     { Public declarations }
@@ -42,7 +48,25 @@ type
 implementation
 
 uses
-    uDesignSystem, System.DateUtils, System.Math;
+  uDesignSystem,
+  modal.VisualizarDocumento,
+  uParametros,
+  uLoading,
+  System.DateUtils,
+  System.Math,
+  System.IOUtils,
+  IdHTTP,
+  // --- BIBLIOTECAS PARA WINDOWS ---
+  {$IFDEF MSWINDOWS}
+    Winapi.ShellAPI,
+  {$ENDIF}
+  // --- BIBLIOTECAS PARA ANDROID ---
+  {$IFDEF ANDROID}
+    Androidapi.Helpers,
+    Androidapi.JNI.GraphicsContentViewText,
+    Androidapi.JNI.Net,
+  {$ENDIF}
+  FMX.frame.PopUpToast;
 
 {$R *.fmx}
 
@@ -50,20 +74,87 @@ procedure TFrameLinhaPlanilhaDocumento.FrameResize(Sender: TObject);
 var
   LWidthTotal: Single;
 begin
-  // Pega a largura total disponível na linha
   LWidthTotal := Self.Width;
+end;
 
-  // Define a largura de cada coluna multiplicando por 0.X (onde 0.10 = 10%)
-  // Ajuste as porcentagens conforme o seu layout visual:
+procedure TFrameLinhaPlanilhaDocumento.recBtnDownloadClick(Sender: TObject);
+var
+  SaveDialog: TSaveDialog;
+begin
+    {$IFDEF MSWINDOWS}
+    SaveDialog := TSaveDialog.Create(nil);
+    try
+        SaveDialog.Title := 'Salvar Documento';
+        SaveDialog.FileName := FNomeDoc + '.pdf';
+        SaveDialog.Filter := 'Arquivos PDF|*.pdf|Imagens PNG|*.png|Imagens JPG|*.jpg';
 
-  recLinhaStatus.Width     := LWidthTotal * 0.09; // 8% para o ícone
-  recLinhaDoc.Width        := LWidthTotal * 0.20; // 32% para o Nome do Documento
-  recLinhaFuncMaq.Width    := LWidthTotal * 0.20; // 25% para o Func/Máquina
-  recLinhaVencimento.Width := LWidthTotal * 0.20; // 15% para a Data
-  recLinhaVisualizar.Width := LWidthTotal * 0.20; //
+        if SaveDialog.Execute then
+        begin
+            BaixarArquivo(SaveDialog.FileName);
+        end;
+    finally
+        SaveDialog.Free;
+    end;
+    {$ENDIF}
 
-  // A última coluna (recLinhaVisualizar) não precisa de cálculo
-  // pois está com Align := Client, então ela vai engolir os 20% restantes automaticamente.
+    {$IFDEF ANDROID}
+    recBtnVisualizarClick(Sender);
+    {$ENDIF}
+end;
+
+procedure TFrameLinhaPlanilhaDocumento.BaixarArquivo(const ACaminhoDestino: string);
+begin
+    TLoading.Show(Self.Root.GetObject as TForm, 'Baixando arquivo...');
+
+    TThread.CreateAnonymousThread(
+        procedure
+        var
+          LHttp: TIdHTTP;
+          LFileStream: TFileStream;
+          LUrl: string;
+        begin
+            LUrl := EndPoint + '/documentos/' + FDocId + '/download?download=true';
+            LHttp := TIdHTTP.Create(nil);
+            LFileStream := TFileStream.Create(ACaminhoDestino, fmCreate);
+            try
+                try
+                    LHttp.Request.BasicAuthentication := True;
+                    LHttp.Request.Username := UserName;
+                    LHttp.Request.Password := Password;
+
+                    LHttp.Get(LUrl, LFileStream);
+
+                    TThread.Synchronize(nil, procedure
+                    begin
+                        TLoading.Hide;
+                        ShowMessage('Download concluído com sucesso!');
+                    end);
+                except
+                    on E: Exception do
+                    begin
+                        TThread.Synchronize(nil, procedure
+                        begin
+                            TLoading.Hide;
+                            ShowMessage('Erro ao baixar arquivo: ' + E.Message);
+                        end);
+                    end;
+                end;
+            finally
+                LFileStream.Free;
+                LHttp.Free;
+            end;
+        end).Start;
+end;
+
+procedure TFrameLinhaPlanilhaDocumento.recBtnVisualizarClick(Sender: TObject);
+var
+  LModal: TFrameVisualizarDocumento;
+begin
+    LModal := TFrameVisualizarDocumento.Create(Self.Root.GetObject as TForm);
+    LModal.Parent := Self.Root.GetObject as TForm;
+    LModal.Align := TAlignLayout.Contents;
+
+    LModal.AbrirModal(FDocId, FNomeDoc, FNomeEntidade);
 end;
 
 procedure TFrameLinhaPlanilhaDocumento.TipoStatus(Sender: TObject);
@@ -111,14 +202,12 @@ begin
   lbInfoTipoDoc.Text := ATipoDoc;
   lbFuncMaq.Text := AFuncMaq;
 
-  // Tratar a data vinda do Node (padrão ISO) para formato amigável BR
   try
     lbInfoVencimento.Text := FormatDateTime('dd/mm/yyyy', ISO8601ToDate(AVencimento));
   except
     lbInfoVencimento.Text := AVencimento; // Fallback se não vier no formato ISO
   end;
 
-  // Chama a sua lógica já existente para pintar as cores corretas
   TipoStatus(Self);
 end;
 

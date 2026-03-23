@@ -7,41 +7,45 @@ inherited fMenu_LgXhdpiPh: TfMenu_LgXhdpiPh
     Size.Height = 695.000000000000000000
     Viewport.Width = 450.000000000000000000
     Viewport.Height = 695.000000000000000000
-    inherited layContainer: TLayout
-      Size.Width = 170.000000000000000000
+    inherited layPrincipal: TLayout
+      Size.Width = 450.000000000000000000
       Size.Height = 695.000000000000000000
-    end
-    inherited layMenu: TLayout
-      Size.Height = 695.000000000000000000
-      inherited recMenu: TRectangle
+      inherited layContainer: TLayout
+        Size.Width = 170.000000000000000000
         Size.Height = 695.000000000000000000
-        inherited VertScrollBox1: TVertScrollBox
-          Size.Height = 645.000000000000000000
-          Viewport.Width = 280.000000000000000000
-          Viewport.Height = 645.000000000000000000
-          inherited recBtnMaquinas: TRectangle
-            inherited lbMaquinas: TLabel
-              TextSettings.Font.StyleExt = {00070000000000000004000000}
+      end
+      inherited layMenu: TLayout
+        Size.Height = 695.000000000000000000
+        inherited recMenu: TRectangle
+          Size.Height = 695.000000000000000000
+          inherited VertScrollBox1: TVertScrollBox
+            Size.Height = 645.000000000000000000
+            Viewport.Width = 280.000000000000000000
+            Viewport.Height = 645.000000000000000000
+            inherited recBtnMaquinas: TRectangle
+              inherited lbMaquinas: TLabel
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+              end
             end
-          end
-          inherited recBtnFuncionarios: TRectangle
-            inherited lbFuncionarios: TLabel
-              TextSettings.Font.StyleExt = {00070000000000000004000000}
+            inherited recBtnFuncionarios: TRectangle
+              inherited lbFuncionarios: TLabel
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+              end
             end
-          end
-          inherited recBtnEmpresas: TRectangle
-            inherited lbEmpresas: TLabel
-              TextSettings.Font.StyleExt = {00070000000000000004000000}
+            inherited recBtnEmpresas: TRectangle
+              inherited lbEmpresas: TLabel
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+              end
             end
-          end
-          inherited recBtnDocumentos: TRectangle
-            inherited lbDocumentos: TLabel
-              TextSettings.Font.StyleExt = {00070000000000000004000000}
+            inherited recBtnDocumentos: TRectangle
+              inherited lbDocumentos: TLabel
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+              end
             end
-          end
-          inherited recBtnDashboard: TRectangle
-            inherited lbDashboard: TLabel
-              TextSettings.Font.StyleExt = {00070000000000000004000000}
+            inherited recBtnDashboard: TRectangle
+              inherited lbDashboard: TLabel
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+              end
             end
           end
         end

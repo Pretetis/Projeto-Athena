@@ -84,30 +84,29 @@ procedure TFrameMenuDashboard.CarregarDados;
 var
   LReqResumo, LReqLista: TModuloRequest;
 begin
-  // 1. Pede o resumo dos totais
-  LReqResumo := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
-  LReqResumo.ListarTotalDocumentos;
+    // 1. Pede o resumo dos totais
+    LReqResumo := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
+    LReqResumo.ListarTotalDocumentos;
 
-  // 2. Pede a lista da tabela
-  LReqLista := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
-  LReqLista.ListarDocumentosVencer;
+    // 2. Pede a lista da tabela
+    LReqLista := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
+    LReqLista.ListarDocumentosVencer;
 end;
 
 procedure TFrameMenuDashboard.OnRequestResult(Sender: TObject; const AJsonContent: string;
   AStatusCode: Integer; AContext: TContextoRequest);
 begin
-  if AStatusCode = 200 then
-  begin
-    case AContext of
-      ctxTotalDocumentos:  PreencherResumoStatus(AJsonContent);
-      ctxDocumentosVencer: PreencherListaAlertas(AJsonContent);
+    if AStatusCode = 200 then
+    begin
+        case AContext of
+            ctxTotalDocumentos:  PreencherResumoStatus(AJsonContent);
+            ctxDocumentosVencer: PreencherListaAlertas(AJsonContent);
+        end;
+    end
+    else
+    begin
+        ShowMessage(Format('Erro ao buscar dados. Código: %d', [AStatusCode]));
     end;
-  end
-  else
-  begin
-    // Lida com erros (pode usar um Toast ou ShowMessage)
-    ShowMessage(Format('Erro ao buscar dados. Código: %d', [AStatusCode]));
-  end;
 end;
 
 procedure TFrameMenuDashboard.PreencherResumoStatus(const AJsonString: string);
@@ -115,114 +114,99 @@ var
   LJsonObj: TJSONObject;
   LTotal, LVencendo, LExpirados: Integer;
 begin
-  if AJsonString.Trim.IsEmpty then Exit;
+    if AJsonString.Trim.IsEmpty then Exit;
 
-  LJsonObj := TJSONObject.ParseJSONValue(AJsonString) as TJSONObject;
-  if not Assigned(LJsonObj) then Exit;
+    LJsonObj := TJSONObject.ParseJSONValue(AJsonString) as TJSONObject;
+    if not Assigned(LJsonObj) then Exit;
 
-  try
-    // Lê os dados do novo JSON: { "total": 6, "vencendoEm30Dias": 3, "expirados": 1 }
-    // Usa o TryGetValue para não quebrar caso a API mude as chaves no futuro
+    try
+        if not LJsonObj.TryGetValue<Integer>('total', LTotal) then LTotal := 0;
+        if not LJsonObj.TryGetValue<Integer>('vencendoEm30Dias', LVencendo) then LVencendo := 0;
+        if not LJsonObj.TryGetValue<Integer>('expirados', LExpirados) then LExpirados := 0;
 
-    // Supondo que lbInfoValido mostre os válidos (Total - Vencendo - Expirados)
-    // Se a regra de negócio for diferente, ajuste o cálculo.
-    // Usando GetValue<Integer> se tivermos certeza que as chaves sempre vêm.
-    // Caso contrário, use TryGetValue. Vou usar TryGetValue para ser seguro.
+        lbInfoValido.Text     := IntToStr(LTotal - LExpirados);
+        lbInfoExpirando.Text  := IntToStr(LVencendo);
+        lbInfoExpirado.Text   := IntToStr(LExpirados);
 
-    if not LJsonObj.TryGetValue<Integer>('total', LTotal) then LTotal := 0;
-    if not LJsonObj.TryGetValue<Integer>('vencendoEm30Dias', LVencendo) then LVencendo := 0;
-    if not LJsonObj.TryGetValue<Integer>('expirados', LExpirados) then LExpirados := 0;
-
-    // Atualiza os labels
-    // Se você tiver um label de "Total", pode colocar aqui.
-    // Como você só tem expirando, expirado e "Validos", fiz uma matemática simples:
-
-    lbInfoValido.Text     := IntToStr(LTotal - LExpirados);
-    lbInfoExpirando.Text  := IntToStr(LVencendo);
-    lbInfoExpirado.Text   := IntToStr(LExpirados);
-
-  finally
-    LJsonObj.Free;
-  end;
+    finally
+        LJsonObj.Free;
+    end;
 end;
 
 procedure TFrameMenuDashboard.PreencherListaAlertas(const AJsonString: string);
 var
-  LJsonArray: TJSONArray;
-  LItem: TJSONValue;
-  LFrameLinha: TFrameLinhaPlanilhaAlerta;
-  LDataISO, LId: string;
-  LDataValidade: TDateTime;
+    LJsonArray: TJSONArray;
+    LItem: TJSONValue;
+    LFrameLinha: TFrameLinhaPlanilhaAlerta;
+    LDataISO, LId: string;
+    LDataValidade: TDateTime;
 
-  // Função auxiliar interna para buscar dados com segurança
-  function GetSafeString(AObj: TJSONValue; const AKey: string; const ADefault: string = ''): string;
-  var
-    LVal: string;
-  begin
-    // TryGetValue não trava se a chave não existir ou for nula
-    if AObj.TryGetValue<string>(AKey, LVal) then
-      Result := LVal
-    else
-      Result := ADefault;
-  end;
+    function GetSafeString(AObj: TJSONValue; const AKey: string; const ADefault: string = ''): string;
+    var
+        LVal: string;
+    begin
+        if AObj.TryGetValue<string>(AKey, LVal) then
+          Result := LVal
+        else
+          Result := ADefault;
+    end;
 
 begin
-  if AJsonString.Trim.IsEmpty then
-    Exit;
+    if AJsonString.Trim.IsEmpty then
+      Exit;
 
-  while vscrollboxLinhaPlanilha.Content.ChildrenCount > 0 do
-    vscrollboxLinhaPlanilha.Content.Children[0].Free;
+    while vscrollboxLinhaPlanilha.Content.ChildrenCount > 0 do
+      vscrollboxLinhaPlanilha.Content.Children[0].Free;
 
-  LJsonArray := TJSONObject.ParseJSONValue(AJsonString) as TJSONArray;
+    LJsonArray := TJSONObject.ParseJSONValue(AJsonString) as TJSONArray;
 
-  if not Assigned(LJsonArray) then
-    Exit;
+    if not Assigned(LJsonArray) then
+      Exit;
 
-  vscrollboxLinhaPlanilha.BeginUpdate;
-  try
+    vscrollboxLinhaPlanilha.BeginUpdate;
     try
-      for LItem in LJsonArray do
-      begin
-        LFrameLinha := TFrameLinhaPlanilhaAlerta.Create(vscrollboxLinhaPlanilha);
-        LFrameLinha.Parent := vscrollboxLinhaPlanilha;
-        LFrameLinha.Align := TAlignLayout.Top;
-        LFrameLinha.Position.Y := 99999;
+        try
+            for LItem in LJsonArray do
+            begin
+                LFrameLinha := TFrameLinhaPlanilhaAlerta.Create(vscrollboxLinhaPlanilha);
+                LFrameLinha.Parent := vscrollboxLinhaPlanilha;
+                LFrameLinha.Align := TAlignLayout.Top;
+                LFrameLinha.Position.Y := 99999;
 
-        // Pega o ID com segurança. Se não vier, gera um provisório para não quebrar o Name do componente
-        LId := GetSafeString(LItem, '_id', TGUID.NewGuid.ToString.Replace('{','').Replace('}',''));
-        LFrameLinha.Name := 'FrameAlerta_' + LId;
+                LId := GetSafeString(LItem, '_id', TGUID.NewGuid.ToString.Replace('{','').Replace('}',''));
+                LFrameLinha.Name := 'FrameAlerta_' + LId;
 
-        // --- PREENCHIMENTO SEGURO DOS DADOS ---
-        // Se a chave não existir, ele vai usar o valor padrão que passamos no 3º parâmetro
-        LFrameLinha.lbInfoDoc.Text       := GetSafeString(LItem, 'nomeDocumento', 'Documento não informado');
-        LFrameLinha.lbInfoTipoDoc.Text   := GetSafeString(LItem, 'tipoDocumento', 'Não categorizado');
-        LFrameLinha.lbFuncMaq.Text       := GetSafeString(LItem, 'nomeFuncionario', 'Não informado');
-        LFrameLinha.lbFuncaoFuncMaq.Text := GetSafeString(LItem, 'funcaoFuncionario', '-'); // Padrão: '-'
+                LFrameLinha.FDocId := LId;
+                LFrameLinha.FNomeDoc := GetSafeString(LItem, 'nomeDocumento', 'Documento não informado');
+                LFrameLinha.FNomeEntidade := GetSafeString(LItem, 'nomeFuncionario', 'Não informado');
 
-        // --- TRATAMENTO SEGURO DA DATA ---
-        LDataISO := GetSafeString(LItem, 'dataValidade');
+                LFrameLinha.lbInfoDoc.Text := LFrameLinha.FNomeDoc;
 
-        if not LDataISO.IsEmpty then
-        begin
-          LDataValidade := ISO8601ToDate(LDataISO);
-          LFrameLinha.lbInfoVencimento.Text := DateToStr(LDataValidade);
-          LFrameLinha.TipoStatus(nil);
-        end
-        else
-        begin
-          LFrameLinha.lbInfoVencimento.Text := 'Sem Validade';
-          // Como não tem data, ele não vai chamar o TipoStatus.
-          // O visual ficará com as cores padrão que você desenhou no frame.
+                LFrameLinha.lbInfoDoc.Text       := GetSafeString(LItem, 'nomeDocumento', 'Documento não informado');
+                LFrameLinha.lbInfoTipoDoc.Text   := GetSafeString(LItem, 'tipoDocumento', 'Não categorizado');
+                LFrameLinha.lbFuncMaq.Text       := GetSafeString(LItem, 'nomeFuncionario', 'Não informado');
+                LFrameLinha.lbFuncaoFuncMaq.Text := GetSafeString(LItem, 'funcaoFuncionario', '-'); // Padrão: '-'
+
+                LDataISO := GetSafeString(LItem, 'dataValidade');
+
+                if not LDataISO.IsEmpty then
+                begin
+                    LDataValidade := ISO8601ToDate(LDataISO);
+                    LFrameLinha.lbInfoVencimento.Text := DateToStr(LDataValidade);
+                    LFrameLinha.TipoStatus(nil);
+                end
+                else
+                begin
+                    LFrameLinha.lbInfoVencimento.Text := 'Sem Validade';
+                end;
+            end;
+        except on E: Exception do
+            ShowMessage('Erro ao renderizar a lista: ' + E.Message);
         end;
-
-      end;
-    except on E: Exception do
-      ShowMessage('Erro ao renderizar a lista: ' + E.Message);
+    finally
+        vscrollboxLinhaPlanilha.EndUpdate;
+        LJsonArray.Free;
     end;
-  finally
-    vscrollboxLinhaPlanilha.EndUpdate;
-    LJsonArray.Free;
-  end;
 end;
 
 end.

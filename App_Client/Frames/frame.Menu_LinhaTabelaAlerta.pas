@@ -3,8 +3,9 @@ unit frame.Menu_LinhaTabelaAlerta;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Objects, FMX.Layouts, FMX.Controls.Presentation;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Objects, FMX.Layouts, FMX.Controls.Presentation;
 
 type
   TFrameLinhaPlanilhaAlerta = class(TFrame)
@@ -30,9 +31,15 @@ type
     recFundoLinha: TRectangle;
     recBtnDownload: TRectangle;
     pathDownload: TPath;
+    procedure recBtnVisualizarClick(Sender: TObject);
+    procedure recBtnDownloadClick(Sender: TObject);
   private
+    procedure BaixarArquivo(const ACaminhoDestino: string);
     { Private declarations }
   public
+    FDocId: string;
+    FNomeDoc: string;
+    FNomeEntidade: string;
     procedure TipoStatus(Sender: TObject);
     { Public declarations }
   end;
@@ -40,10 +47,108 @@ type
 implementation
 
 uses
-    uDesignSystem, System.DateUtils, System.Math;
+  uDesignSystem,
+  modal.VisualizarDocumento,
+  uParametros,
+  uLoading,
+  System.DateUtils,
+  System.Math,
+  System.IOUtils,
+  IdHTTP,
+  // --- BIBLIOTECAS PARA WINDOWS ---
+  {$IFDEF MSWINDOWS}
+    Winapi.ShellAPI,
+  {$ENDIF}
+  // --- BIBLIOTECAS PARA ANDROID ---
+  {$IFDEF ANDROID}
+    Androidapi.Helpers,
+    Androidapi.JNI.GraphicsContentViewText,
+    Androidapi.JNI.Net,
+  {$ENDIF}
+  FMX.frame.PopUpToast;
 
 {$R *.fmx}
 
+
+procedure TFrameLinhaPlanilhaAlerta.recBtnDownloadClick(Sender: TObject);
+var
+  SaveDialog: TSaveDialog;
+begin
+    {$IFDEF MSWINDOWS}
+    SaveDialog := TSaveDialog.Create(nil);
+    try
+        SaveDialog.Title := 'Salvar Documento';
+        SaveDialog.FileName := FNomeDoc + '.pdf';
+        SaveDialog.Filter := 'Arquivos PDF|*.pdf|Imagens PNG|*.png|Imagens JPG|*.jpg';
+
+        if SaveDialog.Execute then
+        begin
+            BaixarArquivo(SaveDialog.FileName);
+        end;
+    finally
+        SaveDialog.Free;
+    end;
+    {$ENDIF}
+
+    {$IFDEF ANDROID}
+    recBtnVisualizarClick(Sender);
+    {$ENDIF}
+end;
+
+procedure TFrameLinhaPlanilhaAlerta.BaixarArquivo(const ACaminhoDestino: string);
+begin
+    TLoading.Show(Self.Root.GetObject as TForm, 'Baixando arquivo...');
+
+    TThread.CreateAnonymousThread(
+        procedure
+        var
+          LHttp: TIdHTTP;
+          LFileStream: TFileStream;
+          LUrl: string;
+        begin
+            LUrl := EndPoint + '/documentos/' + FDocId + '/download?download=true';
+            LHttp := TIdHTTP.Create(nil);
+            LFileStream := TFileStream.Create(ACaminhoDestino, fmCreate);
+            try
+                try
+                    LHttp.Request.BasicAuthentication := True;
+                    LHttp.Request.Username := UserName;
+                    LHttp.Request.Password := Password;
+
+                    LHttp.Get(LUrl, LFileStream);
+
+                    TThread.Synchronize(nil, procedure
+                    begin
+                        TLoading.Hide;
+                        ShowMessage('Download concluído com sucesso!');
+                    end);
+                except
+                    on E: Exception do
+                    begin
+                        TThread.Synchronize(nil, procedure
+                        begin
+                            TLoading.Hide;
+                            ShowMessage('Erro ao baixar arquivo: ' + E.Message);
+                        end);
+                    end;
+                end;
+            finally
+                LFileStream.Free;
+                LHttp.Free;
+            end;
+        end).Start;
+end;
+
+procedure TFrameLinhaPlanilhaAlerta.recBtnVisualizarClick(Sender: TObject);
+var
+  LModal: TFrameVisualizarDocumento;
+begin
+    LModal := TFrameVisualizarDocumento.Create(Self.Root.GetObject as TForm);
+    LModal.Parent := Self.Root.GetObject as TForm;
+    LModal.Align := TAlignLayout.Contents;
+
+    LModal.AbrirModal(FDocId, FNomeDoc, FNomeEntidade);
+end;
 
 procedure TFrameLinhaPlanilhaAlerta.TipoStatus(Sender: TObject);
 var

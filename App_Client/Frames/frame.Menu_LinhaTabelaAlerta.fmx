@@ -297,6 +297,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Stroke.Thickness = 0.000000000000000000
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
+          OnClick = recBtnVisualizarClick
           object lbBtnVisualizar: TLabel
             Align = Client
             StyledSettings = [Size]
@@ -327,6 +328,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Stroke.Thickness = 0.000000000000000000
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
+          OnClick = recBtnDownloadClick
           object pathDownload: TPath
             Align = Client
             Data.Path = {

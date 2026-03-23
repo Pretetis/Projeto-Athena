@@ -383,6 +383,12 @@
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="Modulos\uCatalogos.pas"/>
+        <DCCReference Include="Modais\modal.VisualizarDocumento.pas">
+            <Form>FrameVisualizarDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -4,7 +4,15 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const { Readable } = require('stream');
 const Documento = require('./models/Documento');
+const Funcionario = require('./models/Funcionario'); 
+const Maquina = require('./models/Maquina');
+const Empresa = require('./models/Empresa');
 const iniciarAutomacoes = require('./services/cron'); 
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const app = express();
 app.use(express.json());
@@ -47,43 +55,50 @@ iniciarAutomacoes();
 // 1. CADASTRAR DOCUMENTO (UPLOAD)
 app.post('/documentos', upload.single('pdf'), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send('Arquivo não enviado.');
+
+    if (!req.file) return res.status(400).send('Arquivo não recebido.');
+    if (!req.body.dados) return res.status(400).send('Campo dados não recebido.');
+
+    let dados;
+    try {
+      dados = JSON.parse(req.body.dados);
+    } catch (e) {
+      return res.status(400).send('JSON inválido: ' + e.message);
+    }
+
+    const { entidadeId, entidadeTipo, tipoDocumento, nomeDocumento, dataValidade } = dados;
+
+    if (!entidadeId) return res.status(400).send('entidadeId obrigatório.');
 
     const fileName = `${Date.now()}-athena-${req.file.originalname}`;
-
     const uploadStream = gfsBucket.openUploadStream(fileName, {
-        contentType: req.file.mimetype
+      metadata: { contentType: req.file.mimetype } 
     });
 
     const bufferStream = new Readable();
     bufferStream.push(req.file.buffer);
-    bufferStream.push(null); 
-
+    bufferStream.push(null);
     bufferStream.pipe(uploadStream);
 
     uploadStream.on('finish', async () => {
       try {
         const novoDoc = new Documento({
-          nomeDocumento: req.body.nomeDocumento,
-          entidadeId: req.body.entidadeId,
-          entidadeTipo: req.body.entidadeTipo,
-          tipoDocumento: req.body.tipoDocumento,
-          dataValidade: req.body.dataValidade,
-          fileId: uploadStream.id 
+          nomeDocumento,
+          entidadeId,
+          entidadeTipo,
+          tipoDocumento,
+          dataValidade,
+          fileId: uploadStream.id
         });
-
         await novoDoc.save();
-        res.status(201).json({ 
-            mensagem: 'Sucesso! PDF salvo no Atlas manualmente.',
-            fileId: uploadStream.id 
-        });
+        res.status(201).json({ mensagem: 'Documento salvo com sucesso!', fileId: uploadStream.id });
       } catch (saveErr) {
         res.status(500).send('Erro ao salvar metadados: ' + saveErr.message);
       }
     });
 
     uploadStream.on('error', (err) => {
-      res.status(500).send('Erro no upload para o GridFS: ' + err.message);
+      res.status(500).send('Erro no GridFS: ' + err.message);
     });
 
   } catch (err) {
@@ -107,7 +122,7 @@ app.get('/alertas/documentos-a-vencer', async (req, res) => {
       },
       {
         $lookup: {
-          from: 'funcionarios', // <-- AQUI ESTÁ O SEGREDO DO "JOIN"
+          from: 'funcionarios',
           localField: 'entidadeId',
           foreignField: '_id',
           as: 'dadosFuncionario'
@@ -185,30 +200,127 @@ app.get('/documentos/:id/dados', async (req, res) => {
 });
 
 // 6. ROTA DE DOWNLOAD DO PDF
+// 6. ROTA DE DOWNLOAD / VISUALIZAÇÃO
 app.get('/documentos/:id/download', async (req, res) => {
   try {
     const doc = await Documento.findById(req.params.id);
     if (!doc || !doc.fileId) return res.status(404).send('Registro não encontrado.');
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'x-documento-id': doc._id.toString(),
-      'x-entidade-id': doc.entidadeId.toString(),
-      'x-tipo-documento': encodeURIComponent(doc.tipoDocumento || 'Sem Tipo'),
-      'x-data-validade': doc.dataValidade ? doc.dataValidade.toISOString() : '',
-      'Content-Disposition': `attachment; filename="athena_doc_${doc._id}.pdf"`
-    });
-
-    // Garante que é um ObjectId antes de passar para o GridFS
     const fileId = new mongoose.Types.ObjectId(doc.fileId);
+
+    // Busca os metadados no GridFS para saber o formato real
+    const files = await gfsBucket.find({ _id: fileId }).toArray();
+    const contentType = files.length > 0 ? files[0].contentType : 'application/pdf';
+
+    // Define a extensão dinamicamente para o Windows não se perder
+    let ext = '.pdf';
+    if (contentType === 'image/jpeg') ext = '.jpg';
+    else if (contentType === 'image/png') ext = '.png';
+
+    const isDownload = req.query.download === 'true';
+    const disposition = isDownload ? 'attachment' : 'inline';
+
+    res.set({
+      'Content-Type': contentType,
+      // O Segredo para o IE/Windows não falhar no download dinâmico:
+      'Cache-Control': 'private, max-age=3600', 
+      'x-documento-id': doc._id.toString(),
+      'Content-Disposition': `${disposition}; filename="athena_doc_${doc._id}${ext}"`
+    });
+    
     const downloadStream = gfsBucket.openDownloadStream(fileId);
-    
     downloadStream.on('error', () => res.status(404).send('Arquivo físico não encontrado.'));
-    
     downloadStream.pipe(res);
 
   } catch (err) {
     res.status(500).send(err.message);
+  }
+});
+
+// 6.5 ROTA DE PREVIEW (Imagem para o TImageViewer)
+// ROTA DE PREVIEW (Imagem para o TImageViewer do Delphi)
+app.get('/documentos/:id/preview', async (req, res) => {
+  try {
+    // 1. Captura a página solicitada (ex: ?page=2). Padrão é 1.
+    const page = parseInt(req.query.page) || 1;
+
+    // 2. Busca o registro do documento no MongoDB
+    const doc = await Documento.findById(req.params.id);
+    if (!doc || !doc.fileId) {
+      return res.status(404).send('Registro não encontrado no banco de dados.');
+    }
+
+    // 3. Busca os metadados do arquivo físico no GridFS
+    const fileId = new mongoose.Types.ObjectId(doc.fileId);
+    const files = await gfsBucket.find({ _id: fileId }).toArray();
+    if (files.length === 0) {
+      return res.status(404).send('Arquivo físico não encontrado no Storage.');
+    }
+
+    // 4. Identifica o tipo do arquivo (Lógica "salva-vidas")
+    let contentType = files[0].contentType || (files[0].metadata && files[0].metadata.contentType);
+    if (!contentType) {
+      const isPdf = files[0].filename.toLowerCase().endsWith('.pdf');
+      contentType = isPdf ? 'application/pdf' : 'image/jpeg';
+    }
+
+    // 5. SE FOR IMAGEM: Retorna o arquivo original diretamente
+    if (contentType.startsWith('image/')) {
+      res.set('Content-Type', contentType);
+      return gfsBucket.openDownloadStream(fileId).pipe(res);
+    }
+
+    // 6. SE FOR PDF: Converte a página solicitada usando Poppler
+    if (contentType === 'application/pdf') {
+      // Caminhos temporários (Windows usa os.tmpdir())
+      const tempPdfPath = path.join(os.tmpdir(), `athena_temp_${doc._id}.pdf`);
+      const tempImgPrefix = path.join(os.tmpdir(), `athena_prev_${doc._id}_pg${page}`);
+      
+      const writeStream = fs.createWriteStream(tempPdfPath);
+      gfsBucket.openDownloadStream(fileId).pipe(writeStream);
+
+      writeStream.on('finish', async () => {
+        try {
+          // Executa o Poppler: 
+          // -f/-l define a página inicial/final (mesma página para pegar só uma)
+          // -singlefile evita que o Poppler coloque sufixos como -1, -2 no nome do arquivo
+          await exec(`pdftoppm -jpeg -f ${page} -l ${page} -scale-to 1024 -singlefile "${tempPdfPath}" "${tempImgPrefix}"`);
+          
+          const imgResultPath = `${tempImgPrefix}.jpg`; 
+          
+          if (fs.existsSync(imgResultPath)) {
+            res.set('Content-Type', 'image/jpeg');
+            const readStream = fs.createReadStream(imgResultPath);
+            readStream.pipe(res);
+            
+            // Limpeza de arquivos temporários após o envio
+            readStream.on('end', () => {
+              try {
+                if (fs.existsSync(tempPdfPath)) fs.unlinkSync(tempPdfPath);
+                if (fs.existsSync(imgResultPath)) fs.unlinkSync(imgResultPath);
+              } catch (err) {
+                console.error('Erro ao deletar temporários:', err.message);
+              }
+            });
+          } else {
+            res.status(500).send('Erro: O Poppler não gerou a imagem desta página.');
+          }
+        } catch (cmdErr) {
+          console.error('Erro no Poppler:', cmdErr.message);
+          res.status(500).send('Erro no processamento do PDF (pdftoppm).');
+        }
+      });
+
+      writeStream.on('error', (err) => {
+        res.status(500).send('Erro ao baixar PDF para conversão: ' + err.message);
+      });
+    } else {
+      res.status(400).send('Formato de arquivo não suportado para visualização.');
+    }
+
+  } catch (err) {
+    console.error('Erro na rota de preview:', err.message);
+    res.status(500).send('Erro interno do servidor: ' + err.message);
   }
 });
 
@@ -305,66 +417,138 @@ app.get('/documentos/resumo/status', async (req, res) => {
 });
 
 // 11. ROTA DE PESQUISA AVANÇADA DE DOCUMENTOS
+// 11. ROTA DE PESQUISA AVANÇADA DE DOCUMENTOS
 app.get('/documentos/pesquisa', async (req, res) => {
   try {
     const { busca, status, ativo } = req.query;
-    
-    // Usar $and explícito garante que o MongoDB avalie tudo em conjunto
-    // sem ignorar o bloco $or dos status.
-    const query = { $and: [] };
 
-    // 1. Filtro Ativo/Inativo
+    // --- 1. MATCH INICIAL (Filtros de Performance) ---
+    const matchInicial = { $and: [] };
+
     if (ativo) {
-      // O .trim() salva a vida caso o Delphi mande "true, false" com espaço
       const ativoArray = ativo.split(',').map(a => a.trim());
       const ativoBools = [];
-      
-      if (ativoArray.includes('true')) ativoBools.push(true);
+      if (ativoArray.includes('true'))  ativoBools.push(true);
       if (ativoArray.includes('false')) ativoBools.push(false);
-
-      if (ativoBools.length > 0) {
-        query.$and.push({ ativo: { $in: ativoBools } });
-      }
+      if (ativoBools.length > 0)
+        matchInicial.$and.push({ ativo: { $in: ativoBools } });
     }
 
-    // 2. Filtro de Busca (Texto parcial)
-    if (busca) {
-      query.$and.push({ nomeDocumento: { $regex: busca, $options: 'i' } });
-    }
-
-    // 3. Filtro de Validade
     if (status) {
       const statusArray = status.split(',').map(s => s.trim().toLowerCase());
       const orConditions = [];
-
       const hoje = new Date();
       const trintaDias = new Date();
       trintaDias.setDate(hoje.getDate() + 30);
 
-      // Agrupa as opções marcadas
-      if (statusArray.includes('valido')) {
+      if (statusArray.includes('valido'))
         orConditions.push({ dataValidade: { $gte: trintaDias } });
-      }
-      if (statusArray.includes('a_expirar')) {
+      if (statusArray.includes('a_expirar'))
         orConditions.push({ dataValidade: { $gte: hoje, $lt: trintaDias } });
-      }
-      if (statusArray.includes('expirado')) {
+      if (statusArray.includes('expirado'))
         orConditions.push({ dataValidade: { $lt: hoje } });
-      }
 
-      // Injeta o bloco $or apenas se houver filtros de status válidos
-      if (orConditions.length > 0) {
-        query.$and.push({ $or: orConditions });
-      }
+      if (orConditions.length > 0)
+        matchInicial.$and.push({ $or: orConditions });
     }
 
-    // Se houver condições no array, usa a query. Se não, passa vazio para trazer a coleção toda.
-    const finalQuery = query.$and.length > 0 ? query : {};
+    const queryPrimeiroEstagio = matchInicial.$and.length > 0 ? matchInicial : {};
 
-    // DICA: Se quiser ver exatamente o que o Node está buscando, tire o comentário da linha abaixo:
-    // console.log("Query executada:", JSON.stringify(finalQuery, null, 2));
+    // --- 2. CONSTRUINDO O PIPELINE ---
+    const pipeline = [
+      // Filtra ativos e validade primeiro
+      { $match: queryPrimeiroEstagio },
 
-    const docs = await Documento.find(finalQuery).sort({ dataValidade: 1 });
+      // Faz os Joins
+      { $lookup: { from: 'funcionarios', localField: 'entidadeId', foreignField: '_id', as: '_joinFuncionario' } },
+      { $lookup: { from: 'maquinas', localField: 'entidadeId', foreignField: '_id', as: '_joinMaquina' } },
+      { $lookup: { from: 'empresas', localField: 'entidadeId', foreignField: '_id', as: '_joinEmpresa' } },
+
+      // Monta o nome da Entidade com base no tipo
+      {
+        $addFields: {
+          nomeEntidade: {
+            $switch: {
+              branches: [
+                { case: { $eq: ['$entidadeTipo', 'funcionario'] }, then: { $arrayElemAt: ['$_joinFuncionario.nome', 0] } },
+                { case: { $eq: ['$entidadeTipo', 'maquina'] }, then: { $arrayElemAt: ['$_joinMaquina.nome', 0] } },
+                { case: { $eq: ['$entidadeTipo', 'empresa'] }, then: { $arrayElemAt: ['$_joinEmpresa.razaoSocial', 0] } }
+              ],
+              default: null
+            }
+          },
+          funcaoFuncionario: {
+            $cond: {
+              if: { $eq: ['$entidadeTipo', 'funcionario'] },
+              then: { $arrayElemAt: ['$_joinFuncionario.funcao', 0] },
+              else: null
+            } 
+          }
+        }
+      }
+    ];
+
+    // --- 3. FILTRO DE BUSCA (APÓS OS JOINS) ---
+    // Agora que temos o nomeEntidade, podemos pesquisar nele!
+    if (busca) {
+      pipeline.push({
+        $match: {
+          $or: [
+            { nomeDocumento: { $regex: busca, $options: 'i' } },
+            { nomeEntidade: { $regex: busca, $options: 'i' } }
+          ]
+        }
+      });
+    }
+
+    // --- 4. LIMPEZA E ORDENAÇÃO ---
+    pipeline.push({
+      $project: {
+        _joinFuncionario: 0,
+        _joinMaquina: 0,
+        _joinEmpresa: 0
+      }
+    });
+    
+    pipeline.push({ $sort: { dataValidade: 1 } });
+
+    const docs = await Documento.aggregate(pipeline);
+    res.json(docs);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// LOOKUP: Funcionários ativos
+app.get('/funcionarios/lookup', async (req, res) => {
+  try {
+    const docs = await Funcionario
+      .find({ ativo: true }, { _id: 1, nome: 1 })
+      .sort({ nome: 1 });
+    res.json(docs);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// LOOKUP: Máquinas ativas
+app.get('/maquinas/lookup', async (req, res) => {
+  try {
+    const docs = await Maquina
+      .find({ ativo: true }, { _id: 1, nome: 1 })
+      .sort({ nome: 1 });
+    res.json(docs);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// LOOKUP: Empresas ativas
+app.get('/empresas/lookup', async (req, res) => {
+  try {
+    const docs = await Empresa
+      .find({ ativo: true }, { _id: 1, razaoSocial: 1 })
+      .sort({ razaoSocial: 1 });
     res.json(docs);
   } catch (err) {
     res.status(500).send(err.message);
