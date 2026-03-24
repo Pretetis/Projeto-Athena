@@ -4,13 +4,14 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts;
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, uRequests;
 
 type
   TFrameLinhaPlanilhaDocumento = class(TFrame)
     gplCabecalhoPlanilhaAlerta: TGridPanelLayout;
-    recBtnCancelarDoc: TRectangle;
-    pathCancelar: TPath;
+    recBtnAlterarDoc: TRectangle;
+    pathBtnAlterar: TPath;
     recLinhaDoc: TLayout;
     lbInfoDoc: TLabel;
     lbInfoTipoDoc: TLabel;
@@ -29,33 +30,37 @@ type
     lbBtnVisualizar: TLabel;
     recBtnDownload: TRectangle;
     pathDownload: TPath;
+    recFundoLinha: TRectangle;
     procedure FrameResize(Sender: TObject);
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recBtnDownloadClick(Sender: TObject);
+    procedure recBtnAlterarDocClick(Sender: TObject);
   private
     procedure BaixarArquivo(const ACaminhoDestino: string);
-
     { Private declarations }
   public
     FDocId: string;
     FNomeDoc: string;
     FNomeEntidade: string;
+    FAtivo: Boolean;
+    FEntidadeId: string;
     procedure TipoStatus(Sender: TObject);
     procedure CarregarDados(ANomeDoc, ATipoDoc, AFuncMaq, AVencimento: string);
+    procedure TipoAtivo(Sender: TObject);
     { Public declarations }
   end;
 
 implementation
 
 uses
-  uDesignSystem,
-  modal.VisualizarDocumento,
-  uParametros,
+  uDesignSystem, modal.VisualizarDocumento, uParametros,
   uLoading,
   System.DateUtils,
   System.Math,
   System.IOUtils,
   IdHTTP,
+  modal.AlterarDocumento,
+  frame.Documentos,
   // --- BIBLIOTECAS PARA WINDOWS ---
   {$IFDEF MSWINDOWS}
     Winapi.ShellAPI,
@@ -72,9 +77,35 @@ uses
 
 procedure TFrameLinhaPlanilhaDocumento.FrameResize(Sender: TObject);
 var
-  LWidthTotal: Single;
+    LWidthTotal: Single;
 begin
-  LWidthTotal := Self.Width;
+    LWidthTotal := Self.Width;
+end;
+
+procedure TFrameLinhaPlanilhaDocumento.recBtnAlterarDocClick(Sender: TObject);
+var
+    LModal: TFrameAlterarDocumento;
+begin
+    LModal := TFrameAlterarDocumento.Create(Self.Root.GetObject as TForm);
+    LModal.Parent := Self.Root.GetObject as TForm;
+    LModal.Align := TAlignLayout.Contents;
+    LModal.BringToFront;
+
+    LModal.AbrirModal(
+        FDocId,
+        lbInfoDoc.Text,
+        lbInfoTipoDoc.Text,
+        FEntidadeId,
+        lbFuncMaq.Text,
+        'funcionario',
+        lbInfoVencimento.Text,
+        FAtivo,
+        procedure
+        begin
+            if Self.Owner is TFrameDocumentos then
+                TFrameDocumentos(Self.Owner).BuscarDados;
+        end
+    );
 end;
 
 procedure TFrameLinhaPlanilhaDocumento.recBtnDownloadClick(Sender: TObject);
@@ -124,7 +155,7 @@ begin
 
                     LHttp.Get(LUrl, LFileStream);
 
-                    TThread.Synchronize(nil, procedure
+                    TThread.Synchronize(nil, procedure ()
                     begin
                         TLoading.Hide;
                         ShowMessage('Download concluído com sucesso!');
@@ -132,7 +163,7 @@ begin
                 except
                     on E: Exception do
                     begin
-                        TThread.Synchronize(nil, procedure
+                        TThread.Synchronize(nil, procedure ()
                         begin
                             TLoading.Hide;
                             ShowMessage('Erro ao baixar arquivo: ' + E.Message);
@@ -174,7 +205,7 @@ begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Green400;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Green100;
         pathStatus.Stroke.Color         := TThemeColors.Green800;
-        pathStatus.Data.Data            := TThemeIcons.Expirando;
+        pathStatus.Data.Data            := TThemeIcons.Valido;
     end
 
     // --- LÓGICA: A EXPIRAR (FUTURO) ---
@@ -198,17 +229,39 @@ end;
 
 procedure TFrameLinhaPlanilhaDocumento.CarregarDados(ANomeDoc, ATipoDoc, AFuncMaq, AVencimento: string);
 begin
-  lbInfoDoc.Text := ANomeDoc;
-  lbInfoTipoDoc.Text := ATipoDoc;
-  lbFuncMaq.Text := AFuncMaq;
+    lbInfoDoc.Text := ANomeDoc;
+    lbInfoTipoDoc.Text := ATipoDoc;
+    lbFuncMaq.Text := AFuncMaq;
 
-  try
-    lbInfoVencimento.Text := FormatDateTime('dd/mm/yyyy', ISO8601ToDate(AVencimento));
-  except
-    lbInfoVencimento.Text := AVencimento; // Fallback se não vier no formato ISO
-  end;
+    try
+        lbInfoVencimento.Text := FormatDateTime('dd/mm/yyyy', ISO8601ToDate(AVencimento));
+    except
+        lbInfoVencimento.Text := AVencimento;
+    end;
 
-  TipoStatus(Self);
+    TipoStatus(Self);
 end;
+
+procedure TFrameLinhaPlanilhaDocumento.TipoAtivo(Sender: TObject);
+begin
+//    // --- LÓGICA: ATIVO ---
+//    if fAtivo then
+//    begin
+//        recBtnCancelarDoc.Stroke.Color := TThemeColors.Red500;
+//        recBtnCancelarDoc.Fill.Color   := TThemeColors.Red100;
+//        pathCancelar.Stroke.Color      := TThemeColors.Red600;
+//        pathCancelar.Data.Data         := TThemeIcons.Cancelar;
+//    end
+//
+//    // --- LÓGICA: DESATIVADO ---
+//    else
+//    begin
+//        recBtnCancelarDoc.Stroke.Color := TThemeColors.Yellow500;
+//        recBtnCancelarDoc.Fill.Color   := TThemeColors.Yellow100;
+//        pathCancelar.Stroke.Color      := TThemeColors.Yellow800;
+//        pathCancelar.Data.Data         := TThemeIcons.Dots;
+//    end
+end;
+
 
 end.

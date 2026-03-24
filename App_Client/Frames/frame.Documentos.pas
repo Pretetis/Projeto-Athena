@@ -32,8 +32,8 @@ type
     lbVisualizar: TLabel;
     recFiltroDados: TRectangle;
     ShadowEffect2: TShadowEffect;
-    Rectangle2: TRectangle;
-    Label1: TLabel;
+    recCabecalhoEditar: TRectangle;
+    lbCabecalhoEditar: TLabel;
     recBuscaDocumentos: TRectangle;
     layBotoesFiltro: TLayout;
     GridPanelLayout1: TGridPanelLayout;
@@ -67,6 +67,10 @@ type
     lbTituloPlanilhaAlerta: TLabel;
     tmrBusca: TTimer;
     vscrollboxLinhaPlanilha: TVertScrollBox;
+    recBtnTodosStatus: TRectangle;
+    lbBtnTodosStatus: TLabel;
+    recBtnTodosativosDesa: TRectangle;
+    lbBtnTodosativosDesa: TLabel;
 
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
@@ -76,8 +80,6 @@ type
 
   private
     FReq: TModuloRequest;
-    FStatusFiltro: string;
-    FAtivoFiltro: string;
 
     procedure RequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
     procedure LimparTabela;
@@ -99,31 +101,180 @@ uses
 constructor TFrameDocumentos.Create(AOwner: TComponent);
 begin
     inherited;
-    FStatusFiltro := '';
-    FAtivoFiltro := 'true';
+
+    // Inicia com "Ativos" (Verde)
+    recBtnAtivos.Tag := 1;
+    recBtnAtivos.Fill.Color := TThemeColors.Green100;
+    recBtnAtivos.Fill.Kind := TBrushKind.Solid;
+    recBtnAtivos.Stroke.Color := TThemeColors.Green400;
+    lbBtnAtivos.StyledSettings := lbBtnAtivos.StyledSettings - [TStyledSetting.FontColor];
+    lbBtnAtivos.TextSettings.FontColor := TThemeColors.Green800;
+
+    // Inicia com "Válidos" (Verde)
+    recBtnValidos.Tag := 1;
+    recBtnValidos.Fill.Color := TThemeColors.Green100;
+    recBtnValidos.Fill.Kind := TBrushKind.Solid;
+    recBtnValidos.Stroke.Color := TThemeColors.Green400;
+    lbBtnValidos.StyledSettings := lbBtnValidos.StyledSettings - [TStyledSetting.FontColor];
+    lbBtnValidos.TextSettings.FontColor := TThemeColors.Green800;
+
+    BuscarDados;
 end;
 
 procedure TFrameDocumentos.BtnFiltroClick(Sender: TObject);
 var
     Rec: TRectangle;
+
+    // Descobre qual Label pertence a qual Botão
+    function GetLabel(ABotao: TRectangle): TLabel;
+    begin
+        if ABotao = recBtnValidos then Result := lbBtnValidos
+        else if ABotao = recBtnAExpirar then Result := lbBtnAExpirar
+        else if ABotao = recBtnExpirados then Result := lbBtnExpirados
+        else if ABotao = recBtnAtivos then Result := lbBtnAtivos
+        else if ABotao = recBtnDesativados then Result := lbBtnDesativados
+        else if ABotao = recBtnTodosStatus then Result := lbBtnTodosStatus
+        else if ABotao = recBtnTodosativosDesa then Result := lbBtnTodosativosDesa
+        else Result := nil;
+    end;
+
+    // Função interna para desligar um botão (Cor Cinza)
+    procedure DesligarBotao(ABotao: TRectangle);
+    var
+        L: TLabel;
+    begin
+        ABotao.Tag := 0;
+        ABotao.Fill.Color := TThemeColors.Slate50;
+        ABotao.Stroke.Color := TThemeColors.Slate500;
+
+        L := GetLabel(ABotao);
+        if Assigned(L) then
+        begin
+            L.StyledSettings := L.StyledSettings - [TStyledSetting.FontColor];
+            L.TextSettings.FontColor := $F064748B;
+        end;
+    end;
+
+    // Função interna inteligente para ligar um botão com a cor correta
+    procedure LigarBotao(ABotao: TRectangle);
+    var
+        L: TLabel;
+    begin
+        ABotao.Tag := 1;
+        ABotao.Fill.Kind := TBrushKind.Solid;
+        L := GetLabel(ABotao);
+
+        if Assigned(L) then
+            L.StyledSettings := L.StyledSettings - [TStyledSetting.FontColor];
+
+        // 1. Cores Validade
+        if ABotao = recBtnValidos then
+        begin
+            ABotao.Fill.Color := TThemeColors.Green100;
+            ABotao.Stroke.Color := TThemeColors.Green400;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Green800;
+        end
+        else if ABotao = recBtnAExpirar then
+        begin
+            ABotao.Fill.Color := TThemeColors.Yellow100;
+            ABotao.Stroke.Color := TThemeColors.Yellow500;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Yellow800;
+        end
+        else if ABotao = recBtnExpirados then
+        begin
+            ABotao.Fill.Color := TThemeColors.Red100;
+            ABotao.Stroke.Color := TThemeColors.Red500;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Red800;
+        end
+
+        // 2. Cores Atividade
+        else if ABotao = recBtnAtivos then
+        begin
+            ABotao.Fill.Color := TThemeColors.Green100;
+            ABotao.Stroke.Color := TThemeColors.Green400;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Green800;
+        end
+        else if ABotao = recBtnDesativados then
+        begin
+            ABotao.Fill.Color := TThemeColors.Slate200;
+            ABotao.Stroke.Color := TThemeColors.Slate500;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Slate800;
+        end
+
+        // 3. Botões "Todos" (Azul/Indigo)
+        else
+        begin
+            ABotao.Fill.Color := TThemeColors.Indigo100;
+            ABotao.Stroke.Color := TThemeColors.Indigo600;
+            if Assigned(L) then L.TextSettings.FontColor := TThemeColors.Indigo700;
+        end;
+    end;
+
 begin
     if not (Sender is TRectangle) then Exit;
     Rec := TRectangle(Sender);
 
-    if Rec.Tag = 0 then
+    // --- GRUPO 1: ATIVIDADE (Apenas um selecionado por vez) ---
+    if (Rec = recBtnAtivos) or (Rec = recBtnDesativados) or (Rec = recBtnTodosativosDesa) then
     begin
-        Rec.Tag := 1;
-        Rec.Fill.Color := TThemeColors.Indigo100;
-        Rec.Fill.Kind := TBrushKind.Solid;
-        Rec.Stroke.Color := TThemeColors.Indigo600;
+        // Se já está ligado, ignora para não ficar vazio
+        if Rec.Tag = 1 then Exit;
+
+        LigarBotao(Rec);
+        if Rec <> recBtnAtivos then DesligarBotao(recBtnAtivos);
+        if Rec <> recBtnDesativados then DesligarBotao(recBtnDesativados);
+        if Rec <> recBtnTodosativosDesa then DesligarBotao(recBtnTodosativosDesa);
     end
-    else
+
+    // --- GRUPO 2: VALIDADE (Múltipla Seleção com Inteligência) ---
+    else if (Rec = recBtnValidos) or (Rec = recBtnAExpirar) or (Rec = recBtnExpirados) or (Rec = recBtnTodosStatus) then
     begin
-        Rec.Tag := 0;
-        Rec.Fill.Kind := TBrushKind.None;
-        Rec.Stroke.Color := TThemeColors.Slate300;
+        if Rec = recBtnTodosStatus then
+        begin
+            // Clicou no "Todos". Só processa se estava desligado.
+            if Rec.Tag = 1 then Exit;
+
+            LigarBotao(Rec);
+            DesligarBotao(recBtnValidos);
+            DesligarBotao(recBtnAExpirar);
+            DesligarBotao(recBtnExpirados);
+        end
+        else
+        begin
+            // Clicou em um botão do Trio (Válidos, A Expirar, Expirados)
+            if Rec.Tag = 1 then
+            begin
+                // Se já estava ligado, ele quer desligar
+                DesligarBotao(Rec);
+
+                // Regra Anti-Vazio: Se ao desligar este, todos do trio ficaram desligados, liga o "Todos" automaticamente!
+                if (recBtnValidos.Tag = 0) and (recBtnAExpirar.Tag = 0) and (recBtnExpirados.Tag = 0) then
+                    LigarBotao(recBtnTodosStatus);
+            end
+            else
+            begin
+                // Estava desligado, então liga
+                LigarBotao(Rec);
+
+                // NOVA REGRA: Verifica se, ao ligar este botão, os 3 acabaram ficando ligados
+                if (recBtnValidos.Tag = 1) and (recBtnAExpirar.Tag = 1) and (recBtnExpirados.Tag = 1) then
+                begin
+                    // Se os 3 estão ligados, limpa o trio e acende apenas o "Todos"
+                    DesligarBotao(recBtnValidos);
+                    DesligarBotao(recBtnAExpirar);
+                    DesligarBotao(recBtnExpirados);
+                    LigarBotao(recBtnTodosStatus);
+                end
+                else
+                begin
+                    // Se não formou o trio completo, apenas garante que o "Todos" fique desligado
+                    DesligarBotao(recBtnTodosStatus);
+                end;
+            end;
+        end;
     end;
 
+    // Chama a API com a nova formação
     BuscarDados;
 end;
 
@@ -131,25 +282,30 @@ procedure TFrameDocumentos.BuscarDados;
 var
   LStatusParam, LAtivoParam: string;
 begin
+    // --- LÓGICA DO GRUPO VALIDADE (MÚLTIPLA SELEÇÃO) ---
     LStatusParam := '';
-    if recBtnValidos.Tag = 1 then LStatusParam := LStatusParam + 'valido,';
-    if recBtnAExpirar.Tag = 1 then LStatusParam := LStatusParam + 'a_expirar,';
-    if recBtnExpirados.Tag = 1 then LStatusParam := LStatusParam + 'expirado,';
 
-    if LStatusParam <> '' then
-        SetLength(LStatusParam, Length(LStatusParam) - 1);
+    // Se a flag "Todos" estiver Tag=0, quer dizer que temos que ler o Trio
+    if recBtnTodosStatus.Tag = 0 then
+    begin
+        if recBtnValidos.Tag = 1 then LStatusParam := LStatusParam + 'valido,';
+        if recBtnAExpirar.Tag = 1 then LStatusParam := LStatusParam + 'a_expirar,';
+        if recBtnExpirados.Tag = 1 then LStatusParam := LStatusParam + 'expirado,';
 
-    LAtivoParam := '';
-    if recBtnAtivos.Tag = 1 then LAtivoParam := LAtivoParam + 'true,';
-    if recBtnDesativados.Tag = 1 then LAtivoParam := LAtivoParam + 'false,';
+        // Tira a última vírgula da string
+        if LStatusParam <> '' then
+            SetLength(LStatusParam, Length(LStatusParam) - 1);
+    end;
 
-    if LAtivoParam <> '' then
-        SetLength(LAtivoParam, Length(LAtivoParam) - 1);
+    // --- LÓGICA DO GRUPO ATIVIDADE (ÚNICA SELEÇÃO) ---
+    LAtivoParam := ''; // Por padrão, vazio atende o "TodosativosDesa"
+    if recBtnAtivos.Tag = 1 then LAtivoParam := 'true'
+    else if recBtnDesativados.Tag = 1 then LAtivoParam := 'false';
 
+    // Envia a requisição
     FReq := TModuloRequest.Create(nil, RequestResult);
     FReq.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
 end;
-
 procedure TFrameDocumentos.edtBuscaDocumentosChange(Sender: TObject);
 begin
     tmrBusca.Enabled := False;
@@ -224,8 +380,10 @@ begin
 
                             // 2. SEGUNDO: Atribui os valores às propriedades do Frame criado
                             LFrame.FDocId := LJsonObj.GetValue<string>('_id');
+                            LFrame.FEntidadeId := LJsonObj.GetValue<string>('entidadeId', '');
                             LFrame.FNomeDoc := LJsonObj.GetValue<string>('nomeDocumento', 'Sem Nome');
                             LFrame.FNomeEntidade := LJsonObj.GetValue<string>('nomeEntidade', 'Não informado');
+                            LFrame.FAtivo := LJsonObj.GetValue<Boolean>('ativo', True);
 
                             // 3. TERCEIRO: Configurações visuais e de posicionamento
                             LFrame.Name := '';
@@ -235,6 +393,7 @@ begin
                             LFrame.Position.Y := 99999;
 
                             LFrame.CarregarDados(LTitulo, LTipo, LNome, LValidade);
+                            LFrame.TipoAtivo(LFrame);
                         end;
                     finally
                         vscrollboxLinhaPlanilha.EndUpdate;

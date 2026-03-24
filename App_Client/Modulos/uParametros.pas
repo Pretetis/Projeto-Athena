@@ -39,6 +39,8 @@ const
     userName = ' ';
     password = ' ';
 
+
+
   endPoint       = 'http://localhost:3000';  //Testes Computador DEV
 
 //    endPoint       = '';   //produção
@@ -48,6 +50,7 @@ implementation
 
 initialization
   ListaAlarmesIgnorados := TList<Integer>.Create;
+  mUsuario := 'Felipe';
 finalization
   ListaAlarmesIgnorados.Free;
 

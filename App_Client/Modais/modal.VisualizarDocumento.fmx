@@ -213,12 +213,26 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
             Size.PlatformDefault = False
             TabOrder = 0
             OnClick = layAnteriorClick
-            object Rectangle2: TRectangle
-              Align = Client
+            object cirAnterior: TCircle
+              Align = Center
+              Fill.Kind = None
               HitTest = False
-              Size.Width = 66.599998474121090000
-              Size.Height = 50.000000000000000000
+              Size.Width = 45.000000000000000000
+              Size.Height = 45.000000000000000000
               Size.PlatformDefault = False
+              Stroke.Thickness = 1.500000000000000000
+              object pathAnterior: TPath
+                Align = Client
+                Data.Path = {
+                  05000000000000000000000000000000000000000000C0410000C04100000000
+                  000010410000904101000000000070410000404101000000000010410000C040}
+                Fill.Kind = None
+                RotationAngle = 180.000000000000000000
+                Size.Width = 45.000000000000000000
+                Size.Height = 45.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Thickness = 1.500000000000000000
+              end
             end
           end
           object layPagina: TLayout
@@ -248,12 +262,24 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
             Size.PlatformDefault = False
             TabOrder = 2
             OnClick = layProximoClick
-            object Rectangle1: TRectangle
-              Align = Client
-              HitTest = False
-              Size.Width = 66.599998474121090000
-              Size.Height = 50.000000000000000000
+            object cirProximo: TCircle
+              Align = Center
+              Fill.Kind = None
+              Size.Width = 45.000000000000000000
+              Size.Height = 45.000000000000000000
               Size.PlatformDefault = False
+              Stroke.Thickness = 1.500000000000000000
+              object pathProximo: TPath
+                Align = Client
+                Data.Path = {
+                  05000000000000000000000000000000000000000000C0410000C04100000000
+                  000010410000904101000000000070410000404101000000000010410000C040}
+                Fill.Kind = None
+                Size.Width = 45.000000000000000000
+                Size.Height = 45.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Thickness = 1.500000000000000000
+              end
             end
           end
         end

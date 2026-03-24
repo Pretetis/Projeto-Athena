@@ -324,24 +324,73 @@ app.get('/documentos/:id/preview', async (req, res) => {
   }
 });
 
-// 7. ALTERAR DADOS DO DOCUMENTO
-app.put('/documentos/:id', async (req, res) => {
+// 7. ALTERAR DADOS DO DOCUMENTO (COM ARQUIVO E HISTÓRICO)
+app.put('/documentos/:id', upload.single('pdf'), async (req, res) => {
   try {
-    const dadosAtualizados = {
-      tipoDocumento: req.body.tipoDocumento,
-      dataValidade: req.body.dataValidade,
-      entidadeTipo: req.body.entidadeTipo
-    };
+    if (!req.body.dados) return res.status(400).send('Campo dados não recebido.');
 
-    const doc = await Documento.findByIdAndUpdate(req.params.id, dadosAtualizados, { new: true });
+    let dados;
+    try {
+      dados = JSON.parse(req.body.dados);
+    } catch (e) {
+      return res.status(400).send('JSON inválido: ' + e.message);
+    }
+
+    // 1. Monta os dados dinamicamente (só adiciona se o Delphi enviou)
+    const dadosAtualizados = {
+      dataUltimaAlteracao: new Date() // Atualiza a data sempre
+    };
     
-    if (!doc) return res.status(404).send('Documento não encontrado.');
-    res.json({ mensagem: 'Dados atualizados com sucesso!', documento: doc });
+    if (dados.nomeDocumento) dadosAtualizados.nomeDocumento = dados.nomeDocumento;
+    if (dados.tipoDocumento) dadosAtualizados.tipoDocumento = dados.tipoDocumento;
+    if (dados.dataValidade) dadosAtualizados.dataValidade = dados.dataValidade;
+    if (dados.entidadeId) dadosAtualizados.entidadeId = dados.entidadeId;
+    if (dados.entidadeTipo) dadosAtualizados.entidadeTipo = dados.entidadeTipo;
+    if (dados.usuarioAlteracao) dadosAtualizados.ultimaAlteracaoPor = dados.usuarioAlteracao;
+    if (dados.ativo !== undefined) dadosAtualizados.ativo = dados.ativo;
+
+    const docAtual = await Documento.findById(req.params.id);
+    if (!docAtual) return res.status(404).send('Documento não encontrado.');
+
+    // 2. SE UM NOVO ARQUIVO FOI ENVIADO
+    if (req.file) {
+      if (docAtual.fileId) {
+        try {
+          const oldFileId = new mongoose.Types.ObjectId(docAtual.fileId);
+          await gfsBucket.delete(oldFileId);
+        } catch (errGrid) {
+          console.log('Aviso: Arquivo antigo não estava no Storage.');
+        }
+      }
+
+      const fileName = `${Date.now()}-athena-update-${req.file.originalname}`;
+      const uploadStream = gfsBucket.openUploadStream(fileName, {
+        metadata: { contentType: req.file.mimetype } 
+      });
+
+      const bufferStream = new Readable();
+      bufferStream.push(req.file.buffer);
+      bufferStream.push(null);
+      bufferStream.pipe(uploadStream);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on('finish', resolve);
+        uploadStream.on('error', reject);
+      });
+
+      dadosAtualizados.fileId = uploadStream.id;
+    }
+
+    // 3. Atualiza o banco (Usando returnDocument para evitar o Warning do Node)
+    const doc = await Documento.findByIdAndUpdate(req.params.id, dadosAtualizados, { returnDocument: 'after' });
+    res.json({ mensagem: 'Documento atualizado com sucesso!', documento: doc });
+
   } catch (err) {
-    res.status(500).send(err.message);
+    // Agora o erro vai aparecer em vermelho no seu terminal do Node!
+    console.error('❌ ERRO NO PUT /documentos:', err); 
+    res.status(500).send('Erro interno: ' + err.message);
   }
 });
-
 // 8. SOFT DELETE
 app.delete('/documentos/:id', async (req, res) => {
   try {
@@ -349,6 +398,18 @@ app.delete('/documentos/:id', async (req, res) => {
     if (!doc) return res.status(404).send('Documento não encontrado.');
     
     res.json({ mensagem: 'Documento movido para o arquivo (inativo).' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// 8.5 RECUPERAÇÃO (REATIVAR DOCUMENTO)
+app.put('/documentos/:id/reativar', async (req, res) => {
+  try {
+    const doc = await Documento.findByIdAndUpdate(req.params.id, { ativo: true }, { new: true });
+    if (!doc) return res.status(404).send('Documento não encontrado.');
+    
+    res.json({ mensagem: 'Documento reativado com sucesso!' });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -430,8 +491,7 @@ app.get('/documentos/pesquisa', async (req, res) => {
       const ativoBools = [];
       if (ativoArray.includes('true'))  ativoBools.push(true);
       if (ativoArray.includes('false')) ativoBools.push(false);
-      if (ativoBools.length > 0)
-        matchInicial.$and.push({ ativo: { $in: ativoBools } });
+      matchInicial.$and.push({ ativo: { $in: ativoBools } });
     }
 
     if (status) {

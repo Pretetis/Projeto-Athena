@@ -62,6 +62,8 @@ type
     lbVencimento: TLabel;
     recVisualizar: TRectangle;
     lbVisualizar: TLabel;
+    recEditar: TRectangle;
+    lbEditar: TLabel;
   private
 
     procedure OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
@@ -135,60 +137,59 @@ end;
 
 procedure TFrameMenuDashboard.PreencherListaAlertas(const AJsonString: string);
 var
+    LJsonValue: TJSONValue;
     LJsonArray: TJSONArray;
     LItem: TJSONValue;
+    LObj: TJSONObject;
     LFrameLinha: TFrameLinhaPlanilhaAlerta;
     LDataISO, LId: string;
     LDataValidade: TDateTime;
+begin
+    if Trim(AJsonString).IsEmpty then
+        Exit;
 
-    function GetSafeString(AObj: TJSONValue; const AKey: string; const ADefault: string = ''): string;
-    var
-        LVal: string;
+    // Limpa a lista existente
+    while vscrollboxLinhaPlanilha.Content.ChildrenCount > 0 do
+        vscrollboxLinhaPlanilha.Content.Children[0].Free;
+
+    LJsonValue := TJSONObject.ParseJSONValue(AJsonString);
+    if not (LJsonValue is TJSONArray) then
     begin
-        if AObj.TryGetValue<string>(AKey, LVal) then
-          Result := LVal
-        else
-          Result := ADefault;
+        if Assigned(LJsonValue) then LJsonValue.Free;
+        Exit;
     end;
 
-begin
-    if AJsonString.Trim.IsEmpty then
-      Exit;
-
-    while vscrollboxLinhaPlanilha.Content.ChildrenCount > 0 do
-      vscrollboxLinhaPlanilha.Content.Children[0].Free;
-
-    LJsonArray := TJSONObject.ParseJSONValue(AJsonString) as TJSONArray;
-
-    if not Assigned(LJsonArray) then
-      Exit;
+    LJsonArray := LJsonValue as TJSONArray;
 
     vscrollboxLinhaPlanilha.BeginUpdate;
     try
         try
             for LItem in LJsonArray do
             begin
-                LFrameLinha := TFrameLinhaPlanilhaAlerta.Create(vscrollboxLinhaPlanilha);
+                if not (LItem is TJSONObject) then Continue;
+                LObj := LItem as TJSONObject;
+
+                LFrameLinha := TFrameLinhaPlanilhaAlerta.Create(Self);
                 LFrameLinha.Parent := vscrollboxLinhaPlanilha;
                 LFrameLinha.Align := TAlignLayout.Top;
                 LFrameLinha.Position.Y := 99999;
 
-                LId := GetSafeString(LItem, '_id', TGUID.NewGuid.ToString.Replace('{','').Replace('}',''));
+                LId := LObj.GetValue<string>('_id', TGUID.NewGuid.ToString.Replace('{','').Replace('}',''));
                 LFrameLinha.Name := 'FrameAlerta_' + LId;
 
                 LFrameLinha.FDocId := LId;
-                LFrameLinha.FNomeDoc := GetSafeString(LItem, 'nomeDocumento', 'Documento não informado');
-                LFrameLinha.FNomeEntidade := GetSafeString(LItem, 'nomeFuncionario', 'Não informado');
+                LFrameLinha.FEntidadeId := LObj.GetValue<string>('entidadeId', '');
+                LFrameLinha.FAtivo := LObj.GetValue<Boolean>('ativo', True);
 
-                LFrameLinha.lbInfoDoc.Text := LFrameLinha.FNomeDoc;
+                LFrameLinha.FNomeDoc := LObj.GetValue<string>('nomeDocumento', 'Documento não informado');
+                LFrameLinha.FNomeEntidade := LObj.GetValue<string>('nomeFuncionario', 'Não informado');
 
-                LFrameLinha.lbInfoDoc.Text       := GetSafeString(LItem, 'nomeDocumento', 'Documento não informado');
-                LFrameLinha.lbInfoTipoDoc.Text   := GetSafeString(LItem, 'tipoDocumento', 'Não categorizado');
-                LFrameLinha.lbFuncMaq.Text       := GetSafeString(LItem, 'nomeFuncionario', 'Não informado');
-                LFrameLinha.lbFuncaoFuncMaq.Text := GetSafeString(LItem, 'funcaoFuncionario', '-'); // Padrão: '-'
+                LFrameLinha.lbInfoDoc.Text       := LFrameLinha.FNomeDoc;
+                LFrameLinha.lbInfoTipoDoc.Text   := LObj.GetValue<string>('tipoDocumento', 'Não categorizado');
+                LFrameLinha.lbFuncMaq.Text       := LFrameLinha.FNomeEntidade;
+                LFrameLinha.lbFuncaoFuncMaq.Text := LObj.GetValue<string>('funcaoFuncionario', '-');
 
-                LDataISO := GetSafeString(LItem, 'dataValidade');
-
+                LDataISO := LObj.GetValue<string>('dataValidade', '');
                 if not LDataISO.IsEmpty then
                 begin
                     LDataValidade := ISO8601ToDate(LDataISO);
@@ -200,8 +201,9 @@ begin
                     LFrameLinha.lbInfoVencimento.Text := 'Sem Validade';
                 end;
             end;
-        except on E: Exception do
-            ShowMessage('Erro ao renderizar a lista: ' + E.Message);
+        except
+            on E: Exception do
+                ShowMessage('Erro ao renderizar a lista: ' + E.Message);
         end;
     finally
         vscrollboxLinhaPlanilha.EndUpdate;
