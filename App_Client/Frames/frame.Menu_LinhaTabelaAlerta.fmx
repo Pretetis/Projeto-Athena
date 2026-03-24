@@ -23,19 +23,22 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
       TabOrder = 0
       ColumnCollection = <
         item
-          Value = 19.999989905541420000
+          Value = 20.064677359722780000
         end
         item
-          Value = 19.999991011624210000
+          Value = 20.064678469383060000
         end
         item
-          Value = 20.000005850624170000
+          Value = 15.048515615122960000
         end
         item
-          Value = 20.000009383522600000
+          Value = 14.908185515730620000
         end
         item
-          Value = 20.000003848687580000
+          Value = 20.064691347966290000
+        end
+        item
+          Value = 9.849251692074284000
         end>
       ControlCollection = <
         item
@@ -62,6 +65,11 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Column = 4
           Control = recLinhaVisualizar
           Row = 0
+        end
+        item
+          Column = 5
+          Control = recBtnAlterarDoc
+          Row = 0
         end>
       RowCollection = <
         item
@@ -76,7 +84,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 229.999877929687500000
+        Size.Width = 230.743789672851600000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
@@ -84,7 +92,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         object layLinhaStatus: TLayout
           Align = Client
           Margins.Left = 20.000000000000000000
-          Size.Width = 209.999877929687500000
+          Size.Width = 210.743789672851600000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -94,7 +102,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             Margins.Top = 5.000000000000000000
             Margins.Right = 15.000000000000000000
             Margins.Bottom = 5.000000000000000000
-            Size.Width = 194.999877929687500000
+            Size.Width = 195.743789672851600000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFFEAB308
@@ -103,9 +111,10 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             object lbInfoStatus: TLabel
               Align = Client
               StyledSettings = [Size]
-              Margins.Left = 5.000000000000000000
-              Size.Width = 149.999877929687500000
-              Size.Height = 30.000000000000000000
+              Margins.Left = 10.000000000000000000
+              Margins.Top = 2.000000000000000000
+              Size.Width = 156.743789672851600000
+              Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -128,13 +137,12 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
                 0000504100000000000040410000884101000000F628404100008841}
               Fill.Kind = None
               Margins.Left = 5.000000000000000000
-              Margins.Top = 5.000000000000000000
-              Margins.Right = 5.000000000000000000
-              Margins.Bottom = 5.000000000000000000
+              Margins.Top = 2.000000000000000000
+              Margins.Bottom = 4.000000000000000000
               Position.X = 5.000000000000000000
-              Position.Y = 5.000000000000000000
-              Size.Width = 30.000000000000000000
-              Size.Height = 20.000000000000000000
+              Position.Y = 2.000000000000000000
+              Size.Width = 24.000000000000000000
+              Size.Height = 24.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFFCA8A04
               Stroke.Thickness = 2.500000000000000000
@@ -150,14 +158,14 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 229.999877929687500000
+        Size.Width = 230.743820190429700000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
         Stroke.Thickness = 0.600000023841857900
         object Layout1: TLayout
           Align = Client
-          Size.Width = 229.999877929687500000
+          Size.Width = 230.743820190429700000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -166,7 +174,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Position.X = 20.000000000000000000
-            Size.Width = 209.999877929687500000
+            Size.Width = 210.743820190429700000
             Size.Height = 20.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -182,7 +190,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Margins.Top = 2.000000000000000000
-            Size.Width = 209.999877929687500000
+            Size.Width = 210.743820190429700000
             Size.Height = 18.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -201,14 +209,14 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 230.000061035156300000
+        Size.Width = 173.057922363281200000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
         Stroke.Thickness = 0.600000023841857900
         object Layout2: TLayout
           Align = Client
-          Size.Width = 230.000061035156300000
+          Size.Width = 173.057922363281200000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -217,7 +225,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Position.X = 20.000000000000000000
-            Size.Width = 210.000061035156300000
+            Size.Width = 153.057922363281200000
             Size.Height = 20.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -233,7 +241,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Margins.Top = 2.000000000000000000
-            Size.Width = 210.000061035156300000
+            Size.Width = 153.057922363281200000
             Size.Height = 18.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -252,7 +260,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 230.000122070312500000
+        Size.Width = 171.444152832031300000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
@@ -261,7 +269,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Align = Client
           StyledSettings = []
           Margins.Left = 20.000000000000000000
-          Size.Width = 210.000122070312500000
+          Size.Width = 151.444152832031300000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Family = 'Roboto'
@@ -278,7 +286,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 230.000061035156300000
+        Size.Width = 230.743957519531300000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
@@ -291,7 +299,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Margins.Top = 2.000000000000000000
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 2.000000000000000000
-          Size.Width = 120.000061035156300000
+          Size.Width = 120.743957519531200000
           Size.Height = 36.000000000000000000
           Size.PlatformDefault = False
           Stroke.Thickness = 0.000000000000000000
@@ -301,7 +309,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           object lbBtnVisualizar: TLabel
             Align = Client
             StyledSettings = [Size]
-            Size.Width = 120.000061035156300000
+            Size.Width = 120.743957519531200000
             Size.Height = 36.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -320,7 +328,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Margins.Top = 2.000000000000000000
           Margins.Right = 20.000000000000000000
           Margins.Bottom = 2.000000000000000000
-          Position.X = 160.000061035156300000
+          Position.X = 160.743957519531300000
           Position.Y = 2.000000000000000000
           Size.Width = 50.000000000000000000
           Size.Height = 36.000000000000000000
@@ -351,6 +359,55 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             Stroke.Join = Round
             WrapMode = Fit
           end
+        end
+      end
+      object recBtnAlterarDoc: TRectangle
+        Align = Client
+        Cursor = crHandPoint
+        Fill.Color = xFFFEF9C3
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 30.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 63.266357421875000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.000000000000000000
+        XRadius = 8.000000000000000000
+        YRadius = 8.000000000000000000
+        OnClick = recBtnAlterarDocClick
+        object pathBtnAlterar: TPath
+          Align = Client
+          Data.Path = {
+            29000000000000000000000000000000000000000000C0410000C04100000000
+            0000304100004041020000000000304129D6484102000000D729374100005041
+            0200000000004041000050410200000028D64841000050410200000000005041
+            29D648410200000000005041000040410200000000005041D729374102000000
+            29D648410000304102000000000040410000304102000000D729374100003041
+            0200000000003041D72937410200000000003041000040410000000000009041
+            00004041020000000000904129D6484102000000EC9493410000504102000000
+            000098410000504102000000146B9C4100005041020000000000A04129D64841
+            020000000000A04100004041020000000000A041D729374102000000146B9C41
+            0000304102000000000098410000304102000000EC9493410000304102000000
+            00009041D7293741020000000000904100004041000000000000804000004041
+            020000000000804029D6484102000000AF538E4000005041020000000000A040
+            000050410200000051ACB14000005041020000000000C04029D6484102000000
+            0000C04000004041020000000000C040D72937410200000051ACB14000003041
+            020000000000A0400000304102000000AF538E40000030410200000000008040
+            D7293741020000000000804000004041}
+          Fill.Kind = None
+          HitTest = False
+          Margins.Left = 4.000000000000000000
+          Margins.Top = 4.000000000000000000
+          Margins.Right = 4.000000000000000000
+          Margins.Bottom = 4.000000000000000000
+          Size.Width = 55.266357421875000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFCA8A04
+          Stroke.Thickness = 2.000000000000000000
+          Stroke.Join = Round
+          WrapMode = Fit
         end
       end
     end

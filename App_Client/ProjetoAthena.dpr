@@ -19,7 +19,8 @@ uses
   frame.Documentos_LinhaTabelaDocumentos in 'Frames\frame.Documentos_LinhaTabelaDocumentos.pas' {FrameLinhaPlanilhaDocumento: TFrame},
   modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame},
   uCatalogos in 'Modulos\uCatalogos.pas',
-  modal.VisualizarDocumento in 'Modais\modal.VisualizarDocumento.pas' {FrameVisualizarDocumento: TFrame};
+  modal.VisualizarDocumento in 'Modais\modal.VisualizarDocumento.pas' {FrameVisualizarDocumento: TFrame},
+  modal.AlterarDocumento in 'Modais\modal.AlterarDocumento.pas' {FrameAlterarDocumento: TFrame};
 
 {$R *.res}
 

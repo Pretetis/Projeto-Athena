@@ -11,7 +11,8 @@ type
   TContextoRequest = (ctxDocumentosVencer, ctxEditarAlarme, ctxSolicitarAlarme,
                       ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos,
                       ctxPesquisarDocumentos, ctxEnviarDocumento, ctxCarregarFuncionarios,
-                      ctxCarregarMaquinas, ctxCarregarEmpresas);
+                      ctxCarregarMaquinas, ctxCarregarEmpresas, ctxDesativarDocumento,
+                      ctxReativarDocumento, ctxEditarDocumento);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -46,6 +47,9 @@ type
     procedure CarregarCatalogoFuncionarios;
     procedure CarregarCatalogoMaquinas;
     procedure CarregarCatalogoEmpresas;
+    procedure DesativarDocumento(ADocId: string);
+    procedure ReativarDocumento(ADocId: string);
+    procedure EditarDocumento(ADocId, ANomeDoc, ATipoDoc, AEntidadeId, AEntidadeTipo: string; ADataValidade: TDate; AAtivo: Boolean; AUsuario, ACaminhoArquivo: string);
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -379,6 +383,111 @@ begin
   );
 end;
 
+procedure TModuloRequest.DesativarDocumento(ADocId: string);
+begin
+    FContexto := ctxDesativarDocumento;
+    ResetarComponentesRest;
+
+    FRESTClient.BaseURL := EndPoint + '/documentos/' + ADocId;
+    FRESTRequest.Method := rmDELETE;
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try FRESTRequest.Execute; except end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.ReativarDocumento(ADocId: string);
+begin
+    FContexto := ctxReativarDocumento;
+    ResetarComponentesRest;
+
+    FRESTClient.BaseURL := EndPoint + '/documentos/' + ADocId + '/reativar';
+    FRESTRequest.Method := rmPUT;
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try FRESTRequest.Execute; except end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.EditarDocumento(ADocId, ANomeDoc, ATipoDoc, AEntidadeId, AEntidadeTipo: string; ADataValidade: TDate; AAtivo: Boolean; AUsuario, ACaminhoArquivo: string);
+var
+    LHttp: TIdHTTP;
+    LFormData: TIdMultiPartFormDataStream;
+    LJson: TJSONObject;
+    LJsonStr: string;
+    LField: TIdFormDataField;
+begin
+    FContexto := ctxEditarDocumento;
+    FIdResponse := '';
+    FIdStatusCode := 0;
+
+    LJson := TJSONObject.Create;
+    try
+      // Adicionamos o Título e a EntidadeId no JSON que vai pro Node
+      LJson.AddPair('nomeDocumento', ANomeDoc);
+      LJson.AddPair('tipoDocumento', ATipoDoc);
+      LJson.AddPair('entidadeId', AEntidadeId);
+      LJson.AddPair('entidadeTipo', AEntidadeTipo);
+      LJson.AddPair('dataValidade', FormatDateTime('yyyy-mm-dd', ADataValidade));
+      LJson.AddPair('usuarioAlteracao', AUsuario);
+      if AAtivo then
+          LJson.AddPair('ativo', TJSONTrue.Create)
+      else
+          LJson.AddPair('ativo', TJSONFalse.Create);
+      LJsonStr := LJson.ToString;
+    finally
+      LJson.Free;
+    end;
+
+    LHttp := TIdHTTP.Create(nil);
+    LFormData := TIdMultiPartFormDataStream.Create;
+
+    LHttp.Request.BasicAuthentication := True;
+    LHttp.Request.Username := UserName;
+    LHttp.Request.Password := Password;
+
+    LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+    LField.ContentType := 'application/json';
+    LField.ContentTransfer := '8bit';
+
+    if Trim(ACaminhoArquivo) <> '' then
+        LFormData.AddFile('pdf', ACaminhoArquivo);
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try
+              LHttp.Request.ContentType := LFormData.RequestContentType;
+              FIdResponse   := LHttp.Put(EndPoint + '/documentos/' + ADocId, LFormData);
+              FIdStatusCode := LHttp.ResponseCode;
+          except
+              on E: EIdHTTPProtocolException do
+              begin
+                  FIdResponse   := E.ErrorMessage;
+                  FIdStatusCode := LHttp.ResponseCode;
+              end;
+              on E: Exception do
+              begin
+                  FIdResponse   := E.Message;
+                  FIdStatusCode := 0;
+              end;
+          end;
+
+          LFormData.Free;
+          LHttp.Free;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
 procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);
 begin
     TLoading.Hide;
@@ -395,7 +504,7 @@ var
     LContent: string;
     LJSONArray: TJSONArray;
 begin
-    if FContexto = ctxEnviarDocumento then
+    if (FContexto = ctxEnviarDocumento) or (FContexto = ctxEditarDocumento) then
     begin
         if Assigned(FOnResult) then
             FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);

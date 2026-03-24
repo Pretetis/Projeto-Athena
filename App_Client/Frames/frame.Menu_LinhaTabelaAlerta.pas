@@ -31,12 +31,17 @@ type
     recFundoLinha: TRectangle;
     recBtnDownload: TRectangle;
     pathDownload: TPath;
+    recBtnAlterarDoc: TRectangle;
+    pathBtnAlterar: TPath;
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recBtnDownloadClick(Sender: TObject);
+    procedure recBtnAlterarDocClick(Sender: TObject);
   private
     procedure BaixarArquivo(const ACaminhoDestino: string);
     { Private declarations }
   public
+    FEntidadeID: string;
+    FAtivo: Boolean;
     FDocId: string;
     FNomeDoc: string;
     FNomeEntidade: string;
@@ -55,6 +60,8 @@ uses
   System.Math,
   System.IOUtils,
   IdHTTP,
+  modal.AlterarDocumento,
+  frame.Menu_Dashboard,
   // --- BIBLIOTECAS PARA WINDOWS ---
   {$IFDEF MSWINDOWS}
     Winapi.ShellAPI,
@@ -69,6 +76,32 @@ uses
 
 {$R *.fmx}
 
+
+procedure TFrameLinhaPlanilhaAlerta.recBtnAlterarDocClick(Sender: TObject);
+var
+    LModal: TFrameAlterarDocumento;
+begin
+    LModal := TFrameAlterarDocumento.Create(Self.Root.GetObject as TForm);
+    LModal.Parent := Self.Root.GetObject as TForm;
+    LModal.Align := TAlignLayout.Contents;
+    LModal.BringToFront;
+
+    LModal.AbrirModal(
+        FDocId,
+        lbInfoDoc.Text,
+        lbInfoTipoDoc.Text,
+        FEntidadeId,
+        lbFuncMaq.Text,
+        'funcionario',
+        lbInfoVencimento.Text,
+        FAtivo,
+        procedure
+        begin
+            if Self.Owner is TFrameMenuDashboard then
+                TFrameMenuDashboard(Self.Owner).CarregarDados;
+        end
+    );
+end;
 
 procedure TFrameLinhaPlanilhaAlerta.recBtnDownloadClick(Sender: TObject);
 var

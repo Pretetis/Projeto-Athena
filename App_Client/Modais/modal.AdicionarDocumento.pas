@@ -41,7 +41,7 @@ type
     Rectangle2: TRectangle;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    pathCancelarDocumento: TPath;
+    pathFecharModal: TPath;
     Layout1: TLayout;
     Rectangle3: TRectangle;
     Path2: TPath;
@@ -50,11 +50,12 @@ type
     BlurEffect1: TBlurEffect;
     recListaUsuarios: TRectangle;
     lbSugestoes: TListBox;
+    layFecharModal: TLayout;
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
     procedure recDropZoneClick(Sender: TObject);
     procedure Rectangle3Click(Sender: TObject);
-    procedure pathCancelarDocumentoClick(Sender: TObject);
+    procedure pathFecharModalClick(Sender: TObject);
     procedure lbBtnCancelarDocumentoClick(Sender: TObject);
     procedure edtFuncionarioChangeTracking(Sender: TObject);
     procedure lbSugestoesItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
@@ -170,7 +171,7 @@ begin
     );
 end;
 
-procedure TFrameModalEnivarDocumento.pathCancelarDocumentoClick(Sender: TObject);
+procedure TFrameModalEnivarDocumento.pathFecharModalClick(Sender: TObject);
 begin
     fMenu.EfeitoBlur.Enabled := False;
     Self.Free;

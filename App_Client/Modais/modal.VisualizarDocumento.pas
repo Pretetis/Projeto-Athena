@@ -28,8 +28,10 @@ type
     layPagina: TLayout;
     layProximo: TLayout;
     lbPagina: TLabel;
-    Rectangle1: TRectangle;
-    Rectangle2: TRectangle;
+    cirProximo: TCircle;
+    pathProximo: TPath;
+    cirAnterior: TCircle;
+    pathAnterior: TPath;
     procedure layFecharClick(Sender: TObject);
     procedure layDownloadClick(Sender: TObject);
     procedure layProximoClick(Sender: TObject);
