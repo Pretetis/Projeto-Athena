@@ -1,28 +1,28 @@
-object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
-  Size.Width = 664.000000000000000000
-  Size.Height = 764.000000000000000000
+object FrameAlterarFuncionario: TFrameAlterarFuncionario
+  Size.Width = 500.000000000000000000
+  Size.Height = 720.000000000000000000
   Size.PlatformDefault = False
-  object OpenDialog1: TOpenDialog
-    Left = 23
-    Top = 2
-  end
   object recOverlay: TRectangle
     Align = Contents
     Fill.Color = claBlack
-    Opacity = 0.400000005960464500
-    Size.Width = 664.000000000000000000
-    Size.Height = 764.000000000000000000
+    Opacity = 0.400000005960464400
+    Size.Width = 500.000000000000000000
+    Size.Height = 720.000000000000000000
     Size.PlatformDefault = False
     Stroke.Kind = None
     object BlurEffect1: TBlurEffect
       Softness = 0.300000011920929000
     end
   end
+  object OpenDialog1: TOpenDialog
+    Left = 15
+    Top = 2
+  end
   object recFundo: TRectangle
     Align = Center
     Fill.Color = claWhite
     Size.Width = 420.000000000000000000
-    Size.Height = 550.000000000000000000
+    Size.Height = 635.000000000000000000
     Size.PlatformDefault = False
     Stroke.Thickness = 0.200000002980232200
     XRadius = 15.000000000000000000
@@ -67,7 +67,7 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
         Size.Height = 49.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        OnClick = pathFecharModalClick
+        OnClick = layFecharModalClick
         object pathFecharModal: TPath
           Align = Client
           Data.Path = {
@@ -89,7 +89,6 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Stroke.Cap = Round
           Stroke.Join = Round
           WrapMode = Fit
-          OnClick = pathFecharModalClick
         end
       end
     end
@@ -98,16 +97,16 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
       Margins.Left = 15.000000000000000000
       Margins.Right = 15.000000000000000000
       Size.Width = 390.000000000000000000
-      Size.Height = 427.000000000000000000
+      Size.Height = 512.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      object layTituloDoc: TLayout
+      object layFuncionario: TLayout
         Align = Top
         Size.Width = 390.000000000000000000
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 4
-        object lbTituloDoc: TLabel
+        TabOrder = 5
+        object lbNomeFuncionario: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -118,10 +117,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'T'#237'tulo do Documento'
+          Text = 'Nome do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recFundoTituloDoc: TRectangle
+        object recFundoNomeFunc: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -129,10 +128,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtTituloDoc: TEdit
+          object edtNomeFunc: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -144,20 +143,20 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Ex: ASO Admissional...'
+            TextPrompt = 'Ex: Jorge Amado'
             StyledSettings = [Style, FontColor]
           end
         end
       end
-      object layTipoDoc: TLayout
+      object layFuncao: TLayout
         Align = Top
         Margins.Top = 15.000000000000000000
         Position.Y = 85.000000000000000000
         Size.Width = 390.000000000000000000
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 3
-        object lbTipoDoc: TLabel
+        TabOrder = 4
+        object lbFuncao: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -168,10 +167,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Tipo do Documento'
+          Text = 'Fun'#231#227'o do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recTIpoDoc: TRectangle
+        object recFuncao: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -179,10 +178,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtTipoDoc: TEdit
+          object edtFuncao: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -194,12 +193,12 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Ex: ASO, NR-12, Treinamento, Sa'#250'de...'
+            TextPrompt = 'Ex: Operador de Empilhadeira, Estoquista, etc...'
             StyledSettings = [Style, FontColor]
           end
         end
       end
-      object layFuncionario: TLayout
+      object laySetor: TLayout
         Align = Top
         Margins.Top = 15.000000000000000000
         Position.Y = 170.000000000000000000
@@ -207,7 +206,7 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        object lbFuncionario: TLabel
+        object lbSetor: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -218,10 +217,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Nome do Funcion'#225'rio ou M'#225'quina'
+          Text = 'Setor do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recFuncionario: TRectangle
+        object recSetor: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -229,10 +228,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtFuncionario: TEdit
+          object edtSetor: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -244,46 +243,12 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'EX: Jo'#227'o Silva ou Guindaste T300'
+            TextPrompt = 'Ex: Administrativo, Manuten'#231#227'o'
             StyledSettings = [Style, FontColor]
-            OnChangeTracking = edtFuncionarioChangeTracking
-            object recListaUsuarios: TRectangle
-              Align = Top
-              Fill.Color = claWhite
-              Margins.Top = -110.000000000000000000
-              Position.Y = -110.000000000000000000
-              Size.Width = 370.000000000000000000
-              Size.Height = 100.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF102E4E
-              Visible = False
-              XRadius = 6.000000000000000000
-              YRadius = 6.000000000000000000
-              object lbSugestoes: TListBox
-                Align = Client
-                Margins.Left = 15.000000000000000000
-                Margins.Top = 2.000000000000000000
-                Margins.Right = 2.000000000000000000
-                Margins.Bottom = 2.000000000000000000
-                Size.Width = 353.000000000000000000
-                Size.Height = 96.000000000000000000
-                Size.PlatformDefault = False
-                StyleLookup = 'transparentlistboxstyle'
-                TabOrder = 0
-                ShowScrollBars = False
-                DisableFocusEffect = True
-                DefaultItemStyles.ItemStyle = ''
-                DefaultItemStyles.GroupHeaderStyle = ''
-                DefaultItemStyles.GroupFooterStyle = ''
-                OnItemClick = lbSugestoesItemClick
-                Viewport.Width = 353.000000000000000000
-                Viewport.Height = 96.000000000000000000
-              end
-            end
           end
         end
       end
-      object layVencimento: TLayout
+      object layChapa: TLayout
         Align = Top
         Margins.Top = 15.000000000000000000
         Position.Y = 255.000000000000000000
@@ -291,7 +256,7 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
-        object lbVencimento: TLabel
+        object lbChapa: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -302,10 +267,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Data de Vencimento'
+          Text = 'Chapa (Identifica'#231#227'o) do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recVencimento: TRectangle
+        object recChapa: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -313,19 +278,23 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object DateEdit1: TDateEdit
-            Date = 46101.000000000000000000
+          object edtChapa: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 0
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 15.000000000000000000
             Margins.Left = 10.000000000000000000
             Margins.Right = 10.000000000000000000
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            StyleLookup = 'dateeditstyle'
-            TabOrder = 0
+            TextPrompt = 'EX: M0001, M0002'
+            StyledSettings = [Style, FontColor]
           end
         end
       end
@@ -348,7 +317,7 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Documento:'
+          Text = 'Foto do Funcion'#225'rio:'
           TabOrder = 0
         end
         object recDropZone: TRectangle
@@ -359,12 +328,10 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           Stroke.Dash = Dash
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          OnDragOver = recDropZoneDragOver
-          OnDragDrop = recDropZoneDragDrop
           OnClick = recDropZoneClick
         end
         object lbInsideDropZone: TLabel
@@ -382,10 +349,160 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           TabOrder = 1
         end
       end
+      object layBtnsEstadoFunc: TLayout
+        Align = Top
+        Margins.Top = 15.000000000000000000
+        Position.Y = 425.000000000000000000
+        Size.Width = 390.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object lbEstadoFunc: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 385.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF0F172A
+          Text = 'Estado do Documento'
+          TabOrder = 0
+        end
+        object GridPanelLayout1: TGridPanelLayout
+          Align = Client
+          Size.Width = 390.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          ColumnCollection = <
+            item
+              Value = 50.000000000000000000
+            end
+            item
+              Value = 50.000000000000000000
+            end>
+          ControlCollection = <
+            item
+              Column = 0
+              Control = recBtnDesativarFunc
+              Row = 0
+            end
+            item
+              Column = 1
+              Control = recBtnAtivo
+              Row = 0
+            end>
+          RowCollection = <
+            item
+              Value = 100.000000000000000000
+            end
+            item
+              SizeStyle = Auto
+            end>
+          object recBtnDesativarFunc: TRectangle
+            Align = Client
+            Anchors = []
+            Fill.Color = xFFFEE2E2
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Size.Width = 185.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFEF4444
+            Stroke.Thickness = 0.349999994039535600
+            XRadius = 8.000000000000000000
+            YRadius = 8.000000000000000000
+            OnClick = recBtnDesativarFuncClick
+            object lbBtnDesativarDoc: TLabel
+              Align = Client
+              StyledSettings = []
+              Size.Width = 130.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Roboto'
+              TextSettings.FontColor = xFFDC2626
+              Text = 'Desativar Documento'
+              TabOrder = 0
+            end
+            object pathBtnDesativarDoc: TPath
+              Align = Left
+              Data.Path = {
+                06000000000000000000000000000000000000000000C0410000C04100000000
+                0000A0410000804001000000000080400000A041000000000000804000008040
+                010000000000A0410000A041}
+              Fill.Kind = None
+              Margins.Left = 5.000000000000000000
+              Margins.Top = 5.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Margins.Bottom = 5.000000000000000000
+              Position.X = 5.000000000000000000
+              Position.Y = 5.000000000000000000
+              Size.Width = 40.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFFEF4444
+              Stroke.Thickness = 2.000000000000000000
+              WrapMode = Fit
+            end
+          end
+          object recBtnAtivo: TRectangle
+            Align = Client
+            Anchors = []
+            Fill.Color = xFFDCFCE7
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Size.Width = 185.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFF4ADE80
+            Stroke.Thickness = 0.349999994039535600
+            XRadius = 8.000000000000000000
+            YRadius = 8.000000000000000000
+            OnClick = recBtnAtivoClick
+            object lbBtnAtivo: TLabel
+              Align = Client
+              StyledSettings = []
+              Size.Width = 130.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Roboto'
+              TextSettings.FontColor = xFF166534
+              Text = 'Ativar Documento'
+              TabOrder = 0
+            end
+            object pathBtnAivo: TPath
+              Align = Left
+              Data.Path = {
+                05000000000000000000000000000000000000000000C0410000C04100000000
+                0000A0410000C040010000000000104100008841010000000000804000004041}
+              Fill.Kind = None
+              Margins.Left = 5.000000000000000000
+              Margins.Top = 5.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Margins.Bottom = 5.000000000000000000
+              Position.X = 5.000000000000000000
+              Position.Y = 5.000000000000000000
+              Size.Width = 40.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF166534
+              Stroke.Thickness = 2.000000000000000000
+              WrapMode = Fit
+            end
+          end
+        end
+      end
     end
     object Layout3: TLayout
       Align = Bottom
-      Position.Y = 477.000000000000000000
+      Position.Y = 562.000000000000000000
       Size.Width = 420.000000000000000000
       Size.Height = 73.000000000000000000
       Size.PlatformDefault = False
@@ -432,7 +549,6 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
           Stroke.Kind = None
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
-          OnClick = lbBtnCancelarDocumentoClick
           object lbBtnCancelarDocumento: TLabel
             Align = Client
             StyledSettings = []
@@ -447,7 +563,6 @@ object FrameModalEnivarDocumento: TFrameModalEnivarDocumento
             TextSettings.HorzAlign = Center
             Text = 'Cancelar'
             TabOrder = 1
-            OnClick = lbBtnCancelarDocumentoClick
           end
         end
         object Rectangle3: TRectangle

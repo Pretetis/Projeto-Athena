@@ -1,0 +1,222 @@
+object FrameFuncionarios: TFrameFuncionarios
+  Size.Width = 1220.000000000000000000
+  Size.Height = 800.000000000000000000
+  Size.PlatformDefault = False
+  OnResize = FrameResize
+  object recFundo: TRectangle
+    Align = Client
+    Fill.Color = xF0F8FAFC
+    Size.Width = 1220.000000000000000000
+    Size.Height = 800.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Thickness = 0.000000000000000000
+    object layTitulo: TLayout
+      Align = Top
+      Margins.Left = 35.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Position.X = 35.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 1185.000000000000000000
+      Size.Height = 80.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object lbSubTitulo: TLabel
+        Align = Top
+        StyledSettings = []
+        Position.Y = 35.000000000000000000
+        Size.Width = 888.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.FontColor = xF064748B
+        Text = 'Cadastre colaboradores e gerencie seus documentos.'
+        TabOrder = 1
+      end
+      object lbTitulo: TLabel
+        Align = Top
+        StyledSettings = []
+        Size.Width = 888.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 26.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF0F172A
+        Text = 'Gest'#227'o de Funcion'#225'rios'
+        TabOrder = 0
+      end
+      object layBtnAddFuncionario: TLayout
+        Align = MostRight
+        Position.X = 888.000000000000000000
+        Size.Width = 297.000000000000000000
+        Size.Height = 80.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object recBtnAddFuncionario: TRectangle
+          Align = VertCenter
+          Fill.Color = xFF4F46E5
+          Margins.Left = 35.000000000000000000
+          Margins.Right = 35.000000000000000000
+          Position.X = 35.000000000000000000
+          Position.Y = 17.000000000000000000
+          Size.Width = 227.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          OnClick = recBtnAddFuncionarioClick
+          object pathAddDocumento: TPath
+            Align = Left
+            Data.Path = {
+              06000000000000000000000000000000000000000000C0410000C04100000000
+              0000A0400000404101000000000098410000404100000000000040410000A040
+              010000000000404100009841}
+            Fill.Kind = None
+            Margins.Left = 10.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Position.X = 10.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 43.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFCBD5E1
+            Stroke.Thickness = 3.000000000000000000
+            Stroke.Cap = Round
+            Stroke.Join = Round
+            WrapMode = Fit
+          end
+          object lbBtnAddFuncionario: TLabel
+            Align = Client
+            StyledSettings = []
+            Margins.Right = 10.000000000000000000
+            Size.Width = 174.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 18.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFFCBD5E1
+            TextSettings.HorzAlign = Center
+            Text = 'Novo Funcion'#225'rio'
+            TabOrder = 1
+          end
+        end
+      end
+    end
+    object LayDadosDocs: TLayout
+      Align = Top
+      Margins.Left = 35.000000000000000000
+      Margins.Right = 35.000000000000000000
+      Position.X = 35.000000000000000000
+      Position.Y = 90.000000000000000000
+      Size.Width = 1150.000000000000000000
+      Size.Height = 70.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object recFiltroDados: TRectangle
+        Align = Client
+        Fill.Color = claWhite
+        Size.Width = 1150.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.200000002980232200
+        XRadius = 18.000000000000000000
+        YRadius = 18.000000000000000000
+        object ShadowEffect2: TShadowEffect
+          Distance = 2.000000000000000000
+          Direction = 45.000000000000000000
+          Softness = 0.500000000000000000
+          Opacity = 0.400000005960464500
+          ShadowColor = claBlack
+        end
+        object recBuscaFuncionarios: TRectangle
+          Align = Top
+          Fill.Kind = None
+          Margins.Left = 15.000000000000000000
+          Margins.Top = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Margins.Bottom = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 15.000000000000000000
+          Size.Width = 1120.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 0.500000000000000000
+          XRadius = 14.000000000000000000
+          YRadius = 14.000000000000000000
+          object pathBusca: TPath
+            Align = Left
+            Data.Path = {
+              10000000000000000000A8410000A84101000000AE478541AE47854100000000
+              00003041000040400200000044B17641000040400200000000009841779DD240
+              020000000000984100003041020000000000984144B176410200000044B17641
+              0000984102000000000030410000984102000000779DD2400000984102000000
+              0000404044B176410200000002004040000030410200000004004040749DD240
+              020000007A9DD240FCFF3F400200000001003041020040400300000000003041
+              00004040}
+            Fill.Kind = None
+            Margins.Left = 8.000000000000000000
+            Margins.Top = 8.000000000000000000
+            Margins.Right = 8.000000000000000000
+            Margins.Bottom = 8.000000000000000000
+            Position.X = 8.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 24.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xF064748B
+            Stroke.Thickness = 2.000000000000000000
+            Stroke.Join = Round
+            WrapMode = Fit
+          end
+          object edtBuscaFuncionarios: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 1
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 14.000000000000000000
+            Size.Width = 1071.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'Buscar por t'#237'tulo ou nome do funcion'#225'rio/m'#225'quina...'
+            StyledSettings = [Style, FontColor]
+          end
+          object tmrBusca: TTimer
+            Enabled = False
+            Interval = 300
+            Left = 347
+            Top = 130
+          end
+        end
+      end
+    end
+    object vsbContainerVerticalCards: TVertScrollBox
+      Align = Client
+      Margins.Left = 35.000000000000000000
+      Margins.Top = 20.000000000000000000
+      Margins.Right = 35.000000000000000000
+      Size.Width = 1150.000000000000000000
+      Size.Height = 620.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      ShowScrollBars = False
+      Viewport.Width = 1150.000000000000000000
+      Viewport.Height = 620.000000000000000000
+      object flowlayCardHorzFuncionarios: TFlowLayout
+        Align = Top
+        Size.Width = 1150.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Justify = Justify
+        JustifyLastLine = Justify
+        FlowDirection = LeftToRight
+        HorizontalGap = 5.000000000000000000
+        VerticalGap = 10.000000000000000000
+      end
+    end
+  end
+end

@@ -615,5 +615,212 @@ app.get('/empresas/lookup', async (req, res) => {
   }
 });
 
+// ==========================================
+// ROTAS DE FUNCIONÁRIOS
+// ==========================================
+
+// LISTAR TODOS OS FUNCIONÁRIOS (Para popular a tela de cards)
+app.get('/funcionarios', async (req, res) => {
+  try {
+    const query = { ativo: true };
+    // Aqui você pode adicionar filtros de busca na API no futuro, se necessário
+    const funcionarios = await Funcionario.find(query).sort({ nome: 1 });
+    res.json(funcionarios);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// ROTA PARA BUSCAR A PRÓXIMA CHAPA DISPONÍVEL
+app.get('/chapa/proxima', async (req, res) => {
+  try {
+    // Busca a maior chapa em Funcionários convertendo a string para número
+    const maxFunc = await Funcionario.aggregate([
+      { $addFields: { chapaNum: { $toInt: "$chapa" } } },
+      { $sort: { chapaNum: -1 } },
+      { $limit: 1 }
+    ]);
+
+    // Busca a maior chapa em Máquinas (Assumindo que Máquina tem um campo "chapa" numérico)
+    // Se não tiver, essa query retornará vazio e não vai quebrar.
+    let maxMaq = [];
+    try {
+      maxMaq = await Maquina.aggregate([
+        { $addFields: { chapaNum: { $toInt: "$chapa" } } },
+        { $sort: { chapaNum: -1 } },
+        { $limit: 1 }
+      ]);
+    } catch (e) {
+      console.log("Aviso: Falha ao buscar chapa em Máquinas (talvez o campo não exista).");
+    }
+
+    const val1 = maxFunc.length > 0 && maxFunc[0].chapaNum ? maxFunc[0].chapaNum : 0;
+    const val2 = maxMaq.length > 0 && maxMaq[0].chapaNum ? maxMaq[0].chapaNum : 0;
+
+    const proxima = Math.max(val1, val2) + 1;
+
+    res.json({ proximaChapa: proxima.toString() });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// ROTA PARA CADASTRAR NOVO FUNCIONÁRIO (COM FOTO)
+app.post('/funcionarios', upload.single('foto'), async (req, res) => {
+  try {
+    if (!req.body.dados) return res.status(400).send('Campo dados não recebido.');
+
+    let dados;
+    try {
+      dados = JSON.parse(req.body.dados);
+    } catch (e) {
+      return res.status(400).send('JSON inválido: ' + e.message);
+    }
+
+    const { nome, funcao, setor, chapa } = dados;
+    let fileId = null;
+
+    // Se a foto foi enviada pelo Delphi, salva no GridFS
+    if (req.file) {
+      const fileName = `${Date.now()}-foto-${req.file.originalname}`;
+      const uploadStream = gfsBucket.openUploadStream(fileName, {
+        metadata: { contentType: req.file.mimetype } 
+      });
+
+      const bufferStream = new Readable();
+      bufferStream.push(req.file.buffer);
+      bufferStream.push(null);
+      bufferStream.pipe(uploadStream);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on('finish', resolve);
+        uploadStream.on('error', reject);
+      });
+
+      fileId = uploadStream.id;
+    }
+
+    // Salva o registro no banco
+    const novoFunc = new Funcionario({
+      nome,
+      funcao,
+      setor,
+      chapa,
+      fotoId: fileId
+    });
+
+    await novoFunc.save();
+    res.status(201).json({ mensagem: 'Funcionário cadastrado com sucesso!', id: novoFunc._id });
+
+  } catch (err) {
+    // Erro 11000 é violação de Unique (Chapa duplicada)
+    if (err.code === 11000) {
+      return res.status(409).send('Esta chapa já está em uso.');
+    }
+    console.error('❌ ERRO NO POST /funcionarios:', err);
+    res.status(500).send('Erro interno: ' + err.message);
+  }
+});
+
+// ROTA PARA BUSCAR A FOTO DO FUNCIONÁRIO
+app.get('/funcionarios/:id/foto', async (req, res) => {
+  try {
+    const func = await Funcionario.findById(req.params.id);
+    if (!func || !func.fotoId) {
+      // Retorna 404 para o Delphi saber que esse cara não tem foto
+      return res.status(404).send('Funcionário sem foto.'); 
+    }
+
+    const fileId = new mongoose.Types.ObjectId(func.fotoId);
+    
+    // Busca metadados para saber o content type
+    const files = await gfsBucket.find({ _id: fileId }).toArray();
+    if (files.length === 0) {
+      return res.status(404).send('Arquivo físico não encontrado.');
+    }
+
+    const contentType = files[0].contentType || 'image/jpeg';
+    res.set('Content-Type', contentType);
+    
+    // Envia o stream da imagem direto pro Delphi
+    const downloadStream = gfsBucket.openDownloadStream(fileId);
+    downloadStream.pipe(res);
+
+  } catch (err) {
+    res.status(500).send('Erro ao buscar foto: ' + err.message);
+  }
+});
+
+// ROTA PARA ALTERAR FUNCIONÁRIO (COM OU SEM NOVA FOTO)
+app.put('/funcionarios/:id', upload.single('foto'), async (req, res) => {
+  try {
+    if (!req.body.dados) return res.status(400).send('Campo dados não recebido.');
+
+    let dados;
+    try {
+      dados = JSON.parse(req.body.dados);
+    } catch (e) {
+      return res.status(400).send('JSON inválido: ' + e.message);
+    }
+
+    const { nome, funcao, setor, chapa, ativo } = dados;
+    
+    // Monta o objeto com os dados para atualizar
+    const dadosAtualizados = {};
+    if (nome) dadosAtualizados.nome = nome;
+    if (funcao) dadosAtualizados.funcao = funcao;
+    if (setor !== undefined) dadosAtualizados.setor = setor;
+    if (chapa) dadosAtualizados.chapa = chapa;
+    if (ativo !== undefined) dadosAtualizados.ativo = ativo;
+
+    const funcAtual = await Funcionario.findById(req.params.id);
+    if (!funcAtual) return res.status(404).send('Funcionário não encontrado.');
+
+    // Se uma FOTO NOVA foi enviada
+    if (req.file) {
+      // Deleta a foto antiga do Bucket (se existir)
+      if (funcAtual.fotoId) {
+        try {
+          const oldFileId = new mongoose.Types.ObjectId(funcAtual.fotoId);
+          await gfsBucket.delete(oldFileId);
+        } catch (errGrid) {
+          console.log('Aviso: Foto antiga não estava no Storage.');
+        }
+      }
+
+      // Salva a foto nova
+      const fileName = `${Date.now()}-foto-update-${req.file.originalname}`;
+      const uploadStream = gfsBucket.openUploadStream(fileName, {
+        metadata: { contentType: req.file.mimetype } 
+      });
+
+      const bufferStream = new Readable();
+      bufferStream.push(req.file.buffer);
+      bufferStream.push(null);
+      bufferStream.pipe(uploadStream);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on('finish', resolve);
+        uploadStream.on('error', reject);
+      });
+
+      // Associa a nova foto
+      dadosAtualizados.fotoId = uploadStream.id;
+    }
+
+    // Atualiza no banco de dados
+    const funcAtualizado = await Funcionario.findByIdAndUpdate(req.params.id, dadosAtualizados, { new: true });
+    
+    res.json({ mensagem: 'Funcionário atualizado com sucesso!', funcionario: funcAtualizado });
+
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).send('Esta chapa já está em uso por outro funcionário.');
+    }
+    console.error('❌ ERRO NO PUT /funcionarios:', err);
+    res.status(500).send('Erro interno: ' + err.message);
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
