@@ -1,0 +1,253 @@
+object FrameCardFuncionario: TFrameCardFuncionario
+  Size.Width = 360.000000000000000000
+  Size.Height = 210.000000000000000000
+  Size.PlatformDefault = False
+  object recFundo: TRectangle
+    Align = Client
+    Fill.Color = claWhite
+    Margins.Left = 2.000000000000000000
+    Margins.Top = 2.000000000000000000
+    Margins.Right = 2.000000000000000000
+    Margins.Bottom = 2.000000000000000000
+    Size.Width = 356.000000000000000000
+    Size.Height = 206.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Thickness = 0.400000005960464400
+    XRadius = 14.000000000000000000
+    YRadius = 14.000000000000000000
+    object lbMatricula: TLabel
+      Position.X = 120.000000000000000000
+      Position.Y = 152.000000000000000000
+      Text = 'lbMatricula'
+      Visible = False
+      TabOrder = 0
+    end
+    object layCabecalho: TLayout
+      Align = Top
+      HitTest = True
+      Size.Width = 356.000000000000000000
+      Size.Height = 85.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnClick = layCabecalhoClick
+      object cirFotoFuncionario: TCircle
+        Align = MostLeft
+        Fill.Bitmap.WrapMode = TileOriginal
+        Fill.Kind = Bitmap
+        Margins.Left = 30.000000000000000000
+        Position.X = 30.000000000000000000
+        Size.Width = 67.000000000000000000
+        Size.Height = 85.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.200000002980232200
+      end
+      object lbCargo: TLabel
+        Align = Client
+        StyledSettings = [Style]
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Size.Width = 239.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.FontColor = xFF4F46E5
+        TextSettings.VertAlign = Leading
+        Text = 'lbCargo'
+        TabOrder = 3
+      end
+      object lbNomeFuncionario: TLabel
+        Align = Top
+        StyledSettings = []
+        Margins.Left = 20.000000000000000000
+        Position.X = 117.000000000000000000
+        Size.Width = 239.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Roboto'
+        TextSettings.Font.Size = 18.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF0F172A
+        TextSettings.VertAlign = Trailing
+        Text = 'lbNomeFuncionario'
+        TabOrder = 4
+      end
+    end
+    object layInfos: TLayout
+      Align = Client
+      Size.Width = 356.000000000000000000
+      Size.Height = 60.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object lbChapa: TLabel
+        Align = Client
+        StyledSettings = [Family, Size, Style]
+        Margins.Left = 65.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Size.Width = 291.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.FontColor = xFF64748B
+        TextSettings.VertAlign = Leading
+        Text = 'lbChapa'
+        TabOrder = 3
+        object pathChapa: TPath
+          Align = Left
+          Data.Path = {
+            08000000000000000000804000001041010000000000A0410000104100000000
+            0000804000007041010000000000A04100007041000000000000204100004040
+            01000000000000410000A8410000000000008041000040400100000000006041
+            0000A841}
+          Fill.Kind = None
+          Margins.Left = -35.000000000000000000
+          Margins.Top = -2.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = -35.000000000000000000
+          Position.Y = -2.000000000000000000
+          Size.Width = 25.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 2.000000000000000000
+          Stroke.Cap = Round
+          WrapMode = Fit
+        end
+      end
+      object lbSetor: TLabel
+        Align = Top
+        StyledSettings = [Family, Size, Style]
+        Margins.Left = 65.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Position.X = 65.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 291.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.FontColor = xFF64748B
+        Text = 'lbSetor'
+        TabOrder = 4
+        object pathSetor: TPath
+          Align = Left
+          Data.Path = {
+            25000000000000000000A0400000A041020000000000A040D729974102000000
+            5EA7BC4000009041020000000100E04000009041010000000000884100009041
+            0200000029D69041000090410200000000009841D72997410200000000009841
+            0000A04101000000000098410000A8410200000000009841146BAC4102000000
+            146B94410000B04102000000000090410000B041010000000000C0400000B041
+            02000000AF53AE400000B041020000000000A040146BAC41020000000000A040
+            0000A841030000000000A0400000A04100000000000068410000204101000000
+            0000804100009041000000000000E04000002041010000000000884100002041
+            0000000000000041000090410100000000001841000020410000000000004041
+            0000004002000000A2586341000000400200000000008041779D724002000000
+            000080410000C0400200000000008041A258034102000000A258634100002041
+            020000000000404100002041020000005EA71C41000020410200000000000041
+            A258034102000000000000410000C0400200000000000041749D724002000000
+            5EA71C41FCFFFF3F020000000100404101000040030000000000404100000040}
+          Fill.Kind = None
+          Margins.Left = -35.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Bottom = 2.000000000000000000
+          Position.X = -35.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 25.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF64748B
+          Stroke.Thickness = 2.000000000000000000
+          Stroke.Cap = Round
+          WrapMode = Fit
+        end
+      end
+    end
+    object layFinalMaior: TLayout
+      Align = Bottom
+      Margins.Left = 1.000000000000000000
+      Margins.Right = 1.000000000000000000
+      Margins.Bottom = 1.000000000000000000
+      Position.X = 1.000000000000000000
+      Position.Y = 145.000000000000000000
+      Size.Width = 354.000000000000000000
+      Size.Height = 60.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object recFundoCinza: TRectangle
+        Align = Client
+        Corners = [BottomLeft, BottomRight]
+        Fill.Color = xFFF8FAFC
+        Size.Width = 354.000000000000000000
+        Size.Height = 60.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Thickness = 0.000000000000000000
+        XRadius = 15.000000000000000000
+        YRadius = 15.000000000000000000
+        object recBtnVisualizar: TRectangle
+          Align = Client
+          Cursor = crHandPoint
+          Fill.Color = claWhite
+          Margins.Left = 35.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 35.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Size.Width = 284.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Thickness = 0.500000000000000000
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          OnClick = recBtnVisualizarClick
+          object lbBtnVisualizar: TLabel
+            Align = Client
+            StyledSettings = []
+            Margins.Right = 10.000000000000000000
+            Size.Width = 231.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF0F172A
+            TextSettings.HorzAlign = Center
+            Text = 'Ver Documentos'
+            TabOrder = 1
+          end
+          object pathBtnVisualizar: TPath
+            Align = Left
+            Data.Path = {
+              23000000000000000000000000000000000000000000C0410000C04100000000
+              CFF703406891454102000000B844FD3FCBF9414102000000B844FD3F35063E41
+              02000000CFF70340986E3A41020000005B6B8A40863AC540020000009CC22941
+              0C23634002000000F8C98041F800BA40020000008DF5954184EDDC4002000000
+              E3C5A6416E171041020000000681AF41986E3A4102000000B52BB04135063E41
+              02000000B52BB041CBF94141020000000681AF4168914541020000002A659D41
+              5EB18E4102000000663D56419E9BA3410200000022D8FC40C27F914102000000
+              CB29A8409FC4884102000000E8D0494092E86F4102000000D0F7034068914541
+              000000000000404100001041020000007A825A41000010410200000000007041
+              867D254102000000000070410000404102000000000070417A825A4102000000
+              7A825A410000704102000000000040410000704102000000867D254100007041
+              02000000000010417A825A410200000000001041000040410200000000001041
+              867D254102000000877D25410000104102000000010040410000104103000000
+              0000404100001041}
+            Fill.Kind = None
+            Margins.Left = 10.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Position.X = 10.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 38.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFF0F172A
+            Stroke.Thickness = 2.500000000000000000
+            Stroke.Cap = Round
+            Stroke.Join = Round
+            WrapMode = Fit
+          end
+        end
+      end
+    end
+    object ShadowEffect2: TShadowEffect
+      Distance = 2.000000000000000000
+      Direction = 45.000000000000000000
+      Softness = 0.500000000000000000
+      Opacity = 0.400000005960464400
+      ShadowColor = claBlack
+    end
+  end
+end

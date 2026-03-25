@@ -23,7 +23,6 @@ type
     imgQrCode: TImage;
     layPrincipalTop: TLayout;
     lineTop: TLine;
-    imgLogoEmpresa: TImage;
     lblInformacao: TLabel;
     OpenDialog: TOpenDialog;
     imgNotificacao: TImage;

@@ -6,7 +6,9 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
   FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Effects,
-  frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos;
+  frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
+
+  frame.Funcionarios;
 
 type
   TfMenu = class(TForm)
@@ -41,15 +43,18 @@ type
   public
     procedure CarregarDashboard;
     procedure CarregarDocumentos;
+    procedure AbrirDocumentosFuncionario(const ANomeFuncionario: string);
 
   private
     FFrameDashboard: TFrameMenuDashboard;
     FFrameDocumentos: TFrameDocumentos;
+    FFrameFuncionarios: TFrameFuncionarios;
     FBotaoAtivo: TRectangle;
     procedure FecharTelasAbertas;
     procedure IniciarCatalogos;
 
     procedure OnCatalogoResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
+    procedure CarregarFuncionarios;
   end;
 
 var
@@ -113,6 +118,9 @@ begin
 
     if Assigned(FFrameDocumentos) then
         FreeAndNil(FFrameDocumentos);
+
+    if Assigned(FFrameFuncionarios) then
+        FreeAndNil(FFrameFuncionarios);
 end;
 
 procedure TfMenu.MenuBtnMouseEnter(Sender: TObject);
@@ -175,7 +183,7 @@ begin
     end
     else if Rec.Name = 'recBtnFuncionarios' then
     begin
-        // ShowMessage('Abrir Funcionários');
+        CarregarFuncionarios;
     end;
 end;
 
@@ -203,8 +211,33 @@ begin
     FFrameDocumentos := TFrameDocumentos.Create(Self);
     FFrameDocumentos.Parent := layContainer;
     FFrameDocumentos.Align := TAlignLayout.Client;
+end;
 
-    FFrameDocumentos.BtnFiltroClick(FFrameDocumentos.recBtnValidos);
+procedure TfMenu.CarregarFuncionarios;
+begin
+    FecharTelasAbertas;
+
+    FFrameFuncionarios := TFrameFuncionarios.Create(Self);
+    FFrameFuncionarios.Parent := layContainer;
+    FFrameFuncionarios.Align := TAlignLayout.Client;
+
+    FFrameFuncionarios.CarregarFuncionarios;
+end;
+
+procedure TfMenu.AbrirDocumentosFuncionario(const ANomeFuncionario: string);
+begin
+  // 1. Simula o clique no menu de Documentos (Isso muda a cor do botão e chama o CarregarDocumentos)
+  MenuBtnClick(recBtnDocumentos);
+
+  // 2. Verifica se a frame foi instanciada com sucesso
+  if Assigned(FFrameDocumentos) then
+  begin
+    // 3. Preenche o Edit com o nome do funcionário
+    FFrameDocumentos.edtBuscaDocumentos.Text := ANomeFuncionario;
+
+    // 4. Força a busca imediata ignorando o timer
+    FFrameDocumentos.BuscarDados;
+  end;
 end;
 
 end.

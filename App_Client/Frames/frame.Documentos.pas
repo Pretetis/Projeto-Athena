@@ -110,13 +110,20 @@ begin
     lbBtnAtivos.StyledSettings := lbBtnAtivos.StyledSettings - [TStyledSetting.FontColor];
     lbBtnAtivos.TextSettings.FontColor := TThemeColors.Green800;
 
-    // Inicia com "Válidos" (Verde)
+    // Inicia com "Válidos" (Verde) e "A Expirar" (Amarelo)
     recBtnValidos.Tag := 1;
     recBtnValidos.Fill.Color := TThemeColors.Green100;
     recBtnValidos.Fill.Kind := TBrushKind.Solid;
     recBtnValidos.Stroke.Color := TThemeColors.Green400;
     lbBtnValidos.StyledSettings := lbBtnValidos.StyledSettings - [TStyledSetting.FontColor];
     lbBtnValidos.TextSettings.FontColor := TThemeColors.Green800;
+
+    recBtnAExpirar.Tag := 1;
+    recBtnAExpirar.Fill.Color := TThemeColors.Yellow100;
+    recBtnAExpirar.Fill.Kind := TBrushKind.Solid;
+    recBtnAExpirar.Stroke.Color := TThemeColors.Yellow500;
+    lbBtnAExpirar.StyledSettings := lbBtnAExpirar.StyledSettings - [TStyledSetting.FontColor];
+    lbBtnAExpirar.TextSettings.FontColor := TThemeColors.Yellow800;
 
     BuscarDados;
 end;

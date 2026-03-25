@@ -12,7 +12,8 @@ type
                       ctxConferirUsuarios, ctxCarregarAlarmes, ctxTotalDocumentos,
                       ctxPesquisarDocumentos, ctxEnviarDocumento, ctxCarregarFuncionarios,
                       ctxCarregarMaquinas, ctxCarregarEmpresas, ctxDesativarDocumento,
-                      ctxReativarDocumento, ctxEditarDocumento);
+                      ctxReativarDocumento, ctxEditarDocumento, ctxListarFuncionarios,
+                      ctxCriarFuncionario, ctxProximaChapa, ctxEditarFuncionario);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -47,9 +48,13 @@ type
     procedure CarregarCatalogoFuncionarios;
     procedure CarregarCatalogoMaquinas;
     procedure CarregarCatalogoEmpresas;
+    procedure ListarFuncionarios;
     procedure DesativarDocumento(ADocId: string);
     procedure ReativarDocumento(ADocId: string);
     procedure EditarDocumento(ADocId, ANomeDoc, ATipoDoc, AEntidadeId, AEntidadeTipo: string; ADataValidade: TDate; AAtivo: Boolean; AUsuario, ACaminhoArquivo: string);
+    procedure BuscarProximaChapa;
+    procedure EnviarFuncionario(ANome, AFuncao, ASetor, AChapa, ACaminhoFoto: string);
+    procedure EditarFuncionario(AId, ANome, AFuncao, ASetor, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -488,6 +493,177 @@ begin
     );
 end;
 
+procedure TModuloRequest.ListarFuncionarios;
+begin
+    FContexto := ctxListarFuncionarios;
+    ResetarComponentesRest;
+
+    // Aponta para a rota principal que retorna todos os dados do funcionário
+    FRESTClient.BaseURL := EndPoint + '/funcionarios';
+    FRESTRequest.Method := rmGET;
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try
+             FRESTRequest.Execute;
+          except
+          end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.BuscarProximaChapa;
+begin
+    FContexto := ctxProximaChapa;
+    ResetarComponentesRest;
+
+    FRESTClient.BaseURL := EndPoint + '/chapa/proxima';
+    FRESTRequest.Method := rmGET;
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try FRESTRequest.Execute; except end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.EnviarFuncionario(ANome, AFuncao, ASetor, AChapa, ACaminhoFoto: string);
+var
+  LHttp: TIdHTTP;
+  LFormData: TIdMultiPartFormDataStream;
+  LJson: TJSONObject;
+  LJsonStr: string;
+  LField: TIdFormDataField;
+begin
+  FContexto := ctxCriarFuncionario;
+  FIdResponse := '';
+  FIdStatusCode := 0;
+
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('nome', ANome);
+    LJson.AddPair('funcao', AFuncao);
+    LJson.AddPair('setor', ASetor);
+    LJson.AddPair('chapa', AChapa);
+    LJsonStr := LJson.ToString;
+  finally
+    LJson.Free;
+  end;
+
+  LHttp := TIdHTTP.Create(nil);
+  LFormData := TIdMultiPartFormDataStream.Create;
+
+  LHttp.Request.BasicAuthentication := True;
+  LHttp.Request.Username := UserName;
+  LHttp.Request.Password := Password;
+
+  LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+  LField.ContentType := 'application/json';
+  LField.ContentTransfer := '8bit';
+
+  if Trim(ACaminhoFoto) <> '' then
+    LFormData.AddFile('foto', ACaminhoFoto);
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        FIdResponse   := LHttp.Post(EndPoint + '/funcionarios', LFormData);
+        FIdStatusCode := LHttp.ResponseCode;
+      except
+        on E: EIdHTTPProtocolException do
+        begin
+          FIdResponse   := E.ErrorMessage;
+          FIdStatusCode := LHttp.ResponseCode;
+        end;
+        on E: Exception do
+        begin
+          FIdResponse   := E.Message;
+          FIdStatusCode := 0;
+        end;
+      end;
+
+      LFormData.Free;
+      LHttp.Free;
+    end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.EditarFuncionario(AId, ANome, AFuncao, ASetor, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
+var
+  LHttp: TIdHTTP;
+  LFormData: TIdMultiPartFormDataStream;
+  LJson: TJSONObject;
+  LJsonStr: string;
+  LField: TIdFormDataField;
+begin
+  FContexto := ctxEditarFuncionario;
+  FIdResponse := '';
+  FIdStatusCode := 0;
+
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('nome', ANome);
+    LJson.AddPair('funcao', AFuncao);
+    LJson.AddPair('setor', ASetor);
+    LJson.AddPair('chapa', AChapa);
+
+    if AAtivo then
+      LJson.AddPair('ativo', TJSONTrue.Create)
+    else
+      LJson.AddPair('ativo', TJSONFalse.Create);
+
+    LJsonStr := LJson.ToString;
+  finally
+    LJson.Free;
+  end;
+
+  LHttp := TIdHTTP.Create(nil);
+  LFormData := TIdMultiPartFormDataStream.Create;
+
+  LHttp.Request.BasicAuthentication := True;
+  LHttp.Request.Username := UserName;
+  LHttp.Request.Password := Password;
+
+  LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+  LField.ContentType := 'application/json';
+  LField.ContentTransfer := '8bit';
+
+  if Trim(ACaminhoFoto) <> '' then
+    LFormData.AddFile('foto', ACaminhoFoto);
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        LHttp.Request.ContentType := LFormData.RequestContentType;
+        FIdResponse   := LHttp.Put(EndPoint + '/funcionarios/' + AId, LFormData);
+        FIdStatusCode := LHttp.ResponseCode;
+      except
+        on E: EIdHTTPProtocolException do
+        begin
+          FIdResponse   := E.ErrorMessage;
+          FIdStatusCode := LHttp.ResponseCode;
+        end;
+        on E: Exception do
+        begin
+          FIdResponse   := E.Message;
+          FIdStatusCode := 0;
+        end;
+      end;
+
+      LFormData.Free;
+      LHttp.Free;
+    end,
+    CallbackFimDaThread
+  );
+end;
+
 procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);
 begin
     TLoading.Hide;
@@ -505,6 +681,13 @@ var
     LJSONArray: TJSONArray;
 begin
     if (FContexto = ctxEnviarDocumento) or (FContexto = ctxEditarDocumento) then
+    begin
+        if Assigned(FOnResult) then
+            FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);
+        Exit;
+    end;
+
+    if FContexto = ctxCriarFuncionario then
     begin
         if Assigned(FOnResult) then
             FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);

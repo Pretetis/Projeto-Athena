@@ -20,7 +20,11 @@ uses
   modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame},
   uCatalogos in 'Modulos\uCatalogos.pas',
   modal.VisualizarDocumento in 'Modais\modal.VisualizarDocumento.pas' {FrameVisualizarDocumento: TFrame},
-  modal.AlterarDocumento in 'Modais\modal.AlterarDocumento.pas' {FrameAlterarDocumento: TFrame};
+  modal.AlterarDocumento in 'Modais\modal.AlterarDocumento.pas' {FrameAlterarDocumento: TFrame},
+  frame.Funcionarios in 'Frames\frame.Funcionarios.pas' {FrameFuncionarios: TFrame},
+  card.Funcionario in 'Cards\card.Funcionario.pas' {FrameCardFuncionario: TFrame},
+  modal.AdicionarFuncionario in 'Modais\modal.AdicionarFuncionario.pas' {FrameModalAdicionarFuncionario: TFrame},
+  modal.AlterarFuncionario in 'Modais\modal.AlterarFuncionario.pas' {FrameAlterarFuncionario: TFrame};
 
 {$R *.res}
 
