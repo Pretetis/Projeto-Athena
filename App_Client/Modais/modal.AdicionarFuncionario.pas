@@ -51,11 +51,14 @@ type
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
     edtChapa: TEdit;
+    recLimpar: TRectangle;
+    pathLimpar: TPath;
     procedure lbInsideDropZoneClick(Sender: TObject);
     procedure lbInsideDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure lbInsideDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
     procedure layFecharModalClick(Sender: TObject);
     procedure Rectangle3Click(Sender: TObject);
+    procedure recLimparClick(Sender: TObject);
   private
     FCaminhoArquivo: string;
     procedure ProcessarArquivo(const ACaminho: string);
@@ -127,6 +130,18 @@ begin
         recDropZone.Fill.Color := $FFD4EDDA;
         lbInsideDropZone.Text := ExtractFileName(ACaminho);
     end;
+
+    recLimpar.Visible := True
+end;
+
+procedure TFrameModalAdicionarFuncionario.recLimparClick(Sender: TObject);
+begin
+    FCaminhoArquivo := '';
+
+    recDropZone.Fill.Kind := TBrushKind.None;
+    lbInsideDropZone.Text := 'Arraste a imagem aqui ou clique para selecionar';
+
+    recLimpar.Visible := False;
 end;
 
 procedure TFrameModalAdicionarFuncionario.Rectangle3Click(Sender: TObject);

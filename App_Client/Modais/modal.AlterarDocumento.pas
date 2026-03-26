@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Layouts,
   FMX.Effects, FMX.DateTimeCtrls, FMX.ListBox, FMX.Edit, FMX.Objects, FMX.Controls.Presentation,
-  uRequests, System.StrUtils;
+  uRequests, System.StrUtils, System.JSON;
 type
   TFrameAlterarDocumento = class(TFrame)
     OpenDialog1: TOpenDialog;
@@ -59,6 +59,8 @@ type
     lbBtnAtivo: TLabel;
     pathBtnAivo: TPath;
     layFecharModal: TLayout;
+    recLimpar: TRectangle;
+    pathLimpar: TPath;
     procedure lbBtnCancelarAlteracaoClick(Sender: TObject);
     procedure pathFecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
@@ -70,6 +72,7 @@ type
     procedure recBtnCancelarAlteracaoClick(Sender: TObject);
     procedure lbSugestoesItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
     procedure edtFuncionarioChangeTracking(Sender: TObject);
+    procedure recLimparClick(Sender: TObject);
 
   private
     FDocId: string;
@@ -83,6 +86,8 @@ type
     procedure ProcessarArquivo(const ACaminho: string);
     procedure FiltrarFuncionarios(const ATexto: string);
     procedure OcultarSugestoes;
+    procedure ExtrairDadosComGemini(const ACaminho: string);
+    procedure FimExtracaoGemini(Sender: TObject);
     { Private declarations }
   public
     procedure AbrirModal(ADocId, ANomeDoc, ATipoDoc, AEntidadeId, ANomeEntidade, AEntidadeTipo, AValidade: string; AIsAtivo: Boolean; AOnRefresh: TProc = nil);
@@ -92,7 +97,7 @@ type
 implementation
 
 uses
-  uDesignSystem, FMX.frame.PopUpToast, uParametros, uCatalogos, uMenu;
+  uDesignSystem, FMX.frame.PopUpToast, uParametros, uCatalogos, uMenu, uGemini, uLoading;
 
 {$R *.fmx}
 
@@ -297,10 +302,12 @@ begin
     Extensao := LowerCase(ExtractFileExt(ACaminho));
 
     recDropZone.Fill.Color := $FFD4EDDA; // Fica verde avisando que pegou o arquivo
-    if Extensao = '.pdf' then
-        lbInsideDropZone.Text := 'Novo PDF: ' + ExtractFileName(ACaminho)
-    else
-        lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    if Extensao = '.pdf' then lbInsideDropZone.Text := 'Novo PDF: ' + ExtractFileName(ACaminho)
+    else lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+
+    recLimpar.Visible := True;
+
+    ExtrairDadosComGemini(ACaminho);
 end;
 
 procedure TFrameAlterarDocumento.recDropZoneClick(Sender: TObject);
@@ -330,10 +337,155 @@ begin
     end;
 end;
 
+procedure TFrameAlterarDocumento.recLimparClick(Sender: TObject);
+begin
+    FCaminhoArquivo := '';
+
+    recDropZone.Fill.Kind := TBrushKind.None;
+    lbInsideDropZone.Text := 'Arraste o documento aqui ou clique para selecionar';
+
+//    edtTituloDoc.Text := '';
+//    edtTipoDoc.Text := '';
+//    DateEdit1.Text := '';
+//
+//    edtFuncionario.OnChangeTracking := nil;
+//    try
+//      edtFuncionario.Text := '';
+//      FFuncionarioId := '';
+//    finally
+//      edtFuncionario.OnChangeTracking := edtFuncionarioChangeTracking;
+//    end;
+
+    recLimpar.Visible := False;
+end;
+
 procedure TFrameAlterarDocumento.pathFecharModalClick(Sender: TObject);
 begin
     fMenu.EfeitoBlur.Enabled := False;
     Self.Free;
+end;
+
+procedure TFrameAlterarDocumento.FimExtracaoGemini(Sender: TObject);
+begin
+    TLoading.Hide;
+end;
+
+procedure TFrameAlterarDocumento.ExtrairDadosComGemini(const ACaminho: string);
+begin
+    if Self.Root is TForm then
+      TLoading.Show(TForm(Self.Root), 'Analisando doc com IA...');
+
+    TLoading.ExecuteThread(
+      procedure
+      var
+        Gemini: TGemini;
+        RespostaGemini: string;
+        JSONResposta: TJSONObject;
+        VDataStr: string;
+        VDataFormatada: TFormatSettings;
+        VTitulo, VTipo, VFuncionario, VVencimento: string;
+        LJSONValue: TJSONValue;
+        VMensagemErro: string;
+      begin
+          try
+              Gemini := TGemini.Create;
+              try
+                  Gemini.SystemInstruction :=
+                    'Você é um extrator de dados. Analise o documento e retorne APENAS um objeto JSON ' +
+                    'valido, sem markdown, com as seguintes chaves: ' +
+                    '"titulo", "tipo", "funcionario", "vencimento" (formato DD/MM/YYYY. Vazio se não achar).';
+
+                  RespostaGemini := Gemini.SendImage(ACaminho, 'Extraia os dados deste documento.');
+
+                  RespostaGemini := StringReplace(RespostaGemini, '```json', '', [rfReplaceAll, rfIgnoreCase]);
+                  RespostaGemini := StringReplace(RespostaGemini, '```', '', [rfReplaceAll]);
+                  RespostaGemini := Trim(RespostaGemini);
+
+                  LJSONValue := TJSONObject.ParseJSONValue(RespostaGemini);
+                  if Assigned(LJSONValue) and (LJSONValue is TJSONObject) then
+                  begin
+                      JSONResposta := LJSONValue as TJSONObject;
+                      try
+                          VTitulo := '';
+                          VTipo := '';
+                          VFuncionario := '';
+                          VVencimento := '';
+
+                          JSONResposta.TryGetValue<string>('titulo', VTitulo);
+                          JSONResposta.TryGetValue<string>('tipo', VTipo);
+                          JSONResposta.TryGetValue<string>('funcionario', VFuncionario);
+                          JSONResposta.TryGetValue<string>('vencimento', VVencimento);
+
+                          TThread.Queue(nil,
+                            procedure
+                            var
+                              I: Integer;
+                            begin
+                                if VTitulo <> '' then
+                                  edtTituloDoc.Text := VTitulo;
+
+                                if VTipo <> '' then
+                                  edtTipoDoc.Text := VTipo;
+
+                                if VFuncionario <> '' then
+                                begin
+                                    edtFuncionario.OnChangeTracking := nil;
+                                    try
+                                        edtFuncionario.Text := VFuncionario;
+                                        FFuncionarioId := '';
+                                        for I := 0 to High(CatFuncionariosNomes) do
+                                        begin
+                                            if ContainsText(CatFuncionariosNomes[I], VFuncionario) then
+                                            begin
+                                                FFuncionarioId := CatFuncionariosIds[I];
+                                                edtFuncionario.Text := CatFuncionariosNomes[I];
+                                                Break;
+                                            end;
+                                        end;
+                                    finally
+                                        edtFuncionario.OnChangeTracking := edtFuncionarioChangeTracking;
+                                    end;
+                                end;
+
+                                if VVencimento <> '' then
+                                begin
+                                    VDataFormatada := TFormatSettings.Create('pt-BR');
+                                    VDataFormatada.ShortDateFormat := 'dd/mm/yyyy';
+                                    DateEdit1.Date := StrToDateDef(VVencimento, Now, VDataFormatada);
+                                end;
+
+                                lbInsideDropZone.Text := 'Leitura concluída com sucesso!';
+                            end);
+                      finally
+                          JSONResposta.Free;
+                      end;
+                  end
+                  else
+                  begin
+                      if Assigned(LJSONValue) then LJSONValue.Free;
+                      TThread.Queue(nil, procedure
+                      begin
+                          lbInsideDropZone.Text := 'Erro: IA não retornou um JSON válido.';
+                      end);
+                  end;
+              finally
+                  Gemini.Free;
+              end;
+            except
+              on E: Exception do
+              begin
+                  VMensagemErro := E.Message;
+                  TThread.Queue(nil,
+                    procedure
+                    begin
+                        lbInsideDropZone.Text := 'Erro de Comunicação';
+                        ShowMessage('Falha ao processar o documento: ' + VMensagemErro);
+                    end);
+              end;
+          end;
+      end,
+      FimExtracaoGemini
+    );
 end;
 
 end.

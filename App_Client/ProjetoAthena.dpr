@@ -28,7 +28,8 @@ uses
   frame.Maquina in 'Frames\frame.Maquina.pas' {FrameMaquinas: TFrame},
   modal.AdicionarMaquina in 'Modais\modal.AdicionarMaquina.pas' {FrameModalAdicionarMaquina: TFrame},
   modal.AlterarMaquina in 'Modais\modal.AlterarMaquina.pas' {FrameModalAlterarMaquina: TFrame},
-  card.Maquina in 'Cards\card.Maquina.pas' {FrameCardMaquina: TFrame};
+  card.Maquina in 'Cards\card.Maquina.pas' {FrameCardMaquina: TFrame},
+  uGemini in 'Modulos\uGemini.pas';
 
 {$R *.res}
 
