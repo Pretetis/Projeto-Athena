@@ -24,7 +24,11 @@ uses
   frame.Funcionarios in 'Frames\frame.Funcionarios.pas' {FrameFuncionarios: TFrame},
   card.Funcionario in 'Cards\card.Funcionario.pas' {FrameCardFuncionario: TFrame},
   modal.AdicionarFuncionario in 'Modais\modal.AdicionarFuncionario.pas' {FrameModalAdicionarFuncionario: TFrame},
-  modal.AlterarFuncionario in 'Modais\modal.AlterarFuncionario.pas' {FrameAlterarFuncionario: TFrame};
+  modal.AlterarFuncionario in 'Modais\modal.AlterarFuncionario.pas' {FrameAlterarFuncionario: TFrame},
+  frame.Maquina in 'Frames\frame.Maquina.pas' {FrameMaquinas: TFrame},
+  modal.AdicionarMaquina in 'Modais\modal.AdicionarMaquina.pas' {FrameModalAdicionarMaquina: TFrame},
+  modal.AlterarMaquina in 'Modais\modal.AlterarMaquina.pas' {FrameModalAlterarMaquina: TFrame},
+  card.Maquina in 'Cards\card.Maquina.pas' {FrameCardMaquina: TFrame};
 
 {$R *.res}
 

@@ -150,7 +150,6 @@ begin
   AShadow.ShadowColor := TAlphaColorRec.Black;
   AShadow.Opacity := 0.05;
   AShadow.Softness := 4.0;
-  // No FMX, o Offset Y é controlado pela distância e direção (90 graus = para baixo)
   AShadow.Distance := 1.0;
   AShadow.Direction := 90.0;
 end;

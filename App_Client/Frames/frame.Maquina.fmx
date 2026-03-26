@@ -1,8 +1,7 @@
-object FrameFuncionarios: TFrameFuncionarios
+object FrameMaquinas: TFrameMaquinas
   Size.Width = 1220.000000000000000000
   Size.Height = 800.000000000000000000
   Size.PlatformDefault = False
-  OnResize = FrameResize
   object recFundo: TRectangle
     Align = Client
     Fill.Color = xF0F8FAFC
@@ -30,7 +29,7 @@ object FrameFuncionarios: TFrameFuncionarios
         TextSettings.Font.Family = 'Roboto'
         TextSettings.Font.Size = 14.000000000000000000
         TextSettings.FontColor = xF064748B
-        Text = 'Cadastre colaboradores e gerencie seus documentos.'
+        Text = 'Cadastre m'#225'quinas e gerencie seus documentos.'
         TabOrder = 1
       end
       object lbTitulo: TLabel
@@ -43,17 +42,17 @@ object FrameFuncionarios: TFrameFuncionarios
         TextSettings.Font.Size = 26.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
-        Text = 'Gest'#227'o de Colaboradores'
+        Text = 'Gest'#227'o de M'#225'quinas'
         TabOrder = 0
       end
-      object layBtnAddFuncionario: TLayout
+      object layBtnAddMaquina: TLayout
         Align = MostRight
         Position.X = 888.000000000000000000
         Size.Width = 297.000000000000000000
         Size.Height = 80.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        object recBtnAddFuncionario: TRectangle
+        object recBtnAddMaquina: TRectangle
           Align = VertCenter
           Fill.Color = xFF4F46E5
           Margins.Left = 35.000000000000000000
@@ -66,7 +65,7 @@ object FrameFuncionarios: TFrameFuncionarios
           Stroke.Kind = None
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
-          OnClick = recBtnAddFuncionarioClick
+          OnClick = recBtnAddMaquinaClick
           object pathAddDocumento: TPath
             Align = Left
             Data.Path = {
@@ -98,13 +97,13 @@ object FrameFuncionarios: TFrameFuncionarios
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFFCBD5E1
             TextSettings.HorzAlign = Center
-            Text = 'Novo Colaborador'
+            Text = 'Nova M'#225'quina'
             TabOrder = 1
           end
         end
       end
     end
-    object LayDadosDocs: TLayout
+    object LayDadosMaquinas: TLayout
       Align = Top
       Margins.Left = 35.000000000000000000
       Margins.Right = 35.000000000000000000
@@ -130,7 +129,7 @@ object FrameFuncionarios: TFrameFuncionarios
           Opacity = 0.400000005960464500
           ShadowColor = claBlack
         end
-        object recBuscaFuncionarios: TRectangle
+        object recBuscaMaquinas: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Left = 15.000000000000000000
@@ -169,7 +168,7 @@ object FrameFuncionarios: TFrameFuncionarios
             Stroke.Join = Round
             WrapMode = Fit
           end
-          object edtBuscaFuncionarios: TEdit
+          object edtBuscaMaquina: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -179,15 +178,14 @@ object FrameFuncionarios: TFrameFuncionarios
             Size.Width = 881.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Buscar por chapa ou nome do colaborador'
+            TextPrompt = 'Buscar por chapa ou nome da m'#225'quina'
             StyledSettings = [Style, FontColor]
-            OnChangeTracking = edtBuscaFuncionariosChangeTracking
-            OnKeyDown = edtBuscaFuncionariosKeyDown
+            OnChangeTracking = edtBuscaMaquinaChangeTracking
+            OnKeyDown = edtBuscaMaquinaKeyDown
           end
           object tmrBusca: TTimer
             Enabled = False
             Interval = 300
-            OnTimer = tmrBuscaTimer
             Left = 259
             Top = 26
           end
@@ -264,7 +262,7 @@ object FrameFuncionarios: TFrameFuncionarios
       ShowScrollBars = False
       Viewport.Width = 1150.000000000000000000
       Viewport.Height = 620.000000000000000000
-      object flowlayCardHorzFuncionarios: TFlowLayout
+      object flowlayCardHorzMaquina: TFlowLayout
         Align = Top
         Size.Width = 1150.000000000000000000
         Size.Height = 50.000000000000000000

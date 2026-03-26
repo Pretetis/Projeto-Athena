@@ -1,4 +1,4 @@
-unit card.Funcionario;
+unit card.Maquina;
 
 interface
 
@@ -9,50 +9,49 @@ uses
   System.Net.HttpClient, System.Net.HttpClientComponent, System.Net.URLClient,
 
   uParametros;
-
 type
-  TFrameCardFuncionario = class(TFrame)
+  TFrameCardMaquina = class(TFrame)
     recFundo: TRectangle;
-    lbNomeFuncionario: TLabel;
-    lbCargo: TLabel;
     layCabecalho: TLayout;
+    cirFotoMaquina: TCircle;
+    lbTipo: TLabel;
+    lbNomeMaquina: TLabel;
     layInfos: TLayout;
+    lbChapa: TLabel;
+    pathChapa: TPath;
+    lbModelo: TLabel;
+    pathSetor: TPath;
     layFinalMaior: TLayout;
     recFundoCinza: TRectangle;
     recBtnVisualizar: TRectangle;
-    pathBtnVisualizar: TPath;
     lbBtnVisualizar: TLabel;
+    pathBtnVisualizar: TPath;
     ShadowEffect2: TShadowEffect;
-    cirFotoFuncionario: TCircle;
-    lbChapa: TLabel;
-    pathChapa: TPath;
-    lbSetor: TLabel;
-    pathSetor: TPath;
     recBtnEditarFlutuante: TRectangle;
     Label1: TLabel;
+    procedure recBtnEditarFlutuanteClick(Sender: TObject);
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-    procedure recBtnEditarFlutuanteClick(Sender: TObject);
   private
-    FIdFuncionario: string;
+    FIdMaquina: string;
     { Private declarations }
   public
     FOnRecarregarLista: TProc;
     FIsAtivo: Boolean;
-    procedure CarregarFotoAssincrona(AIdFuncionario: string);
+    procedure CarregarFotoAssincrona(AIdMaquina: string);
     { Public declarations }
   end;
 
 implementation
 
 uses
-  uMenu, modal.AlterarFuncionario;
+  uMenu, modal.AlterarMaquina;
 
 {$R *.fmx}
 
-procedure TFrameCardFuncionario.CarregarFotoAssincrona(AIdFuncionario: string);
+procedure TFrameCardMaquina.CarregarFotoAssincrona(AIdMaquina: string);
 begin
-  FIdFuncionario := AIdFuncionario;
+  FIdMaquina := AIdMaquina;
 
   TTask.Run(
     procedure
@@ -65,7 +64,7 @@ begin
         LStream := TMemoryStream.Create;
         try
             try
-                LResponse := LHttp.Get(EndPoint + '/funcionarios/' + AIdFuncionario + '/foto', LStream);
+                LResponse := LHttp.Get(EndPoint + '/maquinas/' + AIdMaquina + '/foto', LStream);
 
                 if LResponse.StatusCode = 200 then
                 begin
@@ -74,11 +73,11 @@ begin
                   TThread.Synchronize(nil,
                     procedure
                     begin
-                        if Assigned(Self) and Assigned(cirFotoFuncionario) then
+                        if Assigned(Self) and Assigned(cirFotoMaquina) then
                         begin
-                            cirFotoFuncionario.Fill.Kind := TBrushKind.Bitmap;
-                            cirFotoFuncionario.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
-                            cirFotoFuncionario.Fill.Bitmap.WrapMode := TWrapMode.TileStretch; // Ajusta pra não distorcer
+                            cirFotoMaquina.Fill.Kind := TBrushKind.Bitmap;
+                            cirFotoMaquina.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+                            cirFotoMaquina.Fill.Bitmap.WrapMode := TWrapMode.TileStretch; // Ajusta pra não distorcer
                         end;
                     end);
                 end;
@@ -92,20 +91,20 @@ begin
     end);
 end;
 
-procedure TFrameCardFuncionario.recBtnEditarFlutuanteClick(Sender: TObject);
+procedure TFrameCardMaquina.recBtnEditarFlutuanteClick(Sender: TObject);
 var
-  LModal: TFrameAlterarFuncionario;
+  LModal: TFrameModalAlterarMaquina;
 begin
   recBtnEditarFlutuante.Visible := False;
-  LModal := TFrameAlterarFuncionario.Create(Self);
+  LModal := TFrameModalAlterarMaquina.Create(Self);
   LModal.Parent := Application.MainForm;
   LModal.Align := TAlignLayout.Contents;
 
   LModal.AbrirModal(
-    FIdFuncionario,
-    lbNomeFuncionario.Text,
-    lbCargo.Text,
-    lbSetor.Text,
+    FIdMaquina,
+    lbNomeMaquina.Text,
+    lbTipo.Text,
+    lbModelo.Text,
     lbChapa.Text,
     FIsAtivo,
     FOnRecarregarLista
@@ -114,12 +113,12 @@ begin
   LModal.BringToFront;
 end;
 
-procedure TFrameCardFuncionario.recBtnVisualizarClick(Sender: TObject);
+procedure TFrameCardMaquina.recBtnVisualizarClick(Sender: TObject);
 begin
-    fMenu.AbrirDocumentosFuncionario(lbNomeFuncionario.Text);
+    fMenu.AbrirDocumentosFuncionario(lbNomeMaquina.Text);
 end;
 
-procedure TFrameCardFuncionario.recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+procedure TFrameCardMaquina.recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
     if Button = TMouseButton.mbRight then
     begin
@@ -135,4 +134,5 @@ begin
         recBtnEditarFlutuante.Visible := False;
     end;
 end;
+
 end.

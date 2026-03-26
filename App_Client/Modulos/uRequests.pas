@@ -13,7 +13,8 @@ type
                       ctxPesquisarDocumentos, ctxEnviarDocumento, ctxCarregarFuncionarios,
                       ctxCarregarMaquinas, ctxCarregarEmpresas, ctxDesativarDocumento,
                       ctxReativarDocumento, ctxEditarDocumento, ctxListarFuncionarios,
-                      ctxCriarFuncionario, ctxProximaChapa, ctxEditarFuncionario);
+                      ctxCriarFuncionario, ctxProximaChapa, ctxEditarFuncionario,
+                      ctxListarMaquinas, ctxCriarMaquina, ctxEditarMaquina);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -48,13 +49,16 @@ type
     procedure CarregarCatalogoFuncionarios;
     procedure CarregarCatalogoMaquinas;
     procedure CarregarCatalogoEmpresas;
-    procedure ListarFuncionarios;
+    procedure ListarFuncionarios(ABusca: string = ''; AAtivo: string = '');
     procedure DesativarDocumento(ADocId: string);
     procedure ReativarDocumento(ADocId: string);
     procedure EditarDocumento(ADocId, ANomeDoc, ATipoDoc, AEntidadeId, AEntidadeTipo: string; ADataValidade: TDate; AAtivo: Boolean; AUsuario, ACaminhoArquivo: string);
     procedure BuscarProximaChapa;
     procedure EnviarFuncionario(ANome, AFuncao, ASetor, AChapa, ACaminhoFoto: string);
     procedure EditarFuncionario(AId, ANome, AFuncao, ASetor, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
+    procedure ListarMaquinas(ABusca, AAtivo: string);
+    procedure EnviarMaquina(ANome, ATipo, AModelo, AChapa, ACaminhoFoto: string);
+    procedure EditarMaquina(AId, ANome, ATipo, AModelo, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -111,7 +115,6 @@ begin
     FContexto := ctxDocumentosVencer;
     ResetarComponentesRest;
 
-    // Utilize a variável global EndPoint que já deve existir na sua uParametros
     FRESTClient.BaseURL := EndPoint + '/alertas/documentos-a-vencer';
     FRESTRequest.Method := rmGET;
 
@@ -132,7 +135,6 @@ begin
     FContexto := ctxTotalDocumentos;
     ResetarComponentesRest;
 
-    // Utilize a variável global EndPoint que já deve existir na sua uParametros
     FRESTClient.BaseURL := EndPoint + '/documentos/resumo/status';
     FRESTRequest.Method := rmGET;
 
@@ -316,14 +318,13 @@ begin
   LHttp := TIdHTTP.Create(nil);
   LFormData := TIdMultiPartFormDataStream.Create;
 
-  // Sem SSL — HTTP local
   LHttp.Request.BasicAuthentication := True;
   LHttp.Request.Username := UserName;
   LHttp.Request.Password := Password;
 
   LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
   LField.ContentType := 'application/json';
-  LField.ContentTransfer := '8bit'; // <- impede o quoted-printable
+  LField.ContentTransfer := '8bit';
   LFormData.AddFile('pdf', ACaminhoArquivo);
 
   TLoading.ExecuteThread(
@@ -436,7 +437,6 @@ begin
 
     LJson := TJSONObject.Create;
     try
-      // Adicionamos o Título e a EntidadeId no JSON que vai pro Node
       LJson.AddPair('nomeDocumento', ANomeDoc);
       LJson.AddPair('tipoDocumento', ATipoDoc);
       LJson.AddPair('entidadeId', AEntidadeId);
@@ -493,14 +493,19 @@ begin
     );
 end;
 
-procedure TModuloRequest.ListarFuncionarios;
+procedure TModuloRequest.ListarFuncionarios(ABusca, AAtivo: string);
 begin
     FContexto := ctxListarFuncionarios;
     ResetarComponentesRest;
 
-    // Aponta para a rota principal que retorna todos os dados do funcionário
     FRESTClient.BaseURL := EndPoint + '/funcionarios';
     FRESTRequest.Method := rmGET;
+
+    if Trim(ABusca) <> '' then
+      FRESTRequest.AddParameter('busca', ABusca, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(AAtivo) <> '' then
+      FRESTRequest.AddParameter('ativo', AAtivo, TRESTRequestParameterKind.pkQUERY);
 
     TLoading.ExecuteThread(
       procedure
@@ -533,135 +538,277 @@ end;
 
 procedure TModuloRequest.EnviarFuncionario(ANome, AFuncao, ASetor, AChapa, ACaminhoFoto: string);
 var
-  LHttp: TIdHTTP;
-  LFormData: TIdMultiPartFormDataStream;
-  LJson: TJSONObject;
-  LJsonStr: string;
-  LField: TIdFormDataField;
+    LHttp: TIdHTTP;
+    LFormData: TIdMultiPartFormDataStream;
+    LJson: TJSONObject;
+    LJsonStr: string;
+    LField: TIdFormDataField;
 begin
-  FContexto := ctxCriarFuncionario;
-  FIdResponse := '';
-  FIdStatusCode := 0;
+    FContexto := ctxCriarFuncionario;
+    FIdResponse := '';
+    FIdStatusCode := 0;
 
-  LJson := TJSONObject.Create;
-  try
-    LJson.AddPair('nome', ANome);
-    LJson.AddPair('funcao', AFuncao);
-    LJson.AddPair('setor', ASetor);
-    LJson.AddPair('chapa', AChapa);
-    LJsonStr := LJson.ToString;
-  finally
-    LJson.Free;
-  end;
+    LJson := TJSONObject.Create;
+    try
+        LJson.AddPair('nome', ANome);
+        LJson.AddPair('funcao', AFuncao);
+        LJson.AddPair('setor', ASetor);
+        LJson.AddPair('chapa', AChapa);
+        LJsonStr := LJson.ToString;
+    finally
+        LJson.Free;
+    end;
 
-  LHttp := TIdHTTP.Create(nil);
-  LFormData := TIdMultiPartFormDataStream.Create;
+    LHttp := TIdHTTP.Create(nil);
+    LFormData := TIdMultiPartFormDataStream.Create;
 
-  LHttp.Request.BasicAuthentication := True;
-  LHttp.Request.Username := UserName;
-  LHttp.Request.Password := Password;
+    LHttp.Request.BasicAuthentication := True;
+    LHttp.Request.Username := UserName;
+    LHttp.Request.Password := Password;
 
-  LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
-  LField.ContentType := 'application/json';
-  LField.ContentTransfer := '8bit';
+    LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+    LField.ContentType := 'application/json';
+    LField.ContentTransfer := '8bit';
 
-  if Trim(ACaminhoFoto) <> '' then
-    LFormData.AddFile('foto', ACaminhoFoto);
+    if Trim(ACaminhoFoto) <> '' then
+        LFormData.AddFile('foto', ACaminhoFoto);
 
-  TLoading.ExecuteThread(
-    procedure
-    begin
-      try
-        FIdResponse   := LHttp.Post(EndPoint + '/funcionarios', LFormData);
-        FIdStatusCode := LHttp.ResponseCode;
-      except
-        on E: EIdHTTPProtocolException do
-        begin
-          FIdResponse   := E.ErrorMessage;
-          FIdStatusCode := LHttp.ResponseCode;
-        end;
-        on E: Exception do
-        begin
-          FIdResponse   := E.Message;
-          FIdStatusCode := 0;
-        end;
-      end;
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try
+              FIdResponse   := LHttp.Post(EndPoint + '/funcionarios', LFormData);
+              FIdStatusCode := LHttp.ResponseCode;
+          except
+              on E: EIdHTTPProtocolException do
+              begin
+                  FIdResponse   := E.ErrorMessage;
+                  FIdStatusCode := LHttp.ResponseCode;
+              end;
+              on E: Exception do
+              begin
+                  FIdResponse   := E.Message;
+                  FIdStatusCode := 0;
+              end;
+          end;
 
-      LFormData.Free;
-      LHttp.Free;
-    end,
-    CallbackFimDaThread
-  );
+          LFormData.Free;
+          LHttp.Free;
+      end,
+      CallbackFimDaThread
+    );
 end;
 
 procedure TModuloRequest.EditarFuncionario(AId, ANome, AFuncao, ASetor, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
 var
-  LHttp: TIdHTTP;
-  LFormData: TIdMultiPartFormDataStream;
-  LJson: TJSONObject;
-  LJsonStr: string;
-  LField: TIdFormDataField;
+    LHttp: TIdHTTP;
+    LFormData: TIdMultiPartFormDataStream;
+    LJson: TJSONObject;
+    LJsonStr: string;
+    LField: TIdFormDataField;
 begin
-  FContexto := ctxEditarFuncionario;
-  FIdResponse := '';
-  FIdStatusCode := 0;
+    FContexto := ctxEditarFuncionario;
+    FIdResponse := '';
+    FIdStatusCode := 0;
 
-  LJson := TJSONObject.Create;
-  try
-    LJson.AddPair('nome', ANome);
-    LJson.AddPair('funcao', AFuncao);
-    LJson.AddPair('setor', ASetor);
-    LJson.AddPair('chapa', AChapa);
+    LJson := TJSONObject.Create;
+    try
+        LJson.AddPair('nome', ANome);
+        LJson.AddPair('funcao', AFuncao);
+        LJson.AddPair('setor', ASetor);
+        LJson.AddPair('chapa', AChapa);
 
-    if AAtivo then
-      LJson.AddPair('ativo', TJSONTrue.Create)
-    else
-      LJson.AddPair('ativo', TJSONFalse.Create);
+        if AAtivo then
+            LJson.AddPair('ativo', TJSONTrue.Create)
+        else
+            LJson.AddPair('ativo', TJSONFalse.Create);
 
-    LJsonStr := LJson.ToString;
-  finally
-    LJson.Free;
-  end;
+        LJsonStr := LJson.ToString;
+    finally
+        LJson.Free;
+    end;
 
-  LHttp := TIdHTTP.Create(nil);
-  LFormData := TIdMultiPartFormDataStream.Create;
+    LHttp := TIdHTTP.Create(nil);
+    LFormData := TIdMultiPartFormDataStream.Create;
 
-  LHttp.Request.BasicAuthentication := True;
-  LHttp.Request.Username := UserName;
-  LHttp.Request.Password := Password;
+    LHttp.Request.BasicAuthentication := True;
+    LHttp.Request.Username := UserName;
+    LHttp.Request.Password := Password;
 
-  LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
-  LField.ContentType := 'application/json';
-  LField.ContentTransfer := '8bit';
+    LField := LFormData.AddFormField('dados', LJsonStr, 'utf-8');
+    LField.ContentType := 'application/json';
+    LField.ContentTransfer := '8bit';
 
-  if Trim(ACaminhoFoto) <> '' then
-    LFormData.AddFile('foto', ACaminhoFoto);
+    if Trim(ACaminhoFoto) <> '' then
+      LFormData.AddFile('foto', ACaminhoFoto);
 
-  TLoading.ExecuteThread(
-    procedure
-    begin
-      try
-        LHttp.Request.ContentType := LFormData.RequestContentType;
-        FIdResponse   := LHttp.Put(EndPoint + '/funcionarios/' + AId, LFormData);
-        FIdStatusCode := LHttp.ResponseCode;
-      except
-        on E: EIdHTTPProtocolException do
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try
+            LHttp.Request.ContentType := LFormData.RequestContentType;
+            FIdResponse   := LHttp.Put(EndPoint + '/funcionarios/' + AId, LFormData);
+            FIdStatusCode := LHttp.ResponseCode;
+          except
+              on E: EIdHTTPProtocolException do
+              begin
+                  FIdResponse   := E.ErrorMessage;
+                  FIdStatusCode := LHttp.ResponseCode;
+              end;
+              on E: Exception do
+              begin
+                  FIdResponse   := E.Message;
+                  FIdStatusCode := 0;
+              end;
+          end;
+
+        LFormData.Free;
+        LHttp.Free;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.ListarMaquinas(ABusca, AAtivo: string);
+begin
+    FContexto := ctxListarMaquinas;
+    ResetarComponentesRest;
+
+    FRESTClient.BaseURL := EndPoint + '/maquinas';
+    FRESTRequest.Method := rmGET;
+
+    if Trim(ABusca) <> '' then
+        FRESTRequest.AddParameter('busca', ABusca, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(AAtivo) <> '' then
+        FRESTRequest.AddParameter('ativo', AAtivo, TRESTRequestParameterKind.pkQUERY);
+
+    TLoading.ExecuteThread(
+      procedure
+      begin
+          try FRESTRequest.Execute; except end;
+      end,
+      CallbackFimDaThread
+    );
+end;
+
+procedure TModuloRequest.EnviarMaquina(ANome, ATipo, AModelo, AChapa, ACaminhoFoto: string);
+var
+    LHttp: TIdHTTP;
+    LFormData: TIdMultiPartFormDataStream;
+    LJson: TJSONObject;
+begin
+    FContexto := ctxCriarMaquina;
+    FIdResponse := '';
+    FIdStatusCode := 0;
+
+    LJson := TJSONObject.Create;
+    try
+        LJson.AddPair('nome', ANome);
+        LJson.AddPair('tipo', ATipo);
+        LJson.AddPair('modelo', AModelo);
+        LJson.AddPair('chapa', AChapa);
+
+        LHttp := TIdHTTP.Create(nil);
+        LFormData := TIdMultiPartFormDataStream.Create;
+
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
+        with LFormData.AddFormField('dados', LJson.ToString, 'utf-8') do
         begin
-          FIdResponse   := E.ErrorMessage;
-          FIdStatusCode := LHttp.ResponseCode;
+            ContentType := 'application/json';
+            ContentTransfer := '8bit';
         end;
-        on E: Exception do
-        begin
-          FIdResponse   := E.Message;
-          FIdStatusCode := 0;
-        end;
-      end;
 
-      LFormData.Free;
-      LHttp.Free;
-    end,
-    CallbackFimDaThread
-  );
+        if Trim(ACaminhoFoto) <> '' then
+          LFormData.AddFile('foto', ACaminhoFoto);
+
+        TLoading.ExecuteThread(
+          procedure
+          begin
+              try
+                  LHttp.Request.ContentType := LFormData.RequestContentType;
+
+                  FIdResponse := LHttp.Post(EndPoint + '/maquinas', LFormData);
+                  FIdStatusCode := LHttp.ResponseCode;
+              except
+                  on E: EIdHTTPProtocolException do
+                  begin
+                      FIdResponse := E.ErrorMessage;
+                      FIdStatusCode := LHttp.ResponseCode;
+                  end;
+                  on E: Exception do
+                  begin
+                      FIdResponse := E.Message;
+                      FIdStatusCode := 0;
+                  end;
+              end;
+
+              LFormData.Free;
+              LHttp.Free;
+          end,
+          CallbackFimDaThread
+        );
+    finally
+        LJson.Free;
+    end;
+end;
+
+procedure TModuloRequest.EditarMaquina(AId, ANome, ATipo, AModelo, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
+var
+    LHttp: TIdHTTP;
+    LFormData: TIdMultiPartFormDataStream;
+    LJson: TJSONObject;
+begin
+    FContexto := ctxEditarMaquina;
+    FIdResponse := '';
+    FIdStatusCode := 0;
+
+    LJson := TJSONObject.Create;
+    try
+        LJson.AddPair('nome', ANome);
+        LJson.AddPair('tipo', ATipo);
+        LJson.AddPair('modelo', AModelo);
+        LJson.AddPair('chapa', AChapa);
+        LJson.AddPair('ativo', TJSONBool.Create(AAtivo)); // Uso moderno no Delphi para booleanos
+
+        LHttp := TIdHTTP.Create(nil);
+        LFormData := TIdMultiPartFormDataStream.Create;
+
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
+        with LFormData.AddFormField('dados', LJson.ToString, 'utf-8') do
+        begin
+            ContentType := 'application/json';
+            ContentTransfer := '8bit';
+        end;
+
+        if Trim(ACaminhoFoto) <> '' then
+          LFormData.AddFile('foto', ACaminhoFoto);
+
+        TLoading.ExecuteThread(
+          procedure
+          begin
+              try
+                  LHttp.Request.ContentType := LFormData.RequestContentType;
+                  FIdResponse := LHttp.Put(EndPoint + '/maquinas/' + AId, LFormData);
+                  FIdStatusCode := LHttp.ResponseCode;
+              except
+                  on E: EIdHTTPProtocolException do begin FIdResponse := E.ErrorMessage; FIdStatusCode := LHttp.ResponseCode; end;
+                  on E: Exception do begin FIdResponse := E.Message; FIdStatusCode := 0; end;
+              end;
+              LFormData.Free;
+              LHttp.Free;
+          end,
+          CallbackFimDaThread
+        );
+    finally
+        LJson.Free;
+    end;
 end;
 
 procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);
@@ -680,14 +827,10 @@ var
     LContent: string;
     LJSONArray: TJSONArray;
 begin
-    if (FContexto = ctxEnviarDocumento) or (FContexto = ctxEditarDocumento) then
-    begin
-        if Assigned(FOnResult) then
-            FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);
-        Exit;
-    end;
 
-    if FContexto = ctxCriarFuncionario then
+    if (FContexto = ctxEnviarDocumento) or (FContexto = ctxEditarDocumento) or
+       (FContexto = ctxCriarFuncionario) or (FContexto = ctxEditarFuncionario) or
+       (FContexto = ctxCriarMaquina) or (FContexto = ctxEditarMaquina) then
     begin
         if Assigned(FOnResult) then
             FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);

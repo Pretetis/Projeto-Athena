@@ -60,14 +60,12 @@ procedure TFrameVisualizarDocumento.Resize;
 var
   LMargem20: Single;
 begin
-  inherited; // Garante que o comportamento padrão do frame seja executado
+  inherited;
 
   if Assigned(recOverlay) and Assigned(recFundo) then
   begin
-    // Calcula 20% da largura atual do recOverlay
     LMargem20 := recOverlay.Width * 0.20;
 
-    // Aplica o valor nas margens esquerda e direita do recFundo
     recFundo.Margins.Left := LMargem20;
     recFundo.Margins.Right := LMargem20;
   end;

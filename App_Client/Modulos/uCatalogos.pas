@@ -1,8 +1,5 @@
 unit uCatalogos;
 
-// Armazena os catálogos carregados no início da sessão.
-// Acesso global via arrays paralelos: Ids[i] <-> Nomes[i]
-
 interface
 
 var
@@ -18,7 +15,6 @@ var
   CatEmpresasIds  : TArray<string>;
   CatEmpresasNomes: TArray<string>;
 
-// Preenche os arrays a partir de um TJSONArray com objetos {_id, nome/razaoSocial}
 procedure PreencherCatalogo(
   const AJSON       : string;
   const ACampoNome  : string;       // 'nome' ou 'razaoSocial'
