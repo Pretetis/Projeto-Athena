@@ -58,6 +58,8 @@ type
     recBtnAtivo: TRectangle;
     lbBtnAtivo: TLabel;
     pathBtnAivo: TPath;
+    recLimpar: TRectangle;
+    pathLimpar: TPath;
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
@@ -65,6 +67,7 @@ type
     procedure layFecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
     procedure recBtnDesativarClick(Sender: TObject);
+    procedure recLimparClick(Sender: TObject);
   private
     FIdMaquina: string;
     FAtivo: Boolean;
@@ -201,11 +204,22 @@ begin
     end;
 end;
 
+procedure TFrameModalAlterarMaquina.recLimparClick(Sender: TObject);
+begin
+    FCaminhoArquivo := '';
+
+    recDropZone.Fill.Kind := TBrushKind.None;
+    lbInsideDropZone.Text := 'Arraste a imagem aqui ou clique para selecionar';
+
+    recLimpar.Visible := False;
+end;
+
 procedure TFrameModalAlterarMaquina.ProcessarArquivo(const ACaminho: string);
 begin
     FCaminhoArquivo := ACaminho;
     recDropZone.Fill.Color := $FFD4EDDA;
     lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    recLimpar.Visible := true
 end;
 
 end.

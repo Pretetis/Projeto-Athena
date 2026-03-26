@@ -49,11 +49,14 @@ type
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
+    recLimpar: TRectangle;
+    pathLimpar: TPath;
     procedure recBtnSalvarClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
     procedure layFecharModalClick(Sender: TObject);
+    procedure recLimparClick(Sender: TObject);
   private
     FCaminhoArquivo: string;
     procedure ProcessarArquivo(const ACaminho: string);
@@ -150,6 +153,16 @@ begin
     end;
 end;
 
+procedure TFrameModalAdicionarMaquina.recLimparClick(Sender: TObject);
+begin
+    FCaminhoArquivo := '';
+
+    recDropZone.Fill.Kind := TBrushKind.None;
+    lbInsideDropZone.Text := 'Arraste o documento aqui ou clique para selecionar';
+
+    recLimpar.Visible := False;
+end;
+
 procedure TFrameModalAdicionarMaquina.layFecharModalClick(Sender: TObject);
 begin
     fMenu.EfeitoBlur.Enabled := False;
@@ -161,6 +174,7 @@ begin
     FCaminhoArquivo := ACaminho;
     recDropZone.Fill.Color := $FFD4EDDA;
     lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    recLimpar.Visible := True;
 end;
 
 end.

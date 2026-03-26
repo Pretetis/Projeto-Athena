@@ -34,12 +34,8 @@ var
   mProgramador: Integer;
 
 const
-    corLaranja = '#FFEF8F1C';
-    corAzul = '#FF102E4E';
     userName = ' ';
     password = ' ';
-
-
 
   endPoint       = 'http://localhost:3000';  //Testes Computador DEV
 
@@ -48,10 +44,12 @@ const
 
 implementation
 
+
 initialization
   ListaAlarmesIgnorados := TList<Integer>.Create;
   mUsuario := 'Felipe';
 finalization
   ListaAlarmesIgnorados.Free;
+
 
 end.

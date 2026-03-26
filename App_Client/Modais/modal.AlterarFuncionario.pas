@@ -59,12 +59,15 @@ type
     recBtnAtivo: TRectangle;
     lbBtnAtivo: TLabel;
     pathBtnAivo: TPath;
+    recLimpar: TRectangle;
+    pathLimpar: TPath;
     procedure FecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
     procedure recBtnDesativarFuncClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure layFecharModalClick(Sender: TObject);
     procedure Rectangle3Click(Sender: TObject);
+    procedure recLimparClick(Sender: TObject);
   private
     FIdFuncionario: string;
     FAtivo: Boolean;
@@ -157,6 +160,7 @@ begin
     FCaminhoArquivo := ACaminho;
     recDropZone.Fill.Color := TThemeColors.Green400;
     lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    recLimpar.Visible := True;
 end;
 
 procedure TFrameAlterarFuncionario.recDropZoneClick(Sender: TObject);
@@ -164,6 +168,16 @@ begin
     OpenDialog1.Filter := 'Arquivos de Imagem|*.jpg;*.jpeg;*.png';
     if OpenDialog1.Execute then
         ProcessarArquivo(OpenDialog1.FileName);
+end;
+
+procedure TFrameAlterarFuncionario.recLimparClick(Sender: TObject);
+begin
+    FCaminhoArquivo := '';
+
+    recDropZone.Fill.Kind := TBrushKind.None;
+    lbInsideDropZone.Text := 'Arraste o documento aqui ou clique para selecionar';
+
+    recLimpar.Visible := False;
 end;
 
 procedure TFrameAlterarFuncionario.Rectangle3Click(Sender: TObject);
