@@ -148,7 +148,6 @@ begin
     if Trim(AJsonString).IsEmpty then
         Exit;
 
-    // Limpa a lista existente
     while vscrollboxLinhaPlanilha.Content.ChildrenCount > 0 do
         vscrollboxLinhaPlanilha.Content.Children[0].Free;
 

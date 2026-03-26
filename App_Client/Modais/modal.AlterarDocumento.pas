@@ -135,24 +135,24 @@ begin
     // --- SE ESTIVER ATIVO ---
     if FAtivo then
     begin
-        // Botão Ativo parece CLICADO (Verde)
+        // Botão Ativo (Verde)
         recBtnAtivo.Fill.Color := TThemeColors.Green100;
         recBtnAtivo.Fill.Kind := TBrushKind.Solid;
         recBtnAtivo.Stroke.Color := TThemeColors.Green400;
 
-        // Botão Inativo parece SOLTO (Cinza)
+        // Botão Inativo (Cinza)
         recBtnDesativarDoc.Fill.Kind := TBrushKind.None;
         recBtnDesativarDoc.Stroke.Color := TThemeColors.Slate300;
     end
     // --- SE ESTIVER INATIVO ---
     else
     begin
-        // Botão Inativo parece CLICADO (Vermelho/Amarelo)
+        // Botão Inativo (Vermelho/Amarelo)
         recBtnDesativarDoc.Fill.Color := TThemeColors.Red100;
         recBtnDesativarDoc.Fill.Kind := TBrushKind.Solid;
         recBtnDesativarDoc.Stroke.Color := TThemeColors.Red600;
 
-        // Botão Ativo parece SOLTO (Cinza)
+        // Botão Ativo (Cinza)
         recBtnAtivo.Fill.Kind := TBrushKind.None;
         recBtnAtivo.Stroke.Color := TThemeColors.Slate300;
     end;
@@ -291,44 +291,43 @@ end;
 
 procedure TFrameAlterarDocumento.ProcessarArquivo(const ACaminho: string);
 var
-  Extensao: string;
+    Extensao: string;
 begin
-  FCaminhoArquivo := ACaminho;
-  Extensao := LowerCase(ExtractFileExt(ACaminho));
+    FCaminhoArquivo := ACaminho;
+    Extensao := LowerCase(ExtractFileExt(ACaminho));
 
-  recDropZone.Fill.Color := $FFD4EDDA; // Fica verde avisando que pegou o arquivo
-  if Extensao = '.pdf' then
-    lbInsideDropZone.Text := 'Novo PDF: ' + ExtractFileName(ACaminho)
-  else
-    lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    recDropZone.Fill.Color := $FFD4EDDA; // Fica verde avisando que pegou o arquivo
+    if Extensao = '.pdf' then
+        lbInsideDropZone.Text := 'Novo PDF: ' + ExtractFileName(ACaminho)
+    else
+        lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
 end;
 
 procedure TFrameAlterarDocumento.recDropZoneClick(Sender: TObject);
 begin
-  OpenDialog1.Filter := 'Arquivos Suportados|*.pdf;*.jpg;*.jpeg;*.png';
-  if OpenDialog1.Execute then
-  begin
-    ProcessarArquivo(OpenDialog1.FileName);
-  end;
+    OpenDialog1.Filter := 'Arquivos Suportados|*.pdf;*.jpg;*.jpeg;*.png';
+    if OpenDialog1.Execute then
+    begin
+        ProcessarArquivo(OpenDialog1.FileName);
+    end;
 end;
 
 procedure TFrameAlterarDocumento.recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
 begin
-  if Length(Data.Files) > 0 then
-    ProcessarArquivo(Data.Files[0]);
+    if Length(Data.Files) > 0 then ProcessarArquivo(Data.Files[0]);
 end;
 
 procedure TFrameAlterarDocumento.recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
 var
-  Extensao: string;
+    Extensao: string;
 begin
-  Operation := TDragOperation.None;
-  if Length(Data.Files) > 0 then
-  begin
-    Extensao := LowerCase(ExtractFileExt(Data.Files[0]));
-    if (Extensao = '.pdf') or (Extensao = '.jpg') or (Extensao = '.jpeg') or (Extensao = '.png') then
-      Operation := TDragOperation.Copy;
-  end;
+    Operation := TDragOperation.None;
+    if Length(Data.Files) > 0 then
+    begin
+        Extensao := LowerCase(ExtractFileExt(Data.Files[0]));
+        if (Extensao = '.pdf') or (Extensao = '.jpg') or (Extensao = '.jpeg') or (Extensao = '.png') then
+            Operation := TDragOperation.Copy;
+    end;
 end;
 
 procedure TFrameAlterarDocumento.pathFecharModalClick(Sender: TObject);

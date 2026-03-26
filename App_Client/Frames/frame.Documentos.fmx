@@ -126,7 +126,7 @@ object FrameDocumentos: TFrameDocumentos
           Distance = 2.000000000000000000
           Direction = 45.000000000000000000
           Softness = 0.500000000000000000
-          Opacity = 0.400000005960464400
+          Opacity = 0.400000005960464500
           ShadowColor = claBlack
         end
         object recBuscaDocumentos: TRectangle
@@ -310,7 +310,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -340,7 +340,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -370,7 +370,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -400,7 +400,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -494,7 +494,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -524,7 +524,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -554,7 +554,7 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   Stroke.Color = xFF64748B
-                  Stroke.Thickness = 0.400000005960464400
+                  Stroke.Thickness = 0.400000005960464500
                   XRadius = 10.000000000000000000
                   YRadius = 10.000000000000000000
                   OnClick = BtnFiltroClick
@@ -595,7 +595,7 @@ object FrameDocumentos: TFrameDocumentos
         Distance = 2.000000000000000000
         Direction = 45.000000000000000000
         Softness = 0.500000000000000000
-        Opacity = 0.400000005960464400
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
       object layCabecalhoPlanilhaAlerta: TLayout
@@ -758,7 +758,7 @@ object FrameDocumentos: TFrameDocumentos
               Margins.Top = 10.000000000000000000
               Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 235.455627441406200000
+              Size.Width = 235.455627441406300000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF64748B
@@ -767,7 +767,7 @@ object FrameDocumentos: TFrameDocumentos
                 Align = Client
                 StyledSettings = [Size]
                 Margins.Left = 20.000000000000000000
-                Size.Width = 215.455627441406200000
+                Size.Width = 215.455627441406300000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Family = 'Roboto'
@@ -783,7 +783,7 @@ object FrameDocumentos: TFrameDocumentos
               Margins.Top = 10.000000000000000000
               Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 235.455627441406200000
+              Size.Width = 235.455627441406300000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF64748B
@@ -792,7 +792,7 @@ object FrameDocumentos: TFrameDocumentos
                 Align = Client
                 StyledSettings = [Size]
                 Margins.Left = 20.000000000000000000
-                Size.Width = 215.455627441406200000
+                Size.Width = 215.455627441406300000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Family = 'Roboto'

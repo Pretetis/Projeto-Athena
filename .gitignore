@@ -15,3 +15,4 @@ iOSDevice64/
 *.env
 *.ini
 node_modules/
+server_old.js

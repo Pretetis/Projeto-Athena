@@ -74,11 +74,9 @@ type
     procedure AtualizarVisualBotoesEstado;
     procedure ProcessarArquivo(const ACaminho: string);
     procedure OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
-
     { Private declarations }
   public
     procedure AbrirModal(AId, ANome, AFuncao, ASetor, AChapa: string; AIsAtivo: Boolean; AOnRefresh: TProc);
-
     { Public declarations }
   end;
 
@@ -91,122 +89,111 @@ uses
 
 procedure TFrameAlterarFuncionario.AbrirModal(AId, ANome, AFuncao, ASetor, AChapa: string; AIsAtivo: Boolean; AOnRefresh: TProc);
 begin
-  FIdFuncionario := AId;
-  FAtivo := AIsAtivo;
-  FOnRefresh := AOnRefresh;
-  FCaminhoArquivo := '';
+    FIdFuncionario := AId;
+    FAtivo := AIsAtivo;
+    FOnRefresh := AOnRefresh;
+    FCaminhoArquivo := '';
 
-  edtNomeFunc.Text := ANome;
-  edtFuncao.Text := AFuncao;
-  edtSetor.Text := ASetor;
-  edtChapa.Text := AChapa;
+    edtNomeFunc.Text := ANome;
+    edtFuncao.Text := AFuncao;
+    edtSetor.Text := ASetor;
+    edtChapa.Text := AChapa;
 
-  fMenu.EfeitoBlur.Enabled := True;
+    fMenu.EfeitoBlur.Enabled := True;
 
-  AtualizarVisualBotoesEstado;
+    AtualizarVisualBotoesEstado;
 end;
 
 procedure TFrameAlterarFuncionario.AtualizarVisualBotoesEstado;
 begin
-  if FAtivo then
-  begin
-    recBtnAtivo.Fill.Color := TThemeColors.Green100;
-    recBtnAtivo.Fill.Kind := TBrushKind.Solid;
-    recBtnAtivo.Stroke.Color := TThemeColors.Green400;
+    if FAtivo then
+    begin
+        recBtnAtivo.Fill.Color := TThemeColors.Green100;
+        recBtnAtivo.Fill.Kind := TBrushKind.Solid;
+        recBtnAtivo.Stroke.Color := TThemeColors.Green400;
 
-    recBtnDesativarFunc.Fill.Kind := TBrushKind.None;
-    recBtnDesativarFunc.Stroke.Color := TThemeColors.Slate300;
-  end
-  else
-  begin
-    recBtnDesativarFunc.Fill.Color := TThemeColors.Red100;
-    recBtnDesativarFunc.Fill.Kind := TBrushKind.Solid;
-    recBtnDesativarFunc.Stroke.Color := TThemeColors.Red600;
+        recBtnDesativarFunc.Fill.Kind := TBrushKind.None;
+        recBtnDesativarFunc.Stroke.Color := TThemeColors.Slate300;
+    end
+    else
+    begin
+        recBtnDesativarFunc.Fill.Color := TThemeColors.Red100;
+        recBtnDesativarFunc.Fill.Kind := TBrushKind.Solid;
+        recBtnDesativarFunc.Stroke.Color := TThemeColors.Red600;
 
-    recBtnAtivo.Fill.Kind := TBrushKind.None;
-    recBtnAtivo.Stroke.Color := TThemeColors.Slate300;
-  end;
+        recBtnAtivo.Fill.Kind := TBrushKind.None;
+        recBtnAtivo.Stroke.Color := TThemeColors.Slate300;
+    end;
 end;
 
-// ---- EVENTOS DA TELA (ATRIBUA ESSES EVENTOS NO OBJECT INSPECTOR) ----
-
-// Clique no botão "Ativo"
 procedure TFrameAlterarFuncionario.recBtnAtivoClick(Sender: TObject);
 begin
-  if FAtivo then Exit;
-  FAtivo := True;
-  AtualizarVisualBotoesEstado;
+    if FAtivo then Exit;
+    FAtivo := True;
+    AtualizarVisualBotoesEstado;
 end;
 
-// Clique no botão "Desativar"
 procedure TFrameAlterarFuncionario.recBtnDesativarFuncClick(Sender: TObject);
 begin
-  if not FAtivo then Exit;
-  FAtivo := False;
-  AtualizarVisualBotoesEstado;
+    if not FAtivo then Exit;
+    FAtivo := False;
+    AtualizarVisualBotoesEstado;
 end;
 
-// Fechar Modal (Botão X ou Cancelar)
 procedure TFrameAlterarFuncionario.FecharModalClick(Sender: TObject);
 begin
-  fMenu.EfeitoBlur.Enabled := False;
-  Self.Free;
+    fMenu.EfeitoBlur.Enabled := False;
+    Self.Free;
 end;
 
 procedure TFrameAlterarFuncionario.layFecharModalClick(Sender: TObject);
 begin
-  fMenu.EfeitoBlur.Enabled := False;
-  Self.Free;
+    fMenu.EfeitoBlur.Enabled := False;
+    Self.Free;
 end;
 
-// Lógica de Foto (DropZone)
 procedure TFrameAlterarFuncionario.ProcessarArquivo(const ACaminho: string);
 begin
-  FCaminhoArquivo := ACaminho;
-  recDropZone.Fill.Color := $FFD4EDDA; // Verde sucesso
-  lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
+    FCaminhoArquivo := ACaminho;
+    recDropZone.Fill.Color := TThemeColors.Green400;
+    lbInsideDropZone.Text := 'Nova Imagem: ' + ExtractFileName(ACaminho);
 end;
 
-// Clique na DropZone
 procedure TFrameAlterarFuncionario.recDropZoneClick(Sender: TObject);
 begin
-  OpenDialog1.Filter := 'Arquivos de Imagem|*.jpg;*.jpeg;*.png';
-  if OpenDialog1.Execute then
-    ProcessarArquivo(OpenDialog1.FileName);
+    OpenDialog1.Filter := 'Arquivos de Imagem|*.jpg;*.jpeg;*.png';
+    if OpenDialog1.Execute then
+        ProcessarArquivo(OpenDialog1.FileName);
 end;
 
-
- // Salvar Dados
 procedure TFrameAlterarFuncionario.Rectangle3Click(Sender: TObject);
 begin
-  if Trim(edtNomeFunc.Text) = '' then
-  begin
-    TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'O nome é obrigatório!');
-    Exit;
-  end;
+    if Trim(edtNomeFunc.Text) = '' then
+    begin
+        TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'O nome é obrigatório!');
+        Exit;
+    end;
 
-  with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
-    EditarFuncionario(FIdFuncionario, edtNomeFunc.Text, edtFuncao.Text, edtSetor.Text, edtChapa.Text, FAtivo, FCaminhoArquivo);
+    with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
+        EditarFuncionario(FIdFuncionario, edtNomeFunc.Text, edtFuncao.Text, edtSetor.Text, edtChapa.Text, FAtivo, FCaminhoArquivo);
 end;
 
 procedure TFrameAlterarFuncionario.OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 begin
-  if AStatusCode = 200 then
-  begin
-    TFramePopUp.Show(Self.Root.GetObject as TForm, S, 'Funcionário atualizado com sucesso!');
+    if AStatusCode = 200 then
+    begin
+        TFramePopUp.Show(Self.Root.GetObject as TForm, S, 'Funcionário atualizado com sucesso!');
 
-    // Recarrega a tela de fundo
-    if Assigned(FOnRefresh) then
-      FOnRefresh();
+        if Assigned(FOnRefresh) then
+          FOnRefresh();
 
-    // Fecha Modal
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
-  end
-  else
-  begin
-    TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao salvar: ' + AJsonContent);
-  end;
+        fMenu.EfeitoBlur.Enabled := False;
+        Self.Free;
+    end
+    else
+    begin
+        TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao salvar: ' + AJsonContent);
+    end;
 end;
 
 end.

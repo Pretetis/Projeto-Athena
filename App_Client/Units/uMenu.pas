@@ -8,7 +8,7 @@ uses
   FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Effects,
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
 
-  frame.Funcionarios;
+  frame.Funcionarios, frame.Maquina;
 
 type
   TfMenu = class(TForm)
@@ -49,12 +49,14 @@ type
     FFrameDashboard: TFrameMenuDashboard;
     FFrameDocumentos: TFrameDocumentos;
     FFrameFuncionarios: TFrameFuncionarios;
+    FFrameMaquinas: TFrameMaquinas;
     FBotaoAtivo: TRectangle;
     procedure FecharTelasAbertas;
     procedure IniciarCatalogos;
 
     procedure OnCatalogoResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
     procedure CarregarFuncionarios;
+    procedure CarregarMaquinas;
   end;
 
 var
@@ -87,25 +89,22 @@ begin
             begin
                 PreencherCatalogo(AJsonContent, 'nome',
                                   CatFuncionariosIds, CatFuncionariosNomes);
-                // Dispara o próximo da cadeia
                 with TModuloRequest.Create(Self, OnCatalogoResult) do
-                  CarregarCatalogoMaquinas;
+                    CarregarCatalogoMaquinas;
             end;
 
             ctxCarregarMaquinas:
             begin
                 PreencherCatalogo(AJsonContent, 'nome',
                                   CatMaquinasIds, CatMaquinasNomes);
-                // Dispara o próximo da cadeia
                 with TModuloRequest.Create(Self, OnCatalogoResult) do
-                  CarregarCatalogoEmpresas;
+                    CarregarCatalogoEmpresas;
             end;
 
             ctxCarregarEmpresas:
             begin
                 PreencherCatalogo(AJsonContent, 'razaoSocial',
                                   CatEmpresasIds, CatEmpresasNomes);
-                // Cadeia concluída — todos os catálogos estão prontos
             end;
         end;
     end;
@@ -121,6 +120,9 @@ begin
 
     if Assigned(FFrameFuncionarios) then
         FreeAndNil(FFrameFuncionarios);
+
+    if Assigned(FFrameMaquinas) then
+        FreeAndNil(FFrameMaquinas);
 end;
 
 procedure TfMenu.MenuBtnMouseEnter(Sender: TObject);
@@ -179,11 +181,14 @@ begin
     else if Rec.Name = 'recBtnDocumentos' then
     begin
         CarregarDocumentos;
-        // ShowMessage('Abrir Máquinas');
     end
     else if Rec.Name = 'recBtnFuncionarios' then
     begin
         CarregarFuncionarios;
+    end
+    else if Rec.Name = 'recBtnMaquinas' then
+    begin
+        CarregarMaquinas;
     end;
 end;
 
@@ -224,20 +229,26 @@ begin
     FFrameFuncionarios.CarregarFuncionarios;
 end;
 
+procedure TfMenu.CarregarMaquinas;
+begin
+    FecharTelasAbertas;
+
+    FFrameMaquinas := TFrameMaquinas.Create(Self);
+    FFrameMaquinas.Parent := layContainer;
+    FFrameMaquinas.Align := TAlignLayout.Client;
+
+    FFrameMaquinas.CarregarMaquinas;
+end;
+
 procedure TfMenu.AbrirDocumentosFuncionario(const ANomeFuncionario: string);
 begin
-  // 1. Simula o clique no menu de Documentos (Isso muda a cor do botão e chama o CarregarDocumentos)
-  MenuBtnClick(recBtnDocumentos);
+    MenuBtnClick(recBtnDocumentos);
 
-  // 2. Verifica se a frame foi instanciada com sucesso
-  if Assigned(FFrameDocumentos) then
-  begin
-    // 3. Preenche o Edit com o nome do funcionário
-    FFrameDocumentos.edtBuscaDocumentos.Text := ANomeFuncionario;
-
-    // 4. Força a busca imediata ignorando o timer
-    FFrameDocumentos.BuscarDados;
-  end;
+    if Assigned(FFrameDocumentos) then
+    begin
+        FFrameDocumentos.edtBuscaDocumentos.Text := ANomeFuncionario;
+        FFrameDocumentos.BuscarDados;
+    end;
 end;
 
 end.

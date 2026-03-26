@@ -244,23 +244,11 @@ end;
 
 procedure TFrameLinhaPlanilhaDocumento.TipoAtivo(Sender: TObject);
 begin
-//    // --- LÓGICA: ATIVO ---
-//    if fAtivo then
-//    begin
-//        recBtnCancelarDoc.Stroke.Color := TThemeColors.Red500;
-//        recBtnCancelarDoc.Fill.Color   := TThemeColors.Red100;
-//        pathCancelar.Stroke.Color      := TThemeColors.Red600;
-//        pathCancelar.Data.Data         := TThemeIcons.Cancelar;
-//    end
-//
-//    // --- LÓGICA: DESATIVADO ---
-//    else
-//    begin
-//        recBtnCancelarDoc.Stroke.Color := TThemeColors.Yellow500;
-//        recBtnCancelarDoc.Fill.Color   := TThemeColors.Yellow100;
-//        pathCancelar.Stroke.Color      := TThemeColors.Yellow800;
-//        pathCancelar.Data.Data         := TThemeIcons.Dots;
-//    end
+    // --- LÓGICA: ATIVO ---
+    if fAtivo = false then
+    begin
+        lbInfoDoc.TextSettings.FontColor := TThemeColors.Red600;
+    end;
 end;
 
 

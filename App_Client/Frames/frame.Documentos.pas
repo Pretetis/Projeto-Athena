@@ -254,7 +254,7 @@ begin
                 // Se já estava ligado, ele quer desligar
                 DesligarBotao(Rec);
 
-                // Regra Anti-Vazio: Se ao desligar este, todos do trio ficaram desligados, liga o "Todos" automaticamente!
+                // Regra Anti-Vazio: Se ao desligar este, todos do trio ficaram desligados, liga o "Todos" automaticamente
                 if (recBtnValidos.Tag = 0) and (recBtnAExpirar.Tag = 0) and (recBtnExpirados.Tag = 0) then
                     LigarBotao(recBtnTodosStatus);
             end
@@ -263,7 +263,6 @@ begin
                 // Estava desligado, então liga
                 LigarBotao(Rec);
 
-                // NOVA REGRA: Verifica se, ao ligar este botão, os 3 acabaram ficando ligados
                 if (recBtnValidos.Tag = 1) and (recBtnAExpirar.Tag = 1) and (recBtnExpirados.Tag = 1) then
                 begin
                     // Se os 3 estão ligados, limpa o trio e acende apenas o "Todos"
@@ -281,7 +280,6 @@ begin
         end;
     end;
 
-    // Chama a API com a nova formação
     BuscarDados;
 end;
 
@@ -289,7 +287,6 @@ procedure TFrameDocumentos.BuscarDados;
 var
   LStatusParam, LAtivoParam: string;
 begin
-    // --- LÓGICA DO GRUPO VALIDADE (MÚLTIPLA SELEÇÃO) ---
     LStatusParam := '';
 
     // Se a flag "Todos" estiver Tag=0, quer dizer que temos que ler o Trio
@@ -299,20 +296,18 @@ begin
         if recBtnAExpirar.Tag = 1 then LStatusParam := LStatusParam + 'a_expirar,';
         if recBtnExpirados.Tag = 1 then LStatusParam := LStatusParam + 'expirado,';
 
-        // Tira a última vírgula da string
         if LStatusParam <> '' then
             SetLength(LStatusParam, Length(LStatusParam) - 1);
     end;
 
-    // --- LÓGICA DO GRUPO ATIVIDADE (ÚNICA SELEÇÃO) ---
-    LAtivoParam := ''; // Por padrão, vazio atende o "TodosativosDesa"
+    LAtivoParam := '';
     if recBtnAtivos.Tag = 1 then LAtivoParam := 'true'
     else if recBtnDesativados.Tag = 1 then LAtivoParam := 'false';
 
-    // Envia a requisição
     FReq := TModuloRequest.Create(nil, RequestResult);
     FReq.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
 end;
+
 procedure TFrameDocumentos.edtBuscaDocumentosChange(Sender: TObject);
 begin
     tmrBusca.Enabled := False;

@@ -194,7 +194,7 @@ begin
 
     vDiferencaDias := Trunc(vDataVencimento) - Trunc(Date);
 
-    // --- LÓGICA: A EXPIRAR (FUTURO) ---
+    // --- LÓGICA: A EXPIRAR ---
     if vDiferencaDias > 0 then
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Yellow500;
@@ -209,7 +209,7 @@ begin
             lbInfoStatus.Text := Format('A EXPIRAR EM %d DIAS', [vDiferencaDias]);
     end
 
-    // --- LÓGICA: EXPIRADO (HOJE OU PASSADO) ---
+    // --- LÓGICA: EXPIRADO ---
     else
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Red500;
