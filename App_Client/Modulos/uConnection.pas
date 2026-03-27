@@ -3,73 +3,45 @@ unit uConnection;
 interface
 
 uses
-
-  System.Classes, System.SysUtils,
-  System.IOUtils,
-  FireDAC.Stan.Def,
-  FireDAC.DApt,
-  FireDAC.UI.Intf,
-  FireDAC.FMXUI.Wait,
-  FireDAC.Stan.Async,
-  FireDAC.Phys.SQLite,
-  FireDAC.Phys.SQLiteDef,
-  FireDAC.Phys.SQLiteWrapper,
-  // FireDAC.Phys.SQLiteWrapper.Stat,
-  FireDAC.Comp.Client;
-
+  System.Classes, System.SysUtils, System.IOUtils,
+  FireDAC.Stan.Def, FireDAC.DApt, FireDAC.UI.Intf, FireDAC.FMXUI.Wait,
+  FireDAC.Stan.Async, FireDAC.Phys.SQLite, FireDAC.Comp.Client;
 
 var
   FDConnectionSIP: TFDConnection;
 
-function SetupConnectionSIP(FConn: TFDConnection): String;
-function ConnectSIP : TFDConnection;
+procedure ConnectSIP;
 procedure DisconectSIP;
 
 implementation
 
-function SetupConnectionSIP(FConn: TFDConnection): string;
-var
-    lArquivoConfig : string;
+procedure ConnectSIP;
 begin
-    try
-//        FConn.Name := 'SQLite';
+  if not Assigned(FDConnectionSIP) then
+    FDConnectionSIP := TFDConnection.Create(nil);
 
-        {$IFDEF MSWINDOWS}
-        if not DirectoryExists(System.SysUtils.GetCurrentDir + '\db') then CreateDir((System.SysUtils.GetCurrentDir + '\db'));
-        FConn.Params.Values['Database'] := System.SysUtils.GetCurrentDir + '\db\banco.db';
-        FConn.Params.Values['DriverID'] := 'SQLite';
-        {$ELSE}
-        FConn.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'banco.db');
-        FConn.Params.Values['DriverID'] := 'SQLite';
-        {$ENDIF}
-        FConn.LoginPrompt:= False;
+  FDConnectionSIP.Params.Clear;
+  FDConnectionSIP.Params.Values['DriverID'] := 'SQLite';
 
-        FConn.ExecSQL('create table IF NOT EXISTS usuario (NOME varchar(50), USUARIO VARCHAR(50), SENHA varchar(50));');
+  {$IFDEF MSWINDOWS}
+    if not DirectoryExists(GetCurrentDir + '\db') then CreateDir(GetCurrentDir + '\db');
+    FDConnectionSIP.Params.Values['Database'] := GetCurrentDir + '\db\banco.db';
+  {$ELSE}
+    FDConnectionSIP.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'banco.db');
+  {$ENDIF}
 
-        Result := 'OK';
-    except on ex:exception do
-        Result := 'Erro ao configurar banco: ' + ex.Message;
-    end;
-end;
+  FDConnectionSIP.LoginPrompt := False;
+  FDConnectionSIP.Connected := True;
 
-function ConnectSIP : TFDConnection;
-begin
-  FDConnectionSIP := TFDConnection.Create(nil);
-
-  SetupConnectionSIP(FDConnectionSIP);
-  FDConnectionSIP.Connected := true;
-
-  Result := FDConnectionSIP;
+  FDConnectionSIP.ExecSQL('CREATE TABLE IF NOT EXISTS USUARIO (NOME VARCHAR(50), USUARIO VARCHAR(50), SENHA VARCHAR(50));');
 end;
 
 procedure DisconectSIP;
 begin
   if Assigned(FDConnectionSIP) then
   begin
-    if FDConnectionSIP.Connected then
-      FDConnectionSIP.Connected := false;
-
-    FDConnectionSIP.Free;
+    FDConnectionSIP.Connected := False;
+    FreeAndNil(FDConnectionSIP);
   end;
 end;
 

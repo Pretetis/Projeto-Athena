@@ -159,4 +159,58 @@ router.put('/:id', upload.single('foto'), async (req, res) => {
   }
 });
 
+// Rota de Login (Confiar na primeira senha)
+router.post('/login', async (req, res) => {
+  try {
+    const { nome, senha } = req.body;
+
+    if (!nome || !senha) {
+      return res.status(400).send('Nome e senha são obrigatórios.');
+    }
+
+    // Procura o funcionário pelo nome (case insensitive)
+    const func = await Funcionario.findOne({ nome: new RegExp(`^${nome}$`, 'i') });
+    
+    if (!func) {
+      return res.status(404).send('Funcionário não encontrado.');
+    }
+
+    // A MÁGICA AQUI: Se o funcionário não tem senha cadastrada, salvamos a digitada
+    if (!func.senha) {
+      func.senha = senha; 
+      // Nota: Em um ambiente real de produção, use bcrypt para criar um hash da senha aqui!
+      await func.save();
+      return res.json({ 
+        sucesso: true, 
+        mensagem: 'Primeiro acesso identificado. Senha registrada com sucesso!',
+        funcionario: { 
+        id: func._id, 
+        nome: func.nome, 
+        funcao: func.funcao, 
+        setor: func.setor 
+      }
+      });
+    }
+
+    // Se ele já tem senha, apenas validamos
+    if (func.senha !== senha) {
+      return res.status(401).send('Senha incorreta.');
+    }
+
+    return res.json({ 
+      sucesso: true, 
+      mensagem: 'Login aprovado!',
+      funcionario: { 
+        id: func._id, 
+        nome: func.nome, 
+        funcao: func.funcao, 
+        setor: func.setor 
+      }
+    });
+
+  } catch (err) {
+    res.status(500).send('Erro interno: ' + err.message);
+  }
+});
+
 module.exports = router;

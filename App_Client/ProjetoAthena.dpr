@@ -29,7 +29,10 @@ uses
   modal.AdicionarMaquina in 'Modais\modal.AdicionarMaquina.pas' {FrameModalAdicionarMaquina: TFrame},
   modal.AlterarMaquina in 'Modais\modal.AlterarMaquina.pas' {FrameModalAlterarMaquina: TFrame},
   card.Maquina in 'Cards\card.Maquina.pas' {FrameCardMaquina: TFrame},
-  uGemini in 'Modulos\uGemini.pas';
+  uGemini in 'Modulos\uGemini.pas',
+  uMenuMobile in 'Units\uMenuMobile.pas' {fMenuMobile},
+  frame.TelaFuncionario in 'Frames\frame.TelaFuncionario.pas' {fTelaFuncionario: TFrame},
+  frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame};
 
 {$R *.res}
 
@@ -37,5 +40,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TfLogin, fLogin);
   Application.CreateForm(TfMenu, fMenu);
+  Application.CreateForm(TfMenuMobile, fMenuMobile);
   Application.Run;
 end.

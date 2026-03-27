@@ -11,40 +11,62 @@ inherited fMenu_LgXhdpiPh: TfMenu_LgXhdpiPh
       Size.Width = 450.000000000000000000
       Size.Height = 695.000000000000000000
       inherited layContainer: TLayout
-        Size.Width = 170.000000000000000000
+        Size.Width = 375.000000000000000000
         Size.Height = 695.000000000000000000
       end
       inherited layMenu: TLayout
+        Size.Width = 75.000000000000000000
         Size.Height = 695.000000000000000000
         inherited recMenu: TRectangle
+          Size.Width = 75.000000000000000000
           Size.Height = 695.000000000000000000
+          inherited Layout1: TLayout
+            Size.Width = 75.000000000000000000
+          end
           inherited VertScrollBox1: TVertScrollBox
+            Size.Width = 75.000000000000000000
             Size.Height = 645.000000000000000000
-            Viewport.Width = 280.000000000000000000
+            Viewport.Width = 75.000000000000000000
             Viewport.Height = 645.000000000000000000
             inherited recBtnMaquinas: TRectangle
+              Size.Width = 55.000000000000000000
               inherited lbMaquinas: TLabel
+                Size.Width = 79.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Visible = False
               end
             end
             inherited recBtnFuncionarios: TRectangle
+              Size.Width = 55.000000000000000000
               inherited lbFuncionarios: TLabel
+                Size.Width = 69.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Visible = False
+                TabStop = False
               end
             end
             inherited recBtnEmpresas: TRectangle
+              Size.Width = 55.000000000000000000
               inherited lbEmpresas: TLabel
+                Size.Width = 69.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Visible = False
               end
             end
             inherited recBtnDocumentos: TRectangle
+              Size.Width = 55.000000000000000000
               inherited lbDocumentos: TLabel
+                Size.Width = 69.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Visible = False
               end
             end
             inherited recBtnDashboard: TRectangle
+              Size.Width = 55.000000000000000000
               inherited lbDashboard: TLabel
+                Size.Width = 69.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
+                Visible = False
               end
             end
           end
