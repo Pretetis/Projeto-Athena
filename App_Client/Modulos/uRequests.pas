@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.JSON, FMX.Forms, System.DateUtils,
   REST.Client, REST.Types, REST.Authenticator.Basic, System.IOUtils, IdHTTP,
-  IdMultipartFormData;
+  IdMultipartFormData, FMX.Dialogs;
 
 type
   TContextoRequest = (ctxDocumentosVencer, ctxEditarAlarme, ctxSolicitarAlarme,
@@ -59,6 +59,9 @@ type
     procedure ListarMaquinas(ABusca, AAtivo: string);
     procedure EnviarMaquina(ANome, ATipo, AModelo, AChapa, ACaminhoFoto: string);
     procedure EditarMaquina(AId, ANome, ATipo, AModelo, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
+    procedure EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string>);
+
+
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
 
@@ -118,12 +121,30 @@ begin
     FRESTClient.BaseURL := EndPoint + '/alertas/documentos-a-vencer';
     FRESTRequest.Method := rmGET;
 
+//    TLoading.ExecuteThread(
+//      procedure
+//      begin
+//          try
+//             FRESTRequest.Execute;
+//          except
+//          end;
+//      end,
+//      CallbackFimDaThread
+//    );
     TLoading.ExecuteThread(
       procedure
       begin
           try
              FRESTRequest.Execute;
           except
+             on E: Exception do
+             begin
+                 // Força o erro aparecer na tela do celular
+                 TThread.Synchronize(nil, procedure
+                 begin
+                     ShowMessage('Erro na requisição: ' + E.Message);
+                 end);
+             end;
           end;
       end,
       CallbackFimDaThread
@@ -809,6 +830,70 @@ begin
     finally
         LJson.Free;
     end;
+end;
+
+procedure TModuloRequest.EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string>);
+var
+  LJson: TJSONObject;
+begin
+  ResetarComponentesRest;
+
+  FRESTClient.BaseURL := EndPoint + '/funcionarios/login'; // Ou a rota onde colocou o endpoint
+  FRESTRequest.Method := rmPOST;
+
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('nome', ANome);
+    LJson.AddPair('senha', ASenha);
+    FRESTRequest.AddBody(LJson.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    LJson.Free;
+  end;
+
+  TLoading.Show(FParentForm, 'Autenticando...');
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        FRESTRequest.Execute;
+
+        TThread.Synchronize(nil, procedure
+        var
+          LJsonRetorno: TJSONObject;
+          LJsonFunc: TJSONObject;
+        begin
+          if FRESTResponse.StatusCode in [200, 201] then
+          begin
+            // Lê o JSON de retorno
+            LJsonRetorno := TJSONObject.ParseJSONValue(FRESTResponse.Content) as TJSONObject;
+            if Assigned(LJsonRetorno) then
+            begin
+              try
+                LJsonFunc := LJsonRetorno.GetValue<TJSONObject>('funcionario');
+                if Assigned(LJsonFunc) then
+                  mSetor := LJsonFunc.GetValue<string>('setor', ''); // Salva o setor globalmente!
+              finally
+                LJsonRetorno.Free;
+              end;
+            end;
+            ACallback(True, 'Login efetuado com sucesso');
+          end
+          else if FRESTResponse.StatusCode = 401 then
+            ACallback(False, 'Senha incorreta!')
+          else
+            ACallback(False, FRESTResponse.Content);
+        end);
+      except
+        on E: Exception do
+          TThread.Synchronize(nil, procedure
+          begin
+            ACallback(False, 'Erro de conexão: ' + E.Message);
+          end);
+      end;
+    end,
+    CallbackFimDaThread
+  );
 end;
 
 procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);

@@ -100,4 +100,38 @@ router.get('/alertas/documentos-a-vencer', async (req, res) => {
   }
 });
 
+// ==========================================
+// INTEGRAÇÃO GEMINI (PROXY)
+// ==========================================
+router.post('/gemini/:model', async (req, res) => {
+  try {
+    const { model } = req.params;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: { message: "API Key do Gemini não configurada no servidor." } });
+    }
+
+    // URL original da API do Google, montada com o modelo e a chave
+    const googleUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+    // Repassa a requisição exata que veio do Delphi (req.body)
+    const response = await fetch(googleUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body) 
+    });
+
+    const data = await response.json();
+
+    // Devolve para o Delphi o mesmo JSON e Status Code que o Google gerou
+    res.status(response.status).json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: { message: err.message } });
+  }
+});
+
 module.exports = router;

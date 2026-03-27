@@ -8,7 +8,7 @@ uses
   FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Effects,
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
 
-  frame.Funcionarios, frame.Maquina;
+  frame.Funcionarios, frame.Maquina, frame.TelaFuncionario;
 
 type
   TfMenu = class(TForm)
@@ -50,6 +50,7 @@ type
     FFrameDocumentos: TFrameDocumentos;
     FFrameFuncionarios: TFrameFuncionarios;
     FFrameMaquinas: TFrameMaquinas;
+    FFrameFuncionario: TfTelaFuncionario;
     FBotaoAtivo: TRectangle;
     procedure FecharTelasAbertas;
     procedure IniciarCatalogos;
@@ -57,6 +58,7 @@ type
     procedure OnCatalogoResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
     procedure CarregarFuncionarios;
     procedure CarregarMaquinas;
+    procedure CarregarFuncionarioIndividual;
   end;
 
 var
@@ -66,7 +68,7 @@ implementation
 
 uses
 
-  uDesignSystem;
+  uDesignSystem, uParametros;
 
 {$R *.fmx}
 {$R *.LgXhdpiPh.fmx ANDROID}
@@ -123,6 +125,9 @@ begin
 
     if Assigned(FFrameMaquinas) then
         FreeAndNil(FFrameMaquinas);
+
+    if Assigned(FFrameFuncionario) then
+        FreeAndNil(FFrameFuncionario);
 end;
 
 procedure TfMenu.MenuBtnMouseEnter(Sender: TObject);
@@ -189,13 +194,40 @@ begin
     else if Rec.Name = 'recBtnMaquinas' then
     begin
         CarregarMaquinas;
+    end
+    else if Rec.Name = 'recBtnEmpresas' then
+    begin
+        CarregarFuncionarioIndividual;
     end;
 end;
 
 procedure TfMenu.FormShow(Sender: TObject);
+var
+  LSetor: string;
 begin
+  IniciarCatalogos;
+
+  LSetor := UpperCase(Trim(mSetor));
+
+  if (LSetor = 'ADMINISTRATIVO') or (LSetor = 'RH') then
+  begin
+    // Fluxo Normal - Tem acesso a tudo
     MenuBtnClick(recBtnDashboard);
-    IniciarCatalogos;
+  end
+  else
+  begin
+    // Funcionário Comum - Esconde as outras telas
+    recBtnDashboard.Visible := False;
+    recBtnDocumentos.Visible := False;
+    recBtnFuncionarios.Visible := False;
+    recBtnMaquinas.Visible := False;
+
+    // Altera o texto do botão (opcional, já que era Empresas)
+    lbEmpresas.Text := 'Meu Perfil';
+
+    // Já abre direto a tela dele
+    MenuBtnClick(recBtnEmpresas);
+  end;
 end;
 
 procedure TfMenu.CarregarDashboard;
@@ -238,6 +270,17 @@ begin
     FFrameMaquinas.Align := TAlignLayout.Client;
 
     FFrameMaquinas.CarregarMaquinas;
+end;
+
+procedure TfMenu.CarregarFuncionarioIndividual;
+begin
+    FecharTelasAbertas;
+
+    FFrameFuncionario := TfTelaFuncionario.Create(Self);
+    FFrameFuncionario.Parent := layContainer;
+    FFrameFuncionario.Align := TAlignLayout.Client;
+
+    FFrameFuncionario.CarregarDadosTela;
 end;
 
 procedure TfMenu.AbrirDocumentosFuncionario(const ANomeFuncionario: string);

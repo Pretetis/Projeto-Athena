@@ -1,0 +1,168 @@
+object fLinhaTelaFuncionario: TfLinhaTelaFuncionario
+  Size.Width = 533.000000000000000000
+  Size.Height = 50.000000000000000000
+  Size.PlatformDefault = False
+  object recFundoLinha: TRectangle
+    Align = Client
+    Fill.Kind = None
+    Margins.Left = 15.000000000000000000
+    Margins.Right = 15.000000000000000000
+    Sides = [Bottom]
+    Size.Width = 503.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFF64748B
+    Stroke.Thickness = 0.200000002980232200
+    object GridPanelLayout1: TGridPanelLayout
+      Align = Client
+      Size.Width = 503.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      ColumnCollection = <
+        item
+          Value = 42.857136487968380000
+        end
+        item
+          Value = 28.571435709468520000
+        end
+        item
+          Value = 28.571427802563100000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = recLinhaDoc
+          Row = 0
+        end
+        item
+          Column = 1
+          Control = recLinhaVencimento
+          Row = 0
+        end
+        item
+          Column = 2
+          Control = recLinhaVisualizar
+          Row = 0
+        end>
+      RowCollection = <
+        item
+          Value = 100.000000000000000000
+        end
+        item
+          SizeStyle = Auto
+        end>
+      object recLinhaDoc: TLayout
+        Align = Client
+        Margins.Top = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 215.571395874023400000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        object lbInfoDoc: TLabel
+          Align = Top
+          StyledSettings = []
+          Margins.Left = 20.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Position.X = 20.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 195.571395874023400000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF0F172A
+          TextSettings.VertAlign = Trailing
+          Text = 'CNC 8334'
+          TabOrder = 1
+        end
+        object lbInfoTipoDoc: TLabel
+          Align = Client
+          StyledSettings = []
+          Margins.Left = 20.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Size.Width = 195.571395874023400000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 10.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF64748B
+          TextSettings.VertAlign = Leading
+          Text = 'Dobra, Solda'
+          TabOrder = 0
+        end
+      end
+      object recLinhaVencimento: TRectangle
+        Align = Client
+        Fill.Kind = None
+        Margins.Top = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Sides = []
+        Size.Width = 143.714309692382800000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF64748B
+        Stroke.Thickness = 0.600000023841857900
+        object lbInfoVencimento: TLabel
+          Align = Client
+          StyledSettings = []
+          Margins.Left = 20.000000000000000000
+          Size.Width = 123.714309692382800000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 16.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF334155
+          Text = '15/04/2026'
+          TabOrder = 0
+        end
+      end
+      object recLinhaVisualizar: TRectangle
+        Align = Client
+        Fill.Kind = None
+        Margins.Top = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Sides = []
+        Size.Width = 143.714294433593800000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF64748B
+        Stroke.Thickness = 0.600000023841857900
+        object recBtnVisualizar: TRectangle
+          Align = Client
+          Cursor = crHandPoint
+          Fill.Color = xFFE0E7FF
+          Margins.Left = 20.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 2.000000000000000000
+          Size.Width = 113.714294433593800000
+          Size.Height = 36.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = claNull
+          Stroke.Thickness = 0.000000000000000000
+          XRadius = 7.705902099609375000
+          YRadius = 7.705902099609375000
+          OnClick = recBtnVisualizarClick
+          object lbBtnVisualizar: TLabel
+            Align = Client
+            StyledSettings = [Size]
+            Size.Width = 113.714294433593800000
+            Size.Height = 36.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Roboto'
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF4A4AFF
+            TextSettings.HorzAlign = Center
+            Text = 'VISUALIZAR'
+            TabOrder = 0
+          end
+        end
+      end
+    end
+  end
+end

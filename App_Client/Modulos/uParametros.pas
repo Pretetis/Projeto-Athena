@@ -17,6 +17,7 @@ var
 
   mNomeUsuario: string;
   mUsuario: string;
+  mSetor: string;
   mSenha: string;
   mMaqID: Integer;
   mCncID: Integer;
@@ -37,7 +38,7 @@ const
     userName = ' ';
     password = ' ';
 
-  endPoint       = 'http://localhost:3000';  //Testes Computador DEV
+  endPoint       = 'http://192.168.0.142:3000';  //Testes Computador DEV
 
 //    endPoint       = '';   //produção
 
@@ -47,7 +48,7 @@ implementation
 
 initialization
   ListaAlarmesIgnorados := TList<Integer>.Create;
-  mUsuario := 'Felipe';
+  mUsuario := 'Shallan Davar';
 finalization
   ListaAlarmesIgnorados.Free;
 
