@@ -30,6 +30,7 @@ object FrameFuncionarios: TFrameFuncionarios
         TextSettings.Font.Family = 'Roboto'
         TextSettings.Font.Size = 14.000000000000000000
         TextSettings.FontColor = xF064748B
+        TextSettings.WordWrap = False
         Text = 'Cadastre colaboradores e gerencie seus documentos.'
         TabOrder = 1
       end
@@ -43,6 +44,7 @@ object FrameFuncionarios: TFrameFuncionarios
         TextSettings.Font.Size = 26.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
+        TextSettings.WordWrap = False
         Text = 'Gest'#227'o de Colaboradores'
         TabOrder = 0
       end

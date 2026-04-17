@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
   FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Effects,
-  frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
+  frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos, IdHTTP,
 
   frame.Funcionarios, frame.Maquina, frame.TelaFuncionario;
 
@@ -17,7 +17,6 @@ type
     layContainer: TLayout;
     ScrollBox1: TScrollBox;
     VertScrollBox1: TVertScrollBox;
-    Layout1: TLayout;
     recBtnMaquinas: TRectangle;
     lbMaquinas: TLabel;
     recBtnFuncionarios: TRectangle;
@@ -35,6 +34,11 @@ type
     Path2: TPath;
     layPrincipal: TLayout;
     EfeitoBlur: TBlurEffect;
+    layTitulo: TLayout;
+    cirFotoPerfil: TCircle;
+    lbNomeFuncionario: TLabel;
+    lbCargo: TLabel;
+    Line1: TLine;
     procedure FormShow(Sender: TObject);
     procedure MenuBtnMouseEnter(Sender: TObject);
     procedure MenuBtnMouseLeave(Sender: TObject);
@@ -59,6 +63,7 @@ type
     procedure CarregarFuncionarios;
     procedure CarregarMaquinas;
     procedure CarregarFuncionarioIndividual;
+    procedure CarregarDadosPerfil;
   end;
 
 var
@@ -161,44 +166,81 @@ begin
     end;
 end;
 
+//procedure TfMenu.MenuBtnClick(Sender: TObject);
+//var
+//  Rec: TRectangle;
+//begin
+//    if not (Sender is TRectangle) then Exit;
+//
+//    Rec := TRectangle(Sender);
+//
+//    if Rec = FBotaoAtivo then Exit;
+//
+//    if Assigned(FBotaoAtivo) then
+//        FBotaoAtivo.Fill.Kind := TBrushKind.None;
+//
+//    FBotaoAtivo := Rec;
+//
+//    FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
+//    FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
+//
+//    if Rec.Name = 'recBtnDashboard' then
+//    begin
+//        CarregarDashboard;
+//    end
+//    else if Rec.Name = 'recBtnDocumentos' then
+//    begin
+//        CarregarDocumentos;
+//    end
+//    else if Rec.Name = 'recBtnFuncionarios' then
+//    begin
+//        CarregarFuncionarios;
+//    end
+//    else if Rec.Name = 'recBtnMaquinas' then
+//    begin
+//        CarregarMaquinas;
+//    end
+//    else if Rec.Name = 'recBtnEmpresas' then
+//    begin
+//        CarregarFuncionarioIndividual;
+//    end;
+//end;
+
 procedure TfMenu.MenuBtnClick(Sender: TObject);
 var
   Rec: TRectangle;
+  NomeComponente: string;
 begin
-    if not (Sender is TRectangle) then Exit;
+  // 1. Descobrimos o nome do componente clicado de forma segura
+  if Sender is TComponent then
+    NomeComponente := TComponent(Sender).Name
+  else
+    Exit; // Se não for um componente válido, aborta
 
+  // 2. Regra visual (SÓ acontece se quem chamou foi um TRectangle)
+  if Sender is TRectangle then
+  begin
     Rec := TRectangle(Sender);
 
-    if Rec = FBotaoAtivo then Exit;
-
-    if Assigned(FBotaoAtivo) then
-        FBotaoAtivo.Fill.Kind := TBrushKind.None;
+    if Assigned(FBotaoAtivo) and (FBotaoAtivo <> Rec) then
+      FBotaoAtivo.Fill.Kind := TBrushKind.None;
 
     FBotaoAtivo := Rec;
-
-    FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
+    FBotaoAtivo.Fill.Color := TThemeColors.Indigo600; // Substitua pelo seu método de cor
     FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
+  end;
 
-    if Rec.Name = 'recBtnDashboard' then
-    begin
-        CarregarDashboard;
-    end
-    else if Rec.Name = 'recBtnDocumentos' then
-    begin
-        CarregarDocumentos;
-    end
-    else if Rec.Name = 'recBtnFuncionarios' then
-    begin
-        CarregarFuncionarios;
-    end
-    else if Rec.Name = 'recBtnMaquinas' then
-    begin
-        CarregarMaquinas;
-    end
-    else if Rec.Name = 'recBtnEmpresas' then
-    begin
-        CarregarFuncionarioIndividual;
-    end;
+  // 3. Roteamento para as telas (Funciona para Rectangle ou Layout)
+  if NomeComponente = 'recBtnDashboard' then
+    CarregarDashboard
+  else if NomeComponente = 'recBtnDocumentos' then
+    CarregarDocumentos
+  else if NomeComponente = 'recBtnFuncionarios' then
+    CarregarFuncionarios
+  else if NomeComponente = 'recBtnMaquinas' then
+    CarregarMaquinas
+  else if NomeComponente = 'layTitulo' then
+    CarregarFuncionarioIndividual;
 end;
 
 procedure TfMenu.FormShow(Sender: TObject);
@@ -206,6 +248,7 @@ var
   LSetor: string;
 begin
   IniciarCatalogos;
+  CarregarDadosPerfil;
 
   LSetor := UpperCase(Trim(mSetor));
 
@@ -322,5 +365,51 @@ begin
         FFrameDocumentos.BuscarDados;
     end;
 end;
+
+procedure TfMenu.CarregarDadosPerfil;
+begin
+  // 1. Preenche os textos
+  lbNomeFuncionario.Text := mNomeUsuario;
+  lbCargo.Text := mFuncao; // Ou pode usar mSetor se preferir
+
+  // 2. Busca a foto em uma Thread separada (para não travar a tela)
+  if Trim(mIdFuncionario) <> '' then
+  begin
+    TThread.CreateAnonymousThread(
+      procedure
+      var
+        LHttp: TIdHTTP;
+        LStream: TMemoryStream;
+      begin
+        LHttp := TIdHTTP.Create(nil);
+        LStream := TMemoryStream.Create;
+        try
+          LHttp.Request.BasicAuthentication := True;
+          LHttp.Request.Username := UserName;
+          LHttp.Request.Password := Password;
+
+          try
+            // Faz o GET na rota da sua API que retorna a imagem
+            LHttp.Get(EndPoint + '/funcionarios/' + mIdFuncionario + '/foto', LStream);
+            LStream.Position := 0;
+
+            // Atualiza a interface gráfica sincronizando com a thread principal
+            TThread.Synchronize(nil, procedure
+            begin
+              cirFotoPerfil.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+              cirFotoPerfil.Fill.Kind := TBrushKind.Bitmap;
+              cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+            end);
+          except
+            // Se der erro (ex: usuário não cadastrou foto), falha em silêncio e mantém o círculo vazio/padrão
+          end;
+        finally
+          LStream.Free;
+          LHttp.Free;
+        end;
+      end).Start;
+  end;
+end;
+
 
 end.

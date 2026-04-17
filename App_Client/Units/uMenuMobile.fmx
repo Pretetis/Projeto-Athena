@@ -26,10 +26,13 @@ object fMenuMobile: TfMenuMobile
       Stroke.Thickness = 0.000000000000000000
       object layTitulo: TLayout
         Align = Top
+        Cursor = crHandPoint
+        HitTest = True
         Size.Width = 413.000000000000000000
         Size.Height = 81.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
+        OnClick = MenuBtnClick
         object cirFotoPerfil: TCircle
           Align = MostLeft
           Margins.Left = 25.000000000000000000
@@ -72,11 +75,11 @@ object fMenuMobile: TfMenuMobile
       object VertScrollBox1: TVertScrollBox
         Align = Client
         Size.Width = 413.000000000000000000
-        Size.Height = 597.000000000000000000
+        Size.Height = 576.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
         Viewport.Width = 413.000000000000000000
-        Viewport.Height = 597.000000000000000000
+        Viewport.Height = 576.000000000000000000
         object recBtnMaquinas: TRectangle
           Align = Top
           Cursor = crHandPoint
@@ -86,7 +89,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 235.000000000000000000
+          Position.Y = 250.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -172,7 +175,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 172.000000000000000000
+          Position.Y = 187.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -252,6 +255,7 @@ object fMenuMobile: TfMenuMobile
           Size.PlatformDefault = False
           Stroke.Color = xFFCBD5E1
           Stroke.Thickness = 0.000000000000000000
+          Visible = False
           XRadius = 12.000000000000000000
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
@@ -322,7 +326,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 109.000000000000000000
+          Position.Y = 124.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -395,7 +399,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 46.000000000000000000
+          Position.Y = 61.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -477,6 +481,7 @@ object fMenuMobile: TfMenuMobile
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 20.000000000000000000
+          Margins.Bottom = 15.000000000000000000
           Position.X = 20.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 41.000000000000000000
@@ -487,6 +492,21 @@ object fMenuMobile: TfMenuMobile
           Text = 'Menu Principal'
           TabOrder = 1
         end
+      end
+      object Line1: TLine
+        Align = Top
+        LineType = Bottom
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 20.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Position.X = 20.000000000000000000
+        Position.Y = 91.000000000000000000
+        Size.Width = 373.000000000000000000
+        Size.Height = 1.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFFCBD5E1
+        Stroke.Thickness = 0.500000000000000000
       end
     end
   end

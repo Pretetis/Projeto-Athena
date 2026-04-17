@@ -99,24 +99,25 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           object recInfoLinhaStatus: TRectangle
             Align = Client
             Fill.Color = xFFFEF9C3
-            Margins.Top = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
             Margins.Right = 15.000000000000000000
-            Margins.Bottom = 5.000000000000000000
+            Margins.Bottom = 4.000000000000000000
             Size.Width = 195.743789672851600000
-            Size.Height = 30.000000000000000000
+            Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFFEAB308
             XRadius = 8.000000000000000000
             YRadius = 8.000000000000000000
             object lbInfoStatus: TLabel
               Align = Client
-              StyledSettings = [Size]
+              StyledSettings = []
               Margins.Left = 10.000000000000000000
               Margins.Top = 2.000000000000000000
               Size.Width = 156.743789672851600000
-              Size.Height = 28.000000000000000000
+              Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
+              TextSettings.Font.Size = 10.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = xFFCA8A04
               Text = 'A EXPIRAR EM 5 DIAS'
@@ -142,7 +143,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
               Position.X = 5.000000000000000000
               Position.Y = 2.000000000000000000
               Size.Width = 24.000000000000000000
-              Size.Height = 24.000000000000000000
+              Size.Height = 26.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFFCA8A04
               Stroke.Thickness = 2.500000000000000000
@@ -182,6 +183,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF0F172A
             TextSettings.VertAlign = Trailing
+            TextSettings.WordWrap = False
             Text = 'Exame Toxicol'#243'gico'
             TabOrder = 1
           end
@@ -198,6 +200,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF64748B
             TextSettings.VertAlign = Leading
+            TextSettings.WordWrap = False
             Text = 'Sa'#250'de'
             TabOrder = 0
           end
@@ -209,14 +212,14 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 173.057922363281200000
+        Size.Width = 173.057922363281300000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
         Stroke.Thickness = 0.600000023841857900
         object Layout2: TLayout
           Align = Client
-          Size.Width = 173.057922363281200000
+          Size.Width = 173.057922363281300000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -225,7 +228,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Position.X = 20.000000000000000000
-            Size.Width = 153.057922363281200000
+            Size.Width = 153.057922363281300000
             Size.Height = 20.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -233,6 +236,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF0F172A
             TextSettings.VertAlign = Trailing
+            TextSettings.WordWrap = False
             Text = 'Kaladin StormBlessed'
             TabOrder = 1
           end
@@ -241,7 +245,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Margins.Top = 2.000000000000000000
-            Size.Width = 153.057922363281200000
+            Size.Width = 153.057922363281300000
             Size.Height = 18.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -249,6 +253,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF64748B
             TextSettings.VertAlign = Leading
+            TextSettings.WordWrap = False
             Text = 'Operador de Empilhadeira'
             TabOrder = 0
           end
@@ -299,7 +304,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Margins.Top = 2.000000000000000000
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 2.000000000000000000
-          Size.Width = 120.743957519531200000
+          Size.Width = 120.743957519531300000
           Size.Height = 36.000000000000000000
           Size.PlatformDefault = False
           Stroke.Thickness = 0.000000000000000000
@@ -309,7 +314,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           object lbBtnVisualizar: TLabel
             Align = Client
             StyledSettings = [Size]
-            Size.Width = 120.743957519531200000
+            Size.Width = 120.743957519531300000
             Size.Height = 36.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'

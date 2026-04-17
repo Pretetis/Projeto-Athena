@@ -152,6 +152,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.FontColor = xFF0F172A
           TextSettings.VertAlign = Trailing
+          TextSettings.WordWrap = False
           Text = 'CNC 8334'
           TabOrder = 1
         end
@@ -168,6 +169,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.FontColor = xFF64748B
           TextSettings.VertAlign = Leading
+          TextSettings.WordWrap = False
           Text = 'Dobra, Solda'
           TabOrder = 0
         end
@@ -202,6 +204,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF0F172A
             TextSettings.VertAlign = Trailing
+            TextSettings.WordWrap = False
             Text = 'Kaladin StormBlessed'
             TabOrder = 1
           end
@@ -219,6 +222,7 @@ object FrameLinhaPlanilhaDocumento: TFrameLinhaPlanilhaDocumento
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFF64748B
             TextSettings.VertAlign = Leading
+            TextSettings.WordWrap = False
             Text = 'Operador de Empilhadeira'
             TabOrder = 0
           end

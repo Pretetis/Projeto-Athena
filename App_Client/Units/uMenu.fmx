@@ -45,21 +45,14 @@ object fMenu: TfMenu
           Size.Height = 800.000000000000000000
           Size.PlatformDefault = False
           Stroke.Thickness = 0.000000000000000000
-          object Layout1: TLayout
-            Align = Top
-            Size.Width = 280.000000000000000000
-            Size.Height = 50.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 0
-          end
           object VertScrollBox1: TVertScrollBox
             Align = Client
             Size.Width = 280.000000000000000000
-            Size.Height = 750.000000000000000000
+            Size.Height = 698.000000000000000000
             Size.PlatformDefault = False
-            TabOrder = 1
+            TabOrder = 0
             Viewport.Width = 280.000000000000000000
-            Viewport.Height = 750.000000000000000000
+            Viewport.Height = 698.000000000000000000
             object recBtnMaquinas: TRectangle
               Align = Top
               Cursor = crHandPoint
@@ -69,7 +62,7 @@ object fMenu: TfMenu
               Margins.Right = 10.000000000000000000
               Margins.Bottom = 5.000000000000000000
               Position.X = 10.000000000000000000
-              Position.Y = 257.000000000000000000
+              Position.Y = 194.000000000000000000
               Size.Width = 260.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -148,7 +141,7 @@ object fMenu: TfMenu
               Margins.Right = 10.000000000000000000
               Margins.Bottom = 5.000000000000000000
               Position.X = 10.000000000000000000
-              Position.Y = 194.000000000000000000
+              Position.Y = 131.000000000000000000
               Size.Width = 260.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -221,6 +214,7 @@ object fMenu: TfMenu
               Size.PlatformDefault = False
               Stroke.Color = xFFCBD5E1
               Stroke.Thickness = 0.000000000000000000
+              Visible = False
               XRadius = 12.000000000000000000
               YRadius = 12.000000000000000000
               OnClick = MenuBtnClick
@@ -423,6 +417,69 @@ object fMenu: TfMenu
                 TabOrder = 1
               end
             end
+          end
+          object layTitulo: TLayout
+            Align = Top
+            Cursor = crHandPoint
+            HitTest = True
+            Size.Width = 280.000000000000000000
+            Size.Height = 81.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            OnClick = MenuBtnClick
+            object cirFotoPerfil: TCircle
+              Align = MostLeft
+              Margins.Left = 10.000000000000000000
+              Position.X = 10.000000000000000000
+              Size.Width = 65.000000000000000000
+              Size.Height = 81.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object lbNomeFuncionario: TLabel
+              Align = Top
+              StyledSettings = []
+              Margins.Left = 15.000000000000000000
+              Margins.Top = 20.000000000000000000
+              Position.X = 90.000000000000000000
+              Position.Y = 20.000000000000000000
+              Size.Width = 190.000000000000000000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Roboto'
+              TextSettings.Font.Size = 22.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFFCBD5E1
+              Text = 'lbNomeFuncionario'
+              TabOrder = 2
+            end
+            object lbCargo: TLabel
+              Align = Client
+              StyledSettings = [Size, Style]
+              Margins.Left = 20.000000000000000000
+              Margins.Bottom = 15.000000000000000000
+              Size.Width = 185.000000000000000000
+              Size.Height = 29.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Roboto'
+              TextSettings.FontColor = xFFCBD5E1
+              Text = 'lbCargo'
+              TabOrder = 1
+            end
+          end
+          object Line1: TLine
+            Align = Top
+            LineType = Bottom
+            Margins.Left = 30.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Margins.Right = 30.000000000000000000
+            Margins.Bottom = 10.000000000000000000
+            Position.X = 30.000000000000000000
+            Position.Y = 91.000000000000000000
+            Size.Width = 220.000000000000000000
+            Size.Height = 1.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFCBD5E1
+            Stroke.Thickness = 0.500000000000000000
           end
         end
       end

@@ -2,6 +2,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
   Size.Width = 1220.000000000000000000
   Size.Height = 800.000000000000000000
   Size.PlatformDefault = False
+  OnResize = FrameResize
   object recFundo: TRectangle
     Align = Client
     Fill.Color = xF0F8FAFC
@@ -29,6 +30,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
         TextSettings.Font.Family = 'Roboto'
         TextSettings.Font.Size = 14.000000000000000000
         TextSettings.FontColor = xF064748B
+        TextSettings.WordWrap = False
         Text = 'Vis'#227'o geral do status de conformidade da empresa.'
         TabOrder = 1
       end
@@ -42,6 +44,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
         TextSettings.Font.Size = 28.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
+        TextSettings.WordWrap = False
         Text = 'Dashboard de Documentos'
         TabOrder = 0
       end
@@ -535,246 +538,268 @@ object FrameMenuDashboard: TFrameMenuDashboard
           TabOrder = 0
         end
       end
-      object layCabecalhoPlanilhaAlerta: TLayout
-        Align = Top
-        Position.Y = 80.000000000000000000
+      object hscrollboxTabela: THorzScrollBox
+        Align = Client
         Size.Width = 1150.000000000000000000
-        Size.Height = 50.000000000000000000
+        Size.Height = 450.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        object recCabecalhoPlanilha: TRectangle
-          Align = Client
-          Fill.Color = xFFF8FAFC
-          Margins.Left = 1.000000000000000000
-          Margins.Right = 1.000000000000000000
-          Size.Width = 1148.000000000000000000
-          Size.Height = 50.000000000000000000
+        Viewport.Width = 1150.000000000000000000
+        Viewport.Height = 450.000000000000000000
+        object layTabelaCompleta: TLayout
+          Align = Left
+          Size.Width = 1150.000000000000000000
+          Size.Height = 450.000000000000000000
           Size.PlatformDefault = False
-          Stroke.Thickness = 0.000000000000000000
-          object gplCabecalhoPlanilhaAlerta: TGridPanelLayout
-            Align = Client
-            Size.Width = 1148.000000000000000000
+          TabOrder = 0
+          object layCabecalhoPlanilhaAlerta: TLayout
+            Align = Top
+            Size.Width = 1150.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            ColumnCollection = <
-              item
-                Value = 20.181462655635730000
-              end
-              item
-                Value = 20.181463771754730000
-              end
-              item
-                Value = 15.136008535568840000
-              end
-              item
-                Value = 15.136104631265860000
-              end
-              item
-                Value = 20.181476725297000000
-              end
-              item
-                Value = 9.183483680477842000
-              end>
-            ControlCollection = <
-              item
-                Column = 0
-                Control = recCabecalhoStatus
-                Row = 0
-              end
-              item
-                Column = 1
-                Control = recCabecalhoDoc
-                Row = 0
-              end
-              item
-                Column = 2
-                Control = recFuncMaq
-                Row = 0
-              end
-              item
-                Column = 3
-                Control = recVencimento
-                Row = 0
-              end
-              item
-                Column = 4
-                Control = recVisualizar
-                Row = 0
-              end
-              item
-                Column = 5
-                Control = recEditar
-                Row = 0
-              end>
-            RowCollection = <
-              item
-                Value = 100.000000000000000000
-              end
-              item
-                SizeStyle = Auto
-              end>
-            object recCabecalhoStatus: TRectangle
+            object recCabecalhoPlanilha: TRectangle
               Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = [Right]
-              Size.Width = 231.683197021484400000
-              Size.Height = 30.000000000000000000
+              Fill.Color = xFFF8FAFC
+              Margins.Left = 1.000000000000000000
+              Margins.Right = 1.000000000000000000
+              Size.Width = 1148.000000000000000000
+              Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbStatus: TLabel
+              Stroke.Thickness = 0.000000000000000000
+              object gplCabecalhoPlanilhaAlerta: TGridPanelLayout
                 Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 211.683197021484400000
-                Size.Height = 30.000000000000000000
+                Size.Width = 1148.000000000000000000
+                Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'STATUS'
                 TabOrder = 0
-              end
-            end
-            object recCabecalhoDoc: TRectangle
-              Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = [Right]
-              Size.Width = 231.683197021484400000
-              Size.Height = 30.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbDoc: TLabel
-                Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 211.683197021484400000
-                Size.Height = 30.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'DOCUMENTO'
-                TabOrder = 0
-              end
-            end
-            object recFuncMaq: TRectangle
-              Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = [Right]
-              Size.Width = 173.761413574218800000
-              Size.Height = 30.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbFuncMaq: TLabel
-                Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 153.761413574218800000
-                Size.Height = 30.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'FUNCION'#193'RIO / M'#193'QUINA'
-                TabOrder = 0
-              end
-            end
-            object recVencimento: TRectangle
-              Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = [Right]
-              Size.Width = 173.762451171875000000
-              Size.Height = 30.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbVencimento: TLabel
-                Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 153.762451171875000000
-                Size.Height = 30.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'VENCIMENTO'
-                TabOrder = 0
-              end
-            end
-            object recVisualizar: TRectangle
-              Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = [Right]
-              Size.Width = 231.683349609375000000
-              Size.Height = 30.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbVisualizar: TLabel
-                Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 211.683349609375000000
-                Size.Height = 30.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'VISUALIZAR'
-                TabOrder = 0
-              end
-            end
-            object recEditar: TRectangle
-              Align = Client
-              Fill.Kind = None
-              Margins.Top = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Sides = []
-              Size.Width = 105.426391601562500000
-              Size.Height = 30.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Color = xFF64748B
-              Stroke.Thickness = 0.600000023841857900
-              object lbEditar: TLabel
-                Align = Client
-                StyledSettings = [Size]
-                Margins.Left = 20.000000000000000000
-                Size.Width = 85.426391601562500000
-                Size.Height = 30.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.Family = 'Roboto'
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF64748B
-                Text = 'EDITAR'
-                TabOrder = 0
+                ColumnCollection = <
+                  item
+                    Value = 20.181462655635730000
+                  end
+                  item
+                    Value = 20.181463771754730000
+                  end
+                  item
+                    Value = 15.136008535568840000
+                  end
+                  item
+                    Value = 15.136104631265860000
+                  end
+                  item
+                    Value = 20.181476725297000000
+                  end
+                  item
+                    Value = 9.183483680477842000
+                  end>
+                ControlCollection = <
+                  item
+                    Column = 0
+                    Control = recCabecalhoStatus
+                    Row = 0
+                  end
+                  item
+                    Column = 1
+                    Control = recCabecalhoDoc
+                    Row = 0
+                  end
+                  item
+                    Column = 2
+                    Control = recFuncMaq
+                    Row = 0
+                  end
+                  item
+                    Column = 3
+                    Control = recVencimento
+                    Row = 0
+                  end
+                  item
+                    Column = 4
+                    Control = recVisualizar
+                    Row = 0
+                  end
+                  item
+                    Column = 5
+                    Control = recEditar
+                    Row = 0
+                  end>
+                RowCollection = <
+                  item
+                    Value = 100.000000000000000000
+                  end
+                  item
+                    SizeStyle = Auto
+                  end>
+                object recCabecalhoStatus: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = [Right]
+                  Size.Width = 231.683197021484400000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbStatus: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 211.683197021484400000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    Text = 'STATUS'
+                    TabOrder = 0
+                  end
+                end
+                object recCabecalhoDoc: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = [Right]
+                  Size.Width = 231.683197021484400000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbDoc: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 211.683197021484400000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    Text = 'DOCUMENTO'
+                    TabOrder = 0
+                  end
+                end
+                object recFuncMaq: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = [Right]
+                  Size.Width = 173.761413574218800000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbFuncMaq: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 153.761413574218800000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    TextSettings.WordWrap = False
+                    Text = 'FUNCION'#193'RIO / M'#193'QUINA'
+                    TabOrder = 0
+                  end
+                end
+                object recVencimento: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = [Right]
+                  Size.Width = 173.762451171875000000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbVencimento: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 153.762451171875000000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    Text = 'VENCIMENTO'
+                    TabOrder = 0
+                  end
+                end
+                object recVisualizar: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = [Right]
+                  Size.Width = 231.683349609375000000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbVisualizar: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 211.683349609375000000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    Text = 'VISUALIZAR'
+                    TabOrder = 0
+                  end
+                end
+                object recEditar: TRectangle
+                  Align = Client
+                  Fill.Kind = None
+                  Margins.Top = 10.000000000000000000
+                  Margins.Bottom = 10.000000000000000000
+                  Sides = []
+                  Size.Width = 105.426391601562500000
+                  Size.Height = 30.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Color = xFF64748B
+                  Stroke.Thickness = 0.600000023841857900
+                  object lbEditar: TLabel
+                    Align = Client
+                    StyledSettings = [Size]
+                    Margins.Left = 20.000000000000000000
+                    Size.Width = 85.426391601562500000
+                    Size.Height = 30.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF64748B
+                    Text = 'EDITAR'
+                    TabOrder = 0
+                  end
+                end
               end
             end
           end
+          object vscrollboxLinhaPlanilha: TScrollBox
+            Align = Client
+            Size.Width = 1150.000000000000000000
+            Size.Height = 400.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Viewport.Width = 1150.000000000000000000
+            Viewport.Height = 400.000000000000000000
+            object layContainerLinhas: TLayout
+              Size.Width = 1150.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+            end
+          end
         end
-      end
-      object vscrollboxLinhaPlanilha: TScrollBox
-        Align = Client
-        Size.Width = 1150.000000000000000000
-        Size.Height = 400.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 2
-        Viewport.Width = 1150.000000000000000000
-        Viewport.Height = 400.000000000000000000
       end
     end
   end

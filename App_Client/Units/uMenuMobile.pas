@@ -44,6 +44,7 @@ type
     lbNomeFuncionario: TLabel;
     lbCargo: TLabel;
     lbMenu: TLabel;
+    Line1: TLine;
     procedure MenuBtnClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -188,32 +189,71 @@ end;
   NAVEGAÇÃO DO MENU
   ============================================================================== }
 
+//procedure TfMenuMobile.MenuBtnClick(Sender: TObject);
+//var
+//  Rec: TRectangle;
+//  Lay: TLayout;
+//begin
+//  if not (Sender is TRectangle) then Exit;
+//
+//  Rec := TRectangle(Sender);
+//  Lay := TLayout(Sender);
+//
+//  // Controle visual do botão ativo (cor do Theme)
+//  if Assigned(FBotaoAtivo) and (FBotaoAtivo <> Rec) then
+//    FBotaoAtivo.Fill.Kind := TBrushKind.None;
+//
+//  FBotaoAtivo := Rec;
+//  FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
+//  FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
+//
+//  // Roteamento para as telas
+//  if Rec.Name = 'recBtnDashboard' then
+//    CarregarDashboard
+//  else if Rec.Name = 'recBtnDocumentos' then
+//    CarregarDocumentos
+//  else if Rec.Name = 'recBtnFuncionarios' then
+//    CarregarFuncionarios
+//  else if Rec.Name = 'recBtnMaquinas' then
+//    CarregarMaquinas
+//  else if Lay.Name = 'layTitulo' then
+//    CarregarFuncionarioIndividual;
+//end;
+
 procedure TfMenuMobile.MenuBtnClick(Sender: TObject);
 var
   Rec: TRectangle;
+  NomeComponente: string;
 begin
-  if not (Sender is TRectangle) then Exit;
+  // 1. Descobrimos o nome do componente clicado de forma segura
+  if Sender is TComponent then
+    NomeComponente := TComponent(Sender).Name
+  else
+    Exit; // Se não for um componente válido, aborta
 
-  Rec := TRectangle(Sender);
+  // 2. Regra visual (SÓ acontece se quem chamou foi um TRectangle)
+  if Sender is TRectangle then
+  begin
+    Rec := TRectangle(Sender);
 
-  // Controle visual do botão ativo (cor do Theme)
-  if Assigned(FBotaoAtivo) and (FBotaoAtivo <> Rec) then
-    FBotaoAtivo.Fill.Kind := TBrushKind.None;
+    if Assigned(FBotaoAtivo) and (FBotaoAtivo <> Rec) then
+      FBotaoAtivo.Fill.Kind := TBrushKind.None;
 
-  FBotaoAtivo := Rec;
-  FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
-  FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
+    FBotaoAtivo := Rec;
+    FBotaoAtivo.Fill.Color := TThemeColors.Indigo600; // Substitua pelo seu método de cor
+    FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
+  end;
 
-  // Roteamento para as telas
-  if Rec.Name = 'recBtnDashboard' then
+  // 3. Roteamento para as telas (Funciona para Rectangle ou Layout)
+  if NomeComponente = 'recBtnDashboard' then
     CarregarDashboard
-  else if Rec.Name = 'recBtnDocumentos' then
+  else if NomeComponente = 'recBtnDocumentos' then
     CarregarDocumentos
-  else if Rec.Name = 'recBtnFuncionarios' then
+  else if NomeComponente = 'recBtnFuncionarios' then
     CarregarFuncionarios
-  else if Rec.Name = 'recBtnMaquinas' then
+  else if NomeComponente = 'recBtnMaquinas' then
     CarregarMaquinas
-  else if Rec.Name = 'recBtnEmpresas' then
+  else if NomeComponente = 'layTitulo' then
     CarregarFuncionarioIndividual;
 end;
 

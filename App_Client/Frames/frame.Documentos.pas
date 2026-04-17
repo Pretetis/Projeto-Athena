@@ -71,12 +71,17 @@ type
     lbBtnTodosStatus: TLabel;
     recBtnTodosativosDesa: TRectangle;
     lbBtnTodosativosDesa: TLabel;
+    hscrollboxTabela: THorzScrollBox;
+    layTabelaCompleta: TLayout;
+    layContainerLinhas: TLayout;
+    HorzScrollBox1: THorzScrollBox;
 
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
     procedure edtBuscaDocumentosChange(Sender: TObject);
     procedure tmrBuscaTimer(Sender: TObject);
     procedure recBtnAddDocumentoClick(Sender: TObject);
+    procedure FrameResize(Sender: TObject);
 
   private
     FReq: TModuloRequest;
@@ -327,14 +332,41 @@ begin
     end;
 end;
 
+procedure TFrameDocumentos.FrameResize(Sender: TObject);
+const
+  LARGURA_MINIMA = 1150;
+begin
+  // Mesma lógica: expande no PC, cria barra de rolagem no Mobile
+  if Self.Width >= LARGURA_MINIMA then
+  begin
+    layTabelaCompleta.Width  := Self.Width - 70;
+    layContainerLinhas.Width := layTabelaCompleta.Width;
+  end
+  else
+  begin
+    layTabelaCompleta.Width  := LARGURA_MINIMA;
+    layContainerLinhas.Width := LARGURA_MINIMA;
+  end;
+end;
+
+//procedure TFrameDocumentos.LimparTabela;
+//var
+//  i: Integer;
+//begin
+//    for i := vscrollboxLinhaPlanilha.Content.ChildrenCount - 1 downto 0 do
+//    begin
+//        if vscrollboxLinhaPlanilha.Content.Children[i] is TFrameLinhaPlanilhaDocumento then
+//            vscrollboxLinhaPlanilha.Content.Children[i].Free;
+//    end;
+//end;
 procedure TFrameDocumentos.LimparTabela;
 var
   i: Integer;
 begin
-    for i := vscrollboxLinhaPlanilha.Content.ChildrenCount - 1 downto 0 do
+    // Limpa de trás para frente usando DisposeOf (Obrigatório no Mobile 10.3)
+    for i := layContainerLinhas.ChildrenCount - 1 downto 0 do
     begin
-        if vscrollboxLinhaPlanilha.Content.Children[i] is TFrameLinhaPlanilhaDocumento then
-            vscrollboxLinhaPlanilha.Content.Children[i].Free;
+        layContainerLinhas.Children[i].DisposeOf;
     end;
 end;
 
@@ -389,7 +421,7 @@ begin
 
                             // 3. TERCEIRO: Configurações visuais e de posicionamento
                             LFrame.Name := '';
-                            LFrame.Parent := vscrollboxLinhaPlanilha;
+                            LFrame.Parent := layContainerLinhas;
                             LFrame.Align := TAlignLayout.Top;
                             LFrame.Margins.Bottom := 4;
                             LFrame.Position.Y := 99999;
@@ -397,13 +429,15 @@ begin
                             LFrame.CarregarDados(LTitulo, LTipo, LNome, LValidade);
                             LFrame.TipoAtivo(LFrame);
                         end;
+                        layContainerLinhas.Height := LJsonArray.Count * 54;
                     finally
                         vscrollboxLinhaPlanilha.EndUpdate;
-                        Self.Width := Self.Width + 1;
-
-                        Application.ProcessMessages;
-
+                        layContainerLinhas.RecalcSize;
                         Self.Width := Self.Width - 1;
+//
+//                        Application.ProcessMessages;
+//
+                        Self.Width := Self.Width + 1;
                     end;
                 finally
                     LJsonArray.Free;

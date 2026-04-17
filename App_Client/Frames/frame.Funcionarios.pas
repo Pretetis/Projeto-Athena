@@ -220,8 +220,10 @@ begin
             try
                 flowlayCardHorzFuncionarios.BeginUpdate;
                 try
-                    while flowlayCardHorzFuncionarios.ControlsCount > 0 do
-                        flowlayCardHorzFuncionarios.Controls[0].Free;
+                    for I := flowlayCardHorzFuncionarios.ControlsCount - 1 downto 0 do
+                    begin
+                        flowlayCardHorzFuncionarios.Controls[I].DisposeOf;
+                    end;
 
                     for I := 0 to LJsonArray.Count - 1 do
                     begin

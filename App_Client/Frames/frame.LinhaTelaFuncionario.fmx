@@ -75,6 +75,7 @@ object fLinhaTelaFuncionario: TfLinhaTelaFuncionario
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.FontColor = xFF0F172A
           TextSettings.VertAlign = Trailing
+          TextSettings.WordWrap = False
           Text = 'CNC 8334'
           TabOrder = 1
         end
@@ -91,6 +92,7 @@ object fLinhaTelaFuncionario: TfLinhaTelaFuncionario
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.FontColor = xFF64748B
           TextSettings.VertAlign = Leading
+          TextSettings.WordWrap = False
           Text = 'Dobra, Solda'
           TabOrder = 0
         end
