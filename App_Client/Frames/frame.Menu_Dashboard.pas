@@ -86,11 +86,9 @@ procedure TFrameMenuDashboard.CarregarDados;
 var
   LReqResumo, LReqLista: TModuloRequest;
 begin
-    // 1. Pede o resumo dos totais
     LReqResumo := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
     LReqResumo.ListarTotalDocumentos;
 
-    // 2. Pede a lista da tabela
     LReqLista := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
     LReqLista.ListarDocumentosVencer;
 end;

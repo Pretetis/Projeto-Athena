@@ -46,7 +46,7 @@ object FrameModalAdicionarFuncionario: TFrameModalAdicionarFuncionario
         TextSettings.Font.Size = 20.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
-        Text = 'Adicionar Novo Documento'
+        Text = 'Adicionar Novo Funcion'#225'rio'
         TabOrder = 0
       end
       object Line1: TLine

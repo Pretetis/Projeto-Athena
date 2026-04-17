@@ -115,19 +115,19 @@ end;
 procedure TfMenu.FecharTelasAbertas;
 begin
     if Assigned(FFrameDashboard) then
-        FreeAndNil(FFrameDashboard);
+        FFrameDashboard.Visible := False;
 
     if Assigned(FFrameDocumentos) then
-        FreeAndNil(FFrameDocumentos);
+        FFrameDocumentos.Visible := False;
 
     if Assigned(FFrameFuncionarios) then
-        FreeAndNil(FFrameFuncionarios);
+        FFrameFuncionarios.Visible := False;
 
     if Assigned(FFrameMaquinas) then
-        FreeAndNil(FFrameMaquinas);
+        FFrameMaquinas.Visible := False;
 
     if Assigned(FFrameFuncionario) then
-        FreeAndNil(FFrameFuncionario);
+        FFrameFuncionario.Visible := False;
 end;
 
 procedure TfMenu.MenuBtnMouseEnter(Sender: TObject);
@@ -234,10 +234,16 @@ procedure TfMenu.CarregarDashboard;
 begin
     FecharTelasAbertas;
 
-    FFrameDashboard := TFrameMenuDashboard.Create(Self);
-    FFrameDashboard.Parent := layContainer;
-    FFrameDashboard.Align := TAlignLayout.Client;
+    // Só cria o Frame se ele ainda não existir na memória
+    if not Assigned(FFrameDashboard) then
+    begin
+        FFrameDashboard := TFrameMenuDashboard.Create(Self);
+        FFrameDashboard.Parent := layContainer;
+        FFrameDashboard.Align := TAlignLayout.Client;
+    end;
 
+    FFrameDashboard.Visible := True;
+    FFrameDashboard.BringToFront;
     FFrameDashboard.CarregarDados;
 end;
 
@@ -245,19 +251,32 @@ procedure TfMenu.CarregarDocumentos;
 begin
     FecharTelasAbertas;
 
-    FFrameDocumentos := TFrameDocumentos.Create(Self);
-    FFrameDocumentos.Parent := layContainer;
-    FFrameDocumentos.Align := TAlignLayout.Client;
+    if not Assigned(FFrameDocumentos) then
+    begin
+        FFrameDocumentos := TFrameDocumentos.Create(Self);
+        FFrameDocumentos.Parent := layContainer;
+        FFrameDocumentos.Align := TAlignLayout.Client;
+    end;
+
+    FFrameDocumentos.Visible := True;
+    FFrameDocumentos.BringToFront;
+
+    // Se a tela Documentos tiver um método CarregarDados, chame aqui.
 end;
 
 procedure TfMenu.CarregarFuncionarios;
 begin
     FecharTelasAbertas;
 
-    FFrameFuncionarios := TFrameFuncionarios.Create(Self);
-    FFrameFuncionarios.Parent := layContainer;
-    FFrameFuncionarios.Align := TAlignLayout.Client;
+    if not Assigned(FFrameFuncionarios) then
+    begin
+        FFrameFuncionarios := TFrameFuncionarios.Create(Self);
+        FFrameFuncionarios.Parent := layContainer;
+        FFrameFuncionarios.Align := TAlignLayout.Client;
+    end;
 
+    FFrameFuncionarios.Visible := True;
+    FFrameFuncionarios.BringToFront;
     FFrameFuncionarios.CarregarFuncionarios;
 end;
 
@@ -265,10 +284,15 @@ procedure TfMenu.CarregarMaquinas;
 begin
     FecharTelasAbertas;
 
-    FFrameMaquinas := TFrameMaquinas.Create(Self);
-    FFrameMaquinas.Parent := layContainer;
-    FFrameMaquinas.Align := TAlignLayout.Client;
+    if not Assigned(FFrameMaquinas) then
+    begin
+        FFrameMaquinas := TFrameMaquinas.Create(Self);
+        FFrameMaquinas.Parent := layContainer;
+        FFrameMaquinas.Align := TAlignLayout.Client;
+    end;
 
+    FFrameMaquinas.Visible := True;
+    FFrameMaquinas.BringToFront;
     FFrameMaquinas.CarregarMaquinas;
 end;
 
@@ -276,10 +300,15 @@ procedure TfMenu.CarregarFuncionarioIndividual;
 begin
     FecharTelasAbertas;
 
-    FFrameFuncionario := TfTelaFuncionario.Create(Self);
-    FFrameFuncionario.Parent := layContainer;
-    FFrameFuncionario.Align := TAlignLayout.Client;
+    if not Assigned(FFrameFuncionario) then
+    begin
+        FFrameFuncionario := TfTelaFuncionario.Create(Self);
+        FFrameFuncionario.Parent := layContainer;
+        FFrameFuncionario.Align := TAlignLayout.Client;
+    end;
 
+    FFrameFuncionario.Visible := True;
+    FFrameFuncionario.BringToFront;
     FFrameFuncionario.CarregarDadosTela;
 end;
 
