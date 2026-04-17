@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls,
+  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, IdHTTP, FMX.Effects,
   // Units do Projeto Athena
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
   frame.Funcionarios, frame.Maquina, frame.TelaFuncionario;
@@ -15,7 +15,7 @@ type
     layMenu: TLayout;
     layHostName: TLayout;
     recMenu: TRectangle;
-    Layout3: TLayout;
+    layTitulo: TLayout;
     VertScrollBox1: TVertScrollBox;
     recBtnMaquinas: TRectangle;
     lbMaquinas: TLabel;
@@ -39,9 +39,15 @@ type
     Layout8: TLayout;
     recFundo: TRectangle;
     scrollboxContainerFrame: TScrollBox;
-    procedure FormShow(Sender: TObject);
+    EfeitoBlur: TBlurEffect;
+    cirFotoPerfil: TCircle;
+    lbNomeFuncionario: TLabel;
+    lbCargo: TLabel;
+    lbMenu: TLabel;
     procedure MenuBtnClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Gerenciamento SPA Mobile }
     FFrameAtual: TFrame;
@@ -57,6 +63,8 @@ type
     procedure CarregarFuncionarios;
     procedure CarregarMaquinas;
     procedure CarregarFuncionarioIndividual;
+    procedure CarregarDadosPerfil;
+
   public
     procedure AbrirDocumentosFuncionario(const ANomeFuncionario: string);
   end;
@@ -74,16 +82,48 @@ uses
 { ==============================================================================
   GERENCIAMENTO MOBILE (SPA) E BOTÃO VOLTAR
   ============================================================================== }
+procedure TfMenuMobile.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  // Intercepta o botão voltar nativo do Android
+  if Key = vkHardwareBack then
+  begin
+    // Se NÃO for Admin/RH (Ou seja, é o nível 3 - Funcionário Comum)
+    if (mNivelAcesso <> 0) and (mNivelAcesso <> 1) then
+    begin
+      // Ele não tem menu para voltar. Anulamos a tecla para ele não sair da tela de perfil.
+      Key := 0;
+    end
+    else
+    begin
+      // Níveis 0 e 1 (Admin/RH) - Tem permissão para voltar ao menu
+
+      // Verifica se existe alguma tela aberta (layHostName visível)
+      if layHostName.Visible then
+      begin
+        FecharTelaAtual; // Destrói o frame e esconde o host
+
+        // Garante que o layout do menu volte a ficar visível
+        layMenu.Visible := True;
+
+        // Zera a chave para o aplicativo não fechar (voltou apenas de tela)
+        Key := 0;
+      end
+      else
+      begin
+        // Se layHostName NÃO está visível, o usuário já está no Menu principal.
+        // Como não estamos zerando a Key (Key := 0) aqui, o Android fará o
+        // comportamento padrão, que é fechar/minimizar o aplicativo.
+      end;
+    end;
+  end;
+end;
 
 procedure TfMenuMobile.FormShow(Sender: TObject);
-var
-  LSetor: string;
 begin
   IniciarCatalogos;
+  CarregarDadosPerfil;
 
-  LSetor := UpperCase(Trim(mSetor));
-
-  if (LSetor = 'ADMINISTRATIVO') or (LSetor = 'RH') then
+  if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
   begin
     // Fluxo Normal (Admin/RH)
     layHostName.Visible := False;
@@ -98,40 +138,30 @@ begin
     // Traz o container de telas para a frente e deixa sempre visível
     layHostName.Visible := True;
     layHostName.BringToFront;
+    //MenuBtnClick(recBtnEmpresas);
 
     // Carrega direto a tela do funcionário
     CarregarFuncionarioIndividual;
   end;
 end;
 
-procedure TfMenuMobile.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+procedure TfMenuMobile.FormResize(Sender: TObject);
 var
-  LSetor: string;
+  Margem: Single;
 begin
-  // Intercepta o botão voltar nativo do Android
-  if Key = vkHardwareBack then
-  begin
-    LSetor := UpperCase(Trim(mSetor));
+  // Calcula 20% da largura atual da tela
+  Margem := Self.Width * 0.1;
 
-    ShowMessage('Setor identificado pelo Delphi: [' + LSetor + ']');
+  // Aplica a margem em todos os botões do menu
+  Layout4.Margins.Left := Margem;
+  Layout5.Margins.Left := Margem;
+  Layout6.Margins.Left := Margem;
+  Layout7.Margins.Left := Margem;
+  Layout8.Margins.Left := Margem;
 
-    if (LSetor <> 'ADMINISTRATIVO') and (LSetor <> 'RH') then
-    begin
-      // Se for funcionário comum, ele ESTÁ TRAVADO na tela de perfil.
-      // Anulamos a tecla para o app não fazer nada ao tentar voltar.
-      // (Se quiser que o app minimize ao invés de travar, basta remover esta linha abaixo)
-      Key := 0;
-    end
-    else
-    begin
-      // Comportamento normal para Admin/RH: fecha a tela e volta pro menu
-      if layHostName.Visible then
-      begin
-        FecharTelaAtual;
-        Key := 0; // Zera a chave para o app não fechar
-      end;
-    end;
-  end;
+  lbMenu.Margins.Left := Self.Width * 0.1;
+
+  layTitulo.Margins.Top := Self.Width * 0.07;
 end;
 
 procedure TfMenuMobile.FecharTelaAtual;
@@ -286,6 +316,7 @@ begin
     CarregarCatalogoFuncionarios;
 end;
 
+
 procedure TfMenuMobile.OnCatalogoResult(Sender: TObject;
   const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 begin
@@ -311,6 +342,51 @@ begin
         PreencherCatalogo(AJsonContent, 'razaoSocial', CatEmpresasIds, CatEmpresasNomes);
       end;
     end;
+  end;
+end;
+
+procedure TfMenuMobile.CarregarDadosPerfil;
+begin
+  // 1. Preenche os textos
+  lbNomeFuncionario.Text := mNomeUsuario;
+  lbCargo.Text := mFuncao; // Ou pode usar mSetor se preferir
+
+  // 2. Busca a foto em uma Thread separada (para não travar a tela)
+  if Trim(mIdFuncionario) <> '' then
+  begin
+    TThread.CreateAnonymousThread(
+      procedure
+      var
+        LHttp: TIdHTTP;
+        LStream: TMemoryStream;
+      begin
+        LHttp := TIdHTTP.Create(nil);
+        LStream := TMemoryStream.Create;
+        try
+          LHttp.Request.BasicAuthentication := True;
+          LHttp.Request.Username := UserName;
+          LHttp.Request.Password := Password;
+
+          try
+            // Faz o GET na rota da sua API que retorna a imagem
+            LHttp.Get(EndPoint + '/funcionarios/' + mIdFuncionario + '/foto', LStream);
+            LStream.Position := 0;
+
+            // Atualiza a interface gráfica sincronizando com a thread principal
+            TThread.Synchronize(nil, procedure
+            begin
+              cirFotoPerfil.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+              cirFotoPerfil.Fill.Kind := TBrushKind.Bitmap;
+              cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+            end);
+          except
+            // Se der erro (ex: usuário não cadastrou foto), falha em silêncio e mantém o círculo vazio/padrão
+          end;
+        finally
+          LStream.Free;
+          LHttp.Free;
+        end;
+      end).Start;
   end;
 end;
 

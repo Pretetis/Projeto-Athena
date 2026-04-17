@@ -187,7 +187,8 @@ router.post('/login', async (req, res) => {
         id: func._id, 
         nome: func.nome, 
         funcao: func.funcao, 
-        setor: func.setor 
+        setor: func.setor, 
+        nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
       }
       });
     }
@@ -204,7 +205,8 @@ router.post('/login', async (req, res) => {
         id: func._id, 
         nome: func.nome, 
         funcao: func.funcao, 
-        setor: func.setor 
+        setor: func.setor, 
+        nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
       }
     });
 

@@ -34,13 +34,14 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
       object lbTitulo: TLabel
         Align = Client
         StyledSettings = []
-        Size.Width = 622.000000000000000000
+        Size.Width = 617.000000000000000000
         Size.Height = 29.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Family = 'Roboto'
         TextSettings.Font.Size = 20.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
+        TextSettings.WordWrap = False
         Text = 'Titulo do documento'
         TabOrder = 1
       end
@@ -132,7 +133,7 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
         StyledSettings = []
         Position.X = 83.000000000000000000
         Position.Y = 29.000000000000000000
-        Size.Width = 622.000000000000000000
+        Size.Width = 617.000000000000000000
         Size.Height = 20.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Family = 'Roboto'
@@ -146,8 +147,8 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
         Align = MostRight
         Cursor = crHandPoint
         HitTest = True
-        Margins.Right = 10.000000000000000000
-        Position.X = 705.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 700.000000000000000000
         Size.Width = 50.000000000000000000
         Size.Height = 49.000000000000000000
         Size.PlatformDefault = False
@@ -191,8 +192,8 @@ object FrameVisualizarDocumento: TFrameVisualizarDocumento
       StyleLookup = 'framedscrollboxstyle'
       TabOrder = 1
       BitmapScale = 0.959999978542327900
-      Viewport.Width = 821.000000000000000000
-      Viewport.Height = 542.000000000000000000
+      Viewport.Width = 825.000000000000000000
+      Viewport.Height = 546.000000000000000000
       object layOpcoes: TLayout
         Align = Top
         Size.Width = 821.000000000000000000

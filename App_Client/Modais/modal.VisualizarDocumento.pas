@@ -4,7 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.WebBrowser, FMX.ExtCtrls;
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.WebBrowser, FMX.ExtCtrls;
 
 type
   TFrameVisualizarDocumento = class(TFrame)
@@ -51,23 +52,27 @@ type
 implementation
 
 uses
-  uParametros, IdHTTP, uMenu
+  uParametros, IdHTTP, uMenu, uTelaUtils
   {$IFDEF MSWINDOWS} , Winapi.ShellAPI {$ENDIF}
   {$IFDEF ANDROID} , Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText, Androidapi.JNI.Net {$ENDIF};
   {$R *.fmx}
 
 procedure TFrameVisualizarDocumento.Resize;
 var
-  LMargem20: Single;
+  LMargem: Single;
 begin
   inherited;
 
   if Assigned(recOverlay) and Assigned(recFundo) then
   begin
-    LMargem20 := recOverlay.Width * 0.20;
+    {$IFDEF ANDROID}
+        LMargem := recOverlay.Width * 0.04;
+    {$ELSE}
+        LMargem := recOverlay.Width * 0.20;
+    {$ENDIF}
 
-    recFundo.Margins.Left := LMargem20;
-    recFundo.Margins.Right := LMargem20;
+    recFundo.Margins.Left := LMargem;
+    recFundo.Margins.Right := LMargem;
   end;
 end;
 
@@ -78,7 +83,8 @@ begin
     lbTitulo.Text := ANomeDoc;
     lbFuncMaq.Text := AEntidade;
 
-    fMenu.EfeitoBlur.Enabled := True;
+    //fMenu.EfeitoBlur.Enabled := True;
+    AlterarBlurPai(Self, True);
 
     Self.Visible := True;
     Self.BringToFront;
@@ -174,8 +180,8 @@ end;
 
 procedure TFrameVisualizarDocumento.layFecharClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameVisualizarDocumento.layProximoClick(Sender: TObject);

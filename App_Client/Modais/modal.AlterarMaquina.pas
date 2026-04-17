@@ -83,7 +83,7 @@ type
 implementation
 
 uses
-    uDesignSystem, uMenu, FMX.frame.PopUpToast;
+    uDesignSystem, uMenu, FMX.frame.PopUpToast, uTelaUtils;
 
 {$R *.fmx}
 
@@ -99,7 +99,8 @@ begin
     edtModelo.Text := AModelo;
     edtChapa.Text := AChapa;
 
-    fMenu.EfeitoBlur.Enabled := True;
+    AlterarBlurPai(Self, True);
+
 
     AtualizarVisualBotoesEstado;
 end;
@@ -142,8 +143,8 @@ end;
 
 procedure TFrameModalAlterarMaquina.layFecharModalClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameModalAlterarMaquina.recBtnSalvarClick(Sender: TObject);

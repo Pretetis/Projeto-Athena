@@ -74,7 +74,7 @@ type
 implementation
 
 uses
-    uMenu;
+    uMenu, uTelaUtils, FMX.frame.PopUpToast;
 {$R *.fmx}
 
 
@@ -155,7 +155,7 @@ var
 begin
     if Trim(edtNomeFunc.Text) = '' then
     begin
-        ShowMessage('Preencha o nome.');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Preencha o nome');
         Exit;
     end;
 
@@ -171,8 +171,8 @@ end;
 
 procedure TFrameModalAdicionarFuncionario.layFecharModalClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameModalAdicionarFuncionario.lbInsideDropZoneClick(Sender: TObject);
@@ -205,14 +205,14 @@ begin
     begin
         if (AStatusCode = 201) or (AStatusCode = 200) then
         begin
-            ShowMessage('Funcionário adicionado com sucesso!');
+            TFramePopUp.Show(Self.Root.GetObject as TForm, S, 'Funcionário adicionado com sucesso!');
             if Assigned(OnSalvoComSucesso) then
                 OnSalvoComSucesso();
-            fMenu.EfeitoBlur.Enabled := False;
-            Self.Free;
+            AlterarBlurPai(Self, False);
+            Self.DisposeOf;
         end
         else
-          ShowMessage('Erro: ' + AJsonContent);
+          TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro: ' + AJsonContent);
     end;
 end;
 

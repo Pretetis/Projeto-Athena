@@ -46,7 +46,11 @@ router.get('/empresas/lookup', async (req, res) => {
 router.get('/chapa/proxima', async (req, res) => {
   try {
     const maxFunc = await Funcionario.aggregate([
-      { $addFields: { chapaNum: { $toInt: "$chapa" } } },
+      { 
+        $addFields: { 
+          chapaNum: { $convert: { input: "$chapa", to: "int", onError: 0, onNull: 0 } } 
+        } 
+      },
       { $sort: { chapaNum: -1 } },
       { $limit: 1 }
     ]);
@@ -54,7 +58,11 @@ router.get('/chapa/proxima', async (req, res) => {
     let maxMaq = [];
     try {
       maxMaq = await Maquina.aggregate([
-        { $addFields: { chapaNum: { $toInt: "$chapa" } } },
+        { 
+          $addFields: { 
+            chapaNum: { $convert: { input: "$chapa", to: "int", onError: 0, onNull: 0 } } 
+          } 
+        },
         { $sort: { chapaNum: -1 } },
         { $limit: 1 }
       ]);

@@ -767,13 +767,12 @@ object FrameMenuDashboard: TFrameMenuDashboard
           end
         end
       end
-      object vscrollboxLinhaPlanilha: TVertScrollBox
+      object vscrollboxLinhaPlanilha: TScrollBox
         Align = Client
         Size.Width = 1150.000000000000000000
         Size.Height = 400.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        ShowScrollBars = False
         Viewport.Width = 1150.000000000000000000
         Viewport.Height = 400.000000000000000000
       end

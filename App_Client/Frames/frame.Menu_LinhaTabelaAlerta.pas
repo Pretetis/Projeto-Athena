@@ -153,7 +153,7 @@ begin
                     TThread.Synchronize(nil, procedure
                     begin
                         TLoading.Hide;
-                        ShowMessage('Download concluído com sucesso!');
+                        TFramePopUp.Show(Self.Root.GetObject as TForm, S, 'Download concluído com sucesso!');
                     end);
                 except
                     on E: Exception do
@@ -161,7 +161,7 @@ begin
                         TThread.Synchronize(nil, procedure
                         begin
                             TLoading.Hide;
-                            ShowMessage('Erro ao baixar arquivo: ' + E.Message);
+                            TFramePopUp.Show(Self.Root.GetObject as TForm, Er, 'Erro ao baixar arquivo: ' + E.Message);
                         end);
                     end;
                 end;

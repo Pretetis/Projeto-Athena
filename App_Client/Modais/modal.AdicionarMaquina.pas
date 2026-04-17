@@ -69,7 +69,7 @@ type
 implementation
 
 uses
-  uMenu, FMX.frame.PopUpToast;
+  uMenu, FMX.frame.PopUpToast, uTelaUtils;
 
 {$R *.fmx}
 
@@ -117,8 +117,8 @@ begin
             if Assigned(OnSalvoComSucesso) then
                 OnSalvoComSucesso();
 
-            fMenu.EfeitoBlur.Enabled := False;
-            Self.Free;
+            AlterarBlurPai(Self, False);
+            Self.DisposeOf;
         end
         else
             TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro: ' + AJsonContent);
@@ -165,8 +165,8 @@ end;
 
 procedure TFrameModalAdicionarMaquina.layFecharModalClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameModalAdicionarMaquina.ProcessarArquivo(const ACaminho: string);

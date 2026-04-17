@@ -6,6 +6,7 @@ const FuncionarioSchema = new mongoose.Schema({
   setor: { type: String }, 
   chapa: { type: String, required: true, unique: true },
   fotoId: { type: mongoose.Schema.Types.ObjectId }, 
+  nivelAcesso: { type: Number, default: 3 },
   ativo: { type: Boolean, default: true }
 }, { 
   timestamps: true 

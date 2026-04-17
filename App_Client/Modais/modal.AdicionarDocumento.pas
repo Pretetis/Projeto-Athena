@@ -81,14 +81,14 @@ type
 implementation
 
 uses
-    uMenu, uLoading, uCatalogos, uGemini;
+    uMenu, uLoading, uCatalogos, uGemini, uTelaUtils, FMX.frame.PopUpToast;
 
 {$R *.fmx}
 
 procedure TFrameModalEnivarDocumento.lbBtnCancelarDocumentoClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 
@@ -134,18 +134,6 @@ begin
   recDropZone.Fill.Kind := TBrushKind.None;
   lbInsideDropZone.Text := 'Arraste o documento aqui ou clique para selecionar';
 
-//  edtTituloDoc.Text := '';
-//  edtTipoDoc.Text := '';
-//  DateEdit1.Text := '';
-//
-//  edtFuncionario.OnChangeTracking := nil;
-//  try
-//    edtFuncionario.Text := '';
-//    FFuncionarioId := '';
-//  finally
-//    edtFuncionario.OnChangeTracking := edtFuncionarioChangeTracking;
-//  end;
-
   recLimpar.Visible := False;
 end;
 
@@ -154,35 +142,35 @@ begin
     // 1. Validações Básicas
     if Trim(edtFuncionario.Text) = '' then
     begin
-        ShowMessage('Informe o funcionário (entidadeId).');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Informe o funcionário (entidadeId).');
         edtFuncionario.SetFocus;
         Exit;
     end;
 
     if Trim(edtTituloDoc.Text) = '' then
     begin
-        ShowMessage('Informe o título do documento.');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Informe o título do documento.');
         edtTituloDoc.SetFocus;
         Exit;
     end;
 
     if Trim(edtTipoDoc.Text) = '' then
     begin
-        ShowMessage('Informe o tipo do documento.');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Informe o tipo do documento.');
         edtTipoDoc.SetFocus;
         Exit;
     end;
 
     if DateEdit1.Date <= 0 then
     begin
-        ShowMessage('Informe uma data de validade.');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Informe uma data de validade.');
         DateEdit1.SetFocus;
         Exit;
     end;
 
     if FCaminhoArquivo = '' then
     begin
-        ShowMessage('Por favor, selecione um arquivo (PDF ou Imagem) na DropZone.');
+        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Por favor, selecione um arquivo (PDF ou Imagem) na DropZone.');
         Exit;
     end;
 
@@ -201,8 +189,8 @@ end;
 
 procedure TFrameModalEnivarDocumento.pathFecharModalClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameModalEnivarDocumento.ProcessarArquivo(const ACaminho: string);
@@ -235,12 +223,12 @@ begin
     begin
         if (AStatusCode = 200) or (AStatusCode = 201) then
         begin
-            ShowMessage('Documento enviado com sucesso!');
-            fMenu.EfeitoBlur.Enabled := False;
-            Self.Free;
+            TFramePopUp.Show(Self.Root.GetObject as TForm, S, 'Documento enviado com sucesso!');
+            AlterarBlurPai(Self, False);
+            Self.DisposeOf;
         end
         else
-            ShowMessage('Erro ao enviar documento: ' + AJsonContent);
+            TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao enviar documento: ' + AJsonContent);
     end;
 end;
 
@@ -436,7 +424,7 @@ begin
                     procedure
                     begin
                         lbInsideDropZone.Text := 'Erro de Comunicação';
-                        ShowMessage('Falha ao processar o documento: ' + VMensagemErro);
+                        TFramePopUp.Show(Self.Root.GetObject as TForm, A, 'Falha ao processar o documento: ' + VMensagemErro);
                     end);
               end;
           end;

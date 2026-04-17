@@ -9,7 +9,7 @@ uses
   FMX.Objects, FMX.Ani, FMX.Effects, System.IOUtils, FMX.Media;
 
 type
-  TToastType = (S,E,A);
+  TToastType = (S,E,A,Er);
 
   TFramePopUp = class(TFrame)
     recPrincipal: TRectangle;
@@ -159,7 +159,7 @@ begin
               lbTitulo.Text := 'SUCESSO';
               recCor.Fill.Color := $FF04BC04;
           end;
-        E:
+        E, Er:
           begin
               gpIcone.ImageIndex := 0;
               lbTitulo.Text := 'ERRO';

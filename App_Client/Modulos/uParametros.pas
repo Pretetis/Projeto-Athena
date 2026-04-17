@@ -33,12 +33,15 @@ var
   ListaAlarmesIgnorados: TList<Integer>;
   mAlr_id: Integer;
   mProgramador: Integer;
+  mNivelAcesso: Integer;
+  mIdFuncionario: string;
+  mFuncao: string;
 
 const
     userName = ' ';
     password = ' ';
 
-  endPoint       = 'http://localhost:3000';  //Testes Computador DEV
+  endPoint       = 'http://192.168.0.230:3000';  //Testes Computador DEV
 
 //    endPoint       = '';   //produção
 

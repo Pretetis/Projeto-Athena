@@ -8,6 +8,8 @@ object fMenuMobile: TfMenuMobile
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnKeyUp = FormKeyUp
+  OnResize = FormResize
+  OnShow = FormShow
   DesignerMasterStyle = 0
   object layMenu: TLayout
     Align = Client
@@ -22,21 +24,59 @@ object fMenuMobile: TfMenuMobile
       Size.Height = 678.000000000000000000
       Size.PlatformDefault = False
       Stroke.Thickness = 0.000000000000000000
-      object Layout3: TLayout
+      object layTitulo: TLayout
         Align = Top
         Size.Width = 413.000000000000000000
-        Size.Height = 50.000000000000000000
+        Size.Height = 81.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
+        object cirFotoPerfil: TCircle
+          Align = MostLeft
+          Margins.Left = 25.000000000000000000
+          Position.X = 25.000000000000000000
+          Size.Width = 65.000000000000000000
+          Size.Height = 81.000000000000000000
+          Size.PlatformDefault = False
+        end
+        object lbNomeFuncionario: TLabel
+          Align = Top
+          StyledSettings = []
+          Margins.Left = 15.000000000000000000
+          Margins.Top = 20.000000000000000000
+          Position.X = 105.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 308.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 22.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFFCBD5E1
+          Text = 'lbNomeFuncionario'
+          TabOrder = 2
+        end
+        object lbCargo: TLabel
+          Align = Client
+          StyledSettings = [Size, Style]
+          Margins.Left = 20.000000000000000000
+          Margins.Bottom = 15.000000000000000000
+          Size.Width = 303.000000000000000000
+          Size.Height = 29.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.FontColor = xFFCBD5E1
+          Text = 'lbCargo'
+          TabOrder = 1
+        end
       end
       object VertScrollBox1: TVertScrollBox
         Align = Client
         Size.Width = 413.000000000000000000
-        Size.Height = 628.000000000000000000
+        Size.Height = 597.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
         Viewport.Width = 413.000000000000000000
-        Viewport.Height = 628.000000000000000000
+        Viewport.Height = 597.000000000000000000
         object recBtnMaquinas: TRectangle
           Align = Top
           Cursor = crHandPoint
@@ -46,7 +86,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 257.000000000000000000
+          Position.Y = 235.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -56,8 +96,10 @@ object fMenuMobile: TfMenuMobile
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
           object Layout5: TLayout
-            Align = Center
-            Size.Width = 200.000000000000000000
+            Align = Left
+            Margins.Left = 20.000000000000000000
+            Position.X = 20.000000000000000000
+            Size.Width = 250.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -65,7 +107,7 @@ object fMenuMobile: TfMenuMobile
               Align = Client
               StyledSettings = []
               Margins.Left = 15.000000000000000000
-              Size.Width = 120.000000000000000000
+              Size.Width = 170.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
@@ -130,7 +172,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 194.000000000000000000
+          Position.Y = 172.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -140,8 +182,10 @@ object fMenuMobile: TfMenuMobile
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
           object Layout8: TLayout
-            Align = Center
-            Size.Width = 200.000000000000000000
+            Align = Left
+            Margins.Left = 20.000000000000000000
+            Position.X = 20.000000000000000000
+            Size.Width = 250.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -149,7 +193,7 @@ object fMenuMobile: TfMenuMobile
               Align = Client
               StyledSettings = []
               Margins.Left = 15.000000000000000000
-              Size.Width = 120.000000000000000000
+              Size.Width = 170.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
@@ -202,7 +246,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 131.000000000000000000
+          Position.Y = 298.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -212,8 +256,10 @@ object fMenuMobile: TfMenuMobile
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
           object Layout7: TLayout
-            Align = Center
-            Size.Width = 200.000000000000000000
+            Align = Left
+            Margins.Left = 20.000000000000000000
+            Position.X = 20.000000000000000000
+            Size.Width = 250.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -221,7 +267,7 @@ object fMenuMobile: TfMenuMobile
               Align = Client
               StyledSettings = []
               Margins.Left = 15.000000000000000000
-              Size.Width = 120.000000000000000000
+              Size.Width = 170.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
@@ -276,7 +322,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 68.000000000000000000
+          Position.Y = 109.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -286,8 +332,10 @@ object fMenuMobile: TfMenuMobile
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
           object Layout6: TLayout
-            Align = Center
-            Size.Width = 200.000000000000000000
+            Align = Left
+            Margins.Left = 20.000000000000000000
+            Position.X = 20.000000000000000000
+            Size.Width = 250.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -295,7 +343,7 @@ object fMenuMobile: TfMenuMobile
               Align = Client
               StyledSettings = []
               Margins.Left = 15.000000000000000000
-              Size.Width = 120.000000000000000000
+              Size.Width = 170.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
@@ -347,7 +395,7 @@ object fMenuMobile: TfMenuMobile
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 5.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 5.000000000000000000
+          Position.Y = 46.000000000000000000
           Size.Width = 393.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -357,8 +405,8 @@ object fMenuMobile: TfMenuMobile
           YRadius = 12.000000000000000000
           OnClick = MenuBtnClick
           object Layout4: TLayout
-            Align = Center
-            Size.Width = 200.000000000000000000
+            Align = Left
+            Size.Width = 250.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -366,7 +414,7 @@ object fMenuMobile: TfMenuMobile
               Align = Client
               StyledSettings = []
               Margins.Left = 15.000000000000000000
-              Size.Width = 120.000000000000000000
+              Size.Width = 170.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
@@ -425,6 +473,20 @@ object fMenuMobile: TfMenuMobile
             end
           end
         end
+        object lbMenu: TLabel
+          Align = Top
+          StyledSettings = [Style]
+          Margins.Left = 20.000000000000000000
+          Position.X = 20.000000000000000000
+          Size.Width = 393.000000000000000000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Roboto'
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.FontColor = xFFCBD5E1
+          Text = 'Menu Principal'
+          TabOrder = 1
+        end
       end
     end
   end
@@ -455,6 +517,10 @@ object fMenuMobile: TfMenuMobile
         Viewport.Width = 403.000000000000000000
         Viewport.Height = 668.000000000000000000
       end
+    end
+    object EfeitoBlur: TBlurEffect
+      Softness = 0.300000011920929000
+      Enabled = False
     end
   end
 end

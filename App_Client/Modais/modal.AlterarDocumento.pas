@@ -97,7 +97,8 @@ type
 implementation
 
 uses
-  uDesignSystem, FMX.frame.PopUpToast, uParametros, uCatalogos, uMenu, uGemini, uLoading;
+  uDesignSystem, FMX.frame.PopUpToast, uParametros, uCatalogos, uMenu, uGemini,
+  uLoading, uTelaUtils;
 
 {$R *.fmx}
 
@@ -113,7 +114,7 @@ begin
     FOnRefresh := AOnRefresh;
 
     OcultarSugestoes;
-    fMenu.EfeitoBlur.Enabled := True;
+    AlterarBlurPai(Self, True);
 
     edtFuncionario.OnChangeTracking := nil;
     try
@@ -361,8 +362,8 @@ end;
 
 procedure TFrameAlterarDocumento.pathFecharModalClick(Sender: TObject);
 begin
-    fMenu.EfeitoBlur.Enabled := False;
-    Self.Free;
+    AlterarBlurPai(Self, False);
+    Self.DisposeOf;
 end;
 
 procedure TFrameAlterarDocumento.FimExtracaoGemini(Sender: TObject);
@@ -471,7 +472,7 @@ begin
               finally
                   Gemini.Free;
               end;
-            except
+          except
               on E: Exception do
               begin
                   VMensagemErro := E.Message;
@@ -479,7 +480,7 @@ begin
                     procedure
                     begin
                         lbInsideDropZone.Text := 'Erro de Comunicação';
-                        ShowMessage('Falha ao processar o documento: ' + VMensagemErro);
+                        TFramePopUp.Show(Self.Root.GetObject as TForm, Er, 'Falha ao processar o documento: ' + VMensagemErro);
                     end);
               end;
           end;

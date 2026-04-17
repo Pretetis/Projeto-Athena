@@ -872,7 +872,13 @@ begin
               try
                 LJsonFunc := LJsonRetorno.GetValue<TJSONObject>('funcionario');
                 if Assigned(LJsonFunc) then
-                  mSetor := LJsonFunc.GetValue<string>('setor', ''); // Salva o setor globalmente!
+                begin
+                  mSetor := LJsonFunc.GetValue<string>('setor', '');
+                  mNivelAcesso := LJsonFunc.GetValue<Integer>('nivelAcesso', 3);
+                  mIdFuncionario := LJsonFunc.GetValue<string>('id', '');
+                  mFuncao := LJsonFunc.GetValue<string>('funcao', '');
+                end;
+
               finally
                 LJsonRetorno.Free;
               end;

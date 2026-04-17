@@ -49,7 +49,6 @@ type
     lbTituloPlanilhaAlerta: TLabel;
     layCabecalhoPlanilhaAlerta: TLayout;
     gplCabecalhoPlanilhaAlerta: TGridPanelLayout;
-    vscrollboxLinhaPlanilha: TVertScrollBox;
     recCabecalhoPlanilha: TRectangle;
     recCabecalhoStatus: TRectangle;
     lbStatus: TLabel;
@@ -64,6 +63,7 @@ type
     lbVisualizar: TLabel;
     recEditar: TRectangle;
     lbEditar: TLabel;
+    vscrollboxLinhaPlanilha: TScrollBox;
   private
 
     procedure OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
@@ -78,7 +78,7 @@ type
 implementation
 
 uses
-    frame.Menu_LinhaTabelaAlerta;
+    frame.Menu_LinhaTabelaAlerta, FMX.frame.PopUpToast;
 
 {$R *.fmx}
 
@@ -105,7 +105,7 @@ begin
     end
     else
     begin
-        ShowMessage(Format('Erro ao buscar dados. Código: %d', [AStatusCode]));
+        TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao buscar dados');
     end;
 end;
 
@@ -199,8 +199,7 @@ begin
                 end;
             end;
         except
-            on E: Exception do
-                ShowMessage('Erro ao renderizar a lista: ' + E.Message);
+            on E: Exception do TFramePopUp.Show(Self.Root.GetObject as TForm, Er, 'Erro ao renderizar a lista: ' + E.Message);
         end;
     finally
         vscrollboxLinhaPlanilha.EndUpdate;

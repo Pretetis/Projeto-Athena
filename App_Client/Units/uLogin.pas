@@ -79,7 +79,7 @@ var
 begin
   if (Trim(edtUsuario.Text) = '') or (Trim(edtSenha.Text) = '') then
   begin
-    ShowMessage('Preencha usuário e senha!');
+    TFramePopUp.Show(Self, A, 'Preencha usuário e senha!');
     Exit;
   end;
 
@@ -102,10 +102,10 @@ begin
 
               // 2. AQUI: Atualiza as variáveis globais dos parâmetros!
               mNomeUsuario := Trim(edtUsuario.Text);
-              mUsuario := Trim(edtUsuario.Text); // Substitui a Shallan pelo usuário real
+              mUsuario := Trim(edtUsuario.Text);
 
               // 3. Redireciona para o Menu
-              {$IFDEF ANDROID}
+            {$IFDEF ANDROID}
               if not Assigned(fMenuMobile) then
                 Application.CreateForm(TfMenuMobile, fMenuMobile);
               fMenuMobile.Show;
