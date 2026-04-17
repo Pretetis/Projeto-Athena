@@ -16,3 +16,4 @@ iOSDevice64/
 *.ini
 node_modules/
 server_old.js
+*.pem

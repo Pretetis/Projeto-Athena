@@ -134,4 +134,59 @@ router.post('/gemini/:model', async (req, res) => {
   }
 });
 
+// Rota exclusiva para receber o Base64 do Delphi e subir para a File API do Google
+router.post('/gemini-upload', async (req, res) => {
+  try {
+    const { mimeType, base64Data, displayName } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: { message: "API Key do Gemini não configurada." } });
+    }
+
+    // 1. Converter o Base64 que veio do Delphi para bytes (Buffer)
+    const fileBuffer = Buffer.from(base64Data, 'base64');
+    const numBytes = fileBuffer.length;
+
+    // 2. Passo 1 do Upload: Iniciar (Start) e pegar a URL temporária
+    const startUrl = `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${apiKey}`;
+    const startResponse = await fetch(startUrl, {
+      method: 'POST',
+      headers: {
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'start',
+        'X-Goog-Upload-Header-Content-Length': numBytes,
+        'X-Goog-Upload-Header-Content-Type': mimeType,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ file: { displayName: displayName || 'Upload_Athena' } })
+    });
+
+    const uploadUrl = startResponse.headers.get('x-goog-upload-url');
+    if (!uploadUrl) {
+      throw new Error('Falha ao obter URL de upload da API do Google.');
+    }
+
+    // 3. Passo 2 do Upload: Enviar os bytes para a URL temporária
+    const uploadResponse = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'upload, finalize',
+        'X-Goog-Upload-Offset': '0'
+      },
+      body: fileBuffer
+    });
+
+    const fileData = await uploadResponse.json();
+    
+    // Devolve o JSON pro Delphi. O Delphi vai extrair o campo "file.uri"
+    res.status(uploadResponse.status).json(fileData);
+
+  } catch (err) {
+    res.status(500).json({ error: { message: err.message } });
+  }
+});
+
+
 module.exports = router;
