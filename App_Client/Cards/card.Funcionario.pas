@@ -33,6 +33,7 @@ type
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure recBtnEditarFlutuanteClick(Sender: TObject);
+    procedure recFundoGesture(Sender: TObject; const EventInfo: TGestureEventInfo; var Handled: Boolean);
   private
     FIdFuncionario: string;
     { Private declarations }
@@ -46,7 +47,7 @@ type
 implementation
 
 uses
-  uMenu, modal.AlterarFuncionario;
+  uMenu, uMenuMobile, modal.AlterarFuncionario;
 
 {$R *.fmx}
 
@@ -116,7 +117,25 @@ end;
 
 procedure TFrameCardFuncionario.recBtnVisualizarClick(Sender: TObject);
 begin
+    {$IFDEF ANDROID}
+    fMenuMobile.AbrirDocumentosFuncionario(lbNomeFuncionario.Text);
+    {$ELSEIF defined(MSWINDOWS)}
     fMenu.AbrirDocumentosFuncionario(lbNomeFuncionario.Text);
+    {$ENDIF}
+end;
+
+procedure TFrameCardFuncionario.recFundoGesture(Sender: TObject; const EventInfo: TGestureEventInfo; var Handled: Boolean);
+begin
+  if EventInfo.GestureID = igiLongTap then
+  begin
+    recBtnEditarFlutuante.Position.X := EventInfo.Location.X;
+    recBtnEditarFlutuante.Position.Y := EventInfo.Location.Y;
+
+    recBtnEditarFlutuante.BringToFront;
+    recBtnEditarFlutuante.Visible := True;
+
+    Handled := True;
+  end;
 end;
 
 procedure TFrameCardFuncionario.recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);

@@ -3,6 +3,8 @@ object FrameCardMaquina: TFrameCardMaquina
   Size.Height = 210.000000000000000000
   Size.PlatformDefault = False
   object recFundo: TRectangle
+    Touch.InteractiveGestures = [LongTap]
+    OnGesture = recFundoGesture
     Align = Client
     Fill.Color = claWhite
     Margins.Left = 2.000000000000000000

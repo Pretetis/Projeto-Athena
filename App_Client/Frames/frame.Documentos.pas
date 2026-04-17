@@ -17,7 +17,7 @@ type
     LayDadosDocs: TLayout;
     recPlanilhaDocumentos: TRectangle;
     ShadowEffect1: TShadowEffect;
-    layCabecalhoPlanilhaAlerta: TLayout;
+    layContainerCabecalho: TLayout;
     recCabecalhoPlanilha: TRectangle;
     gplCabecalhoPlanilhaAlerta: TGridPanelLayout;
     recCabecalhoStatus: TRectangle;
@@ -66,22 +66,22 @@ type
     layTituloPlanilha: TLayout;
     lbTituloPlanilhaAlerta: TLabel;
     tmrBusca: TTimer;
-    vscrollboxLinhaPlanilha: TVertScrollBox;
     recBtnTodosStatus: TRectangle;
     lbBtnTodosStatus: TLabel;
     recBtnTodosativosDesa: TRectangle;
     lbBtnTodosativosDesa: TLabel;
-    hscrollboxTabela: THorzScrollBox;
-    layTabelaCompleta: TLayout;
     layContainerLinhas: TLayout;
     HorzScrollBox1: THorzScrollBox;
+    layCabecalhoPlanilha: TLayout;
+    vscrollboxLinhaPlanilha: TScrollBox;
 
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
-    procedure edtBuscaDocumentosChange(Sender: TObject);
     procedure tmrBuscaTimer(Sender: TObject);
     procedure recBtnAddDocumentoClick(Sender: TObject);
     procedure FrameResize(Sender: TObject);
+    procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
+    procedure edtBuscaDocumentosChangeTracking(Sender: TObject);
 
   private
     FReq: TModuloRequest;
@@ -313,7 +313,7 @@ begin
     FReq.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
 end;
 
-procedure TFrameDocumentos.edtBuscaDocumentosChange(Sender: TObject);
+procedure TFrameDocumentos.edtBuscaDocumentosChangeTracking(Sender: TObject);
 begin
     tmrBusca.Enabled := False;
 
@@ -336,29 +336,18 @@ procedure TFrameDocumentos.FrameResize(Sender: TObject);
 const
   LARGURA_MINIMA = 1150;
 begin
-  // Mesma lógica: expande no PC, cria barra de rolagem no Mobile
   if Self.Width >= LARGURA_MINIMA then
   begin
-    layTabelaCompleta.Width  := Self.Width - 70;
-    layContainerLinhas.Width := layTabelaCompleta.Width;
+    layCabecalhoPlanilha.Width := Self.Width - 70;
+    layContainerLinhas.Width   := layCabecalhoPlanilha.Width;
   end
   else
   begin
-    layTabelaCompleta.Width  := LARGURA_MINIMA;
-    layContainerLinhas.Width := LARGURA_MINIMA;
+    layCabecalhoPlanilha.Width := LARGURA_MINIMA;
+    layContainerLinhas.Width   := LARGURA_MINIMA;
   end;
 end;
 
-//procedure TFrameDocumentos.LimparTabela;
-//var
-//  i: Integer;
-//begin
-//    for i := vscrollboxLinhaPlanilha.Content.ChildrenCount - 1 downto 0 do
-//    begin
-//        if vscrollboxLinhaPlanilha.Content.Children[i] is TFrameLinhaPlanilhaDocumento then
-//            vscrollboxLinhaPlanilha.Content.Children[i].Free;
-//    end;
-//end;
 procedure TFrameDocumentos.LimparTabela;
 var
   i: Integer;
@@ -434,10 +423,8 @@ begin
                         vscrollboxLinhaPlanilha.EndUpdate;
                         layContainerLinhas.RecalcSize;
                         Self.Width := Self.Width - 1;
-//
-//                        Application.ProcessMessages;
-//
                         Self.Width := Self.Width + 1;
+
                     end;
                 finally
                     LJsonArray.Free;
@@ -451,6 +438,11 @@ procedure TFrameDocumentos.tmrBuscaTimer(Sender: TObject);
 begin
     tmrBusca.Enabled := False;
     BuscarDados;
+end;
+
+procedure TFrameDocumentos.vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
+begin
+    layCabecalhoPlanilha.Position.X := -NewViewportPosition.X;
 end;
 
 end.

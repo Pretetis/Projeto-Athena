@@ -43,7 +43,7 @@ const
 
 //  endPoint       = 'http://192.168.0.230:3000';  //Testes Computador DEV
 
-    endPoint       = 'http://3.135.82.98:3000';   //produção
+    endPoint       = '';   //produção
 
 
 implementation

@@ -32,6 +32,7 @@ type
     procedure recBtnEditarFlutuanteClick(Sender: TObject);
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure recFundoGesture(Sender: TObject; const EventInfo: TGestureEventInfo; var Handled: Boolean);
   private
     FIdMaquina: string;
     { Private declarations }
@@ -45,7 +46,7 @@ type
 implementation
 
 uses
-  uMenu, modal.AlterarMaquina;
+  uMenu, uMenuMobile, modal.AlterarMaquina;
 
 {$R *.fmx}
 
@@ -115,7 +116,25 @@ end;
 
 procedure TFrameCardMaquina.recBtnVisualizarClick(Sender: TObject);
 begin
+    {$IFDEF ANDROID}
+    fMenuMobile.AbrirDocumentosFuncionario(lbNomeMaquina.Text);
+    {$ELSEIF defined(MSWINDOWS)}
     fMenu.AbrirDocumentosFuncionario(lbNomeMaquina.Text);
+    {$ENDIF}
+end;
+
+procedure TFrameCardMaquina.recFundoGesture(Sender: TObject; const EventInfo: TGestureEventInfo; var Handled: Boolean);
+begin
+  if EventInfo.GestureID = igiLongTap then
+  begin
+    recBtnEditarFlutuante.Position.X := EventInfo.Location.X;
+    recBtnEditarFlutuante.Position.Y := EventInfo.Location.Y;
+
+    recBtnEditarFlutuante.BringToFront;
+    recBtnEditarFlutuante.Visible := True;
+
+    Handled := True;
+  end;
 end;
 
 procedure TFrameCardMaquina.recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -134,5 +153,7 @@ begin
         recBtnEditarFlutuante.Visible := False;
     end;
 end;
+
+
 
 end.
