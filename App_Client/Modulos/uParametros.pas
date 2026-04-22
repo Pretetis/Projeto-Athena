@@ -41,9 +41,9 @@ const
     userName = ' ';
     password = ' ';
 
-//  endPoint       = 'http://192.168.0.230:3000';  //Testes Computador DEV
+  endPoint       = 'http://localhost:3000';  //Testes Computador DEV
 
-    endPoint       = '';   //produção
+//    endPoint       = '';   //produção
 
 
 implementation
