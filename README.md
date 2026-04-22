@@ -6,7 +6,7 @@ O Projeto Athena adota uma arquitetura robusta, dividindo-se entre uma aplicaç�
 
 ## Telas do Sistema
 
-Abaixo você encontra as interfaces principais do sistema, demonstrando o design system próprio e a fluidez da plataforma FireMonkey.
+Abaixo você encontra as interfaces principais do sistema, demonstrando a tela principal e a fluidez da plataforma FireMonkey.
 
 ### 1. Dashboard Interativo
 
@@ -45,24 +45,16 @@ Gestão de Arquivos: Interface dedicada para upload, visualização segura e org
 O projeto é estritamente dividido em dois ambientes principais, garantindo segurança e escalabilidade.
 
 ### Front-end (App Client)
-
-Framework: Embarcadero Delphi 10.3 Rio (FMX - FireMonkey).
-
-Interface (UI/UX): Menu **(uMenu.pas e uMenuMobile.pas)** customizado via Design System **(uDesignSystem.pas)**, construído com Frames e Cards dinâmicos.
-
-Inteligência Artificial: Módulo de integração com APIs de IA (Gemini) via uGemini.pas.
-
-Comunicação REST: Utilitários isolados para requisições HTTP (uRequests.pas).
+* **Framework:** Embarcadero Delphi 10.3 Rio (FMX - FireMonkey).
+* **Interface (UI/UX):** Menu (`uMenu.pas` e `uMenuMobile.pas`) customizado via Design System (`uDesignSystem.pas`), construído com Frames e Cards dinâmicos.
+* **Inteligência Artificial:** Módulo de integração com APIs de IA (Gemini) via `uGemini.pas`.
+* **Comunicação REST:** Utilitários isolados para requisições HTTP (`uRequests.pas`).
 
 ### Back-end (API Server)
-
-Ambiente: Node.js + Express.
-
-Banco de Dados: MongoDB (com Mongoose ODM).
-
-Armazenamento: Integração com o middleware Multer para upload físico de documentos.
-
-Automação: Serviços agendados via Node-cron **(services/cron.js)**.
+* **Ambiente:** Node.js + Express.
+* **Banco de Dados:** MongoDB (com Mongoose ODM).
+* **Armazenamento:** Integração com o middleware Multer para upload físico de documentos.
+* **Automação:** Serviços agendados via Node-cron (`services/cron.js`).
 
 ## Como Executar o Projeto
 
@@ -95,19 +87,14 @@ Inicie o servidor:
 npm start
 </pre>
 
-
 ### 2. Compilando o App Cliente (Delphi)
 
-Abra o Delphi 10.3 Rio.
+1. Abra o Delphi 10.3 Rio.
+2. Carregue o projeto acessando `File > Open Project` e apontando para `App_Client/ProjetoAthena.dproj`.
+3. Verifique o arquivo `uParametros.pas` para assegurar que a URL da API corresponde ao seu localhost (ex: `http://localhost:3000`).
+4. Selecione a plataforma de destino desejada no Project Manager (Windows de 32/64 bits, Android, etc).
+5. Compile e execute o projeto pressionando **F9**.
 
-Carregue o projeto acessando File > Open Project e apontando para **App_Client/ProjetoAthena.dproj**.
+## Licença
 
-Verifique o arquivo uConnection.pas ou uParametros.pas para assegurar que a URL da API corresponde ao seu localhost (ex: *http://localhost:3000*).
-
-Selecione a plataforma de destino desejada no Project Manager (Windows de 32/64 bits, Android, etc).
-
-Compile e execute o projeto pressionando F9.
-
-Licença
-
-Consulte o arquivo LICENSE na raiz do repositório para obter detalhes sobre o uso e a distribuição deste código.
+Consulte o arquivo `LICENSE` na raiz do repositório para obter detalhes sobre o uso e a distribuição deste código.
