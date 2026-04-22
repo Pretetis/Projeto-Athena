@@ -7,6 +7,7 @@ uses
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Edit, FMX.Effects, FMX.Objects, FMX.Controls.Presentation,
   System.JSON,
+
   uRequests, modal.AdicionarFuncionario;
 
 type
@@ -51,7 +52,7 @@ type
 implementation
 
 uses
-  uMenu, card.Funcionario, uDesignSystem;
+  uMenu, card.Funcionario, uDesignSystem, uTelaUtils;
 
 {$R *.fmx}
 
@@ -73,6 +74,10 @@ begin
     recBtnDesativados.Stroke.Color := TThemeColors.Slate500;
     lbBtnDesativados.StyledSettings := lbBtnDesativados.StyledSettings - [TStyledSetting.FontColor];
     lbBtnDesativados.TextSettings.FontColor := $F064748B;
+
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAddFuncionario);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAtivos);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnDesativados);
 end;
 
 procedure TFrameFuncionarios.BtnFiltroClick(Sender: TObject);

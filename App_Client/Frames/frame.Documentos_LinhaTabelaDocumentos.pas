@@ -223,7 +223,7 @@ begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Red500;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Red100;
         pathStatus.Stroke.Color         := TThemeColors.Red600;
-        pathStatus.Data.Data            := TThemeIcons.Expirado;;
+        pathStatus.Data.Data            := TThemeIcons.Expirado;
     end;
 end;
 

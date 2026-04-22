@@ -102,7 +102,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
           Align = Client
           ClipChildren = True
           ClipParent = True
-          Fill.Color = claWhite
+          Fill.Color = xFF166534
           Padding.Left = 1.000000000000000000
           Padding.Top = 1.000000000000000000
           Padding.Right = 1.000000000000000000
@@ -111,25 +111,20 @@ object FrameMenuDashboard: TFrameMenuDashboard
           Size.Width = 365.833343505859400000
           Size.Height = 110.000000000000000000
           Size.PlatformDefault = False
-          Stroke.Color = claCornflowerblue
+          Stroke.Kind = None
           XRadius = 20.000000000000000000
           YRadius = 20.000000000000000000
-          object recCorValido: TRectangle
-            Align = MostLeft
-            Fill.Color = claBlue
-            Position.X = 1.000000000000000000
-            Position.Y = 1.000000000000000000
-            Size.Width = 40.000000000000000000
-            Size.Height = 108.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Thickness = 0.000000000000000000
-            XRadius = 20.000000000000000000
-            YRadius = 20.000000000000000000
+          object ShadowAzul: TShadowEffect
+            Distance = 2.500000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.500000000000000000
+            Opacity = 0.400000005960464500
+            ShadowColor = xFF166534
           end
           object recQntdValido: TRectangle
             Align = Client
             Fill.Color = claWhite
-            Margins.Left = -35.000000000000000000
+            Margins.Left = 5.000000000000000000
             Size.Width = 358.833343505859400000
             Size.Height = 108.000000000000000000
             Size.PlatformDefault = False
@@ -149,7 +144,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
               Size.PlatformDefault = False
               TextSettings.Font.Size = 45.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
-              TextSettings.FontColor = claBlue
+              TextSettings.FontColor = xFF166534
               Text = '9'
               TabOrder = 0
             end
@@ -183,7 +178,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
               TabOrder = 2
               object cirIconeValido: TCircle
                 Align = Center
-                Fill.Color = xFFE0E7FF
+                Fill.Color = xFFDCFCE7
                 Size.Width = 60.000000000000000000
                 Size.Height = 60.000000000000000000
                 Size.PlatformDefault = False
@@ -212,7 +207,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
                   Size.Width = 40.000000000000000000
                   Size.Height = 40.000000000000000000
                   Size.PlatformDefault = False
-                  Stroke.Color = claBlue
+                  Stroke.Color = xFF166534
                   Stroke.Thickness = 2.000000000000000000
                   Stroke.Cap = Round
                   Stroke.Join = Round
@@ -221,19 +216,12 @@ object FrameMenuDashboard: TFrameMenuDashboard
               end
             end
           end
-          object ShadowAzul: TShadowEffect
-            Distance = 2.500000000000000000
-            Direction = 45.000000000000000000
-            Softness = 0.500000000000000000
-            Opacity = 0.400000005960464500
-            ShadowColor = claCornflowerblue
-          end
         end
         object recDocumentosExpirados: TRectangle
           Align = Client
           ClipChildren = True
           ClipParent = True
-          Fill.Color = claWhite
+          Fill.Color = xFFEF4444
           Padding.Left = 1.000000000000000000
           Padding.Top = 1.000000000000000000
           Padding.Right = 1.000000000000000000
@@ -244,22 +232,10 @@ object FrameMenuDashboard: TFrameMenuDashboard
           Stroke.Color = xFFEF4444
           XRadius = 20.000000000000000000
           YRadius = 20.000000000000000000
-          object recCorExpirado: TRectangle
-            Align = Left
-            Fill.Color = xFFEF4444
-            Position.X = 1.000000000000000000
-            Position.Y = 1.000000000000000000
-            Size.Width = 40.000000000000000000
-            Size.Height = 108.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Thickness = 0.000000000000000000
-            XRadius = 20.000000000000000000
-            YRadius = 20.000000000000000000
-          end
           object recQntdExpirado: TRectangle
             Align = Client
             Fill.Color = claWhite
-            Margins.Left = -35.000000000000000000
+            Margins.Left = 5.000000000000000000
             Size.Width = 376.333312988281300000
             Size.Height = 108.000000000000000000
             Size.PlatformDefault = False
@@ -361,7 +337,7 @@ object FrameMenuDashboard: TFrameMenuDashboard
           Align = Client
           ClipChildren = True
           ClipParent = True
-          Fill.Color = claWhite
+          Fill.Color = xFFEAB308
           Padding.Left = 1.000000000000000000
           Padding.Top = 1.000000000000000000
           Padding.Right = 1.000000000000000000
@@ -373,22 +349,10 @@ object FrameMenuDashboard: TFrameMenuDashboard
           Stroke.Color = xFFEAB308
           XRadius = 20.000000000000000000
           YRadius = 20.000000000000000000
-          object recCorExpirando: TRectangle
-            Align = Left
-            Fill.Color = xFFEAB308
-            Position.X = 1.000000000000000000
-            Position.Y = 1.000000000000000000
-            Size.Width = 40.000000000000000000
-            Size.Height = 108.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Thickness = 0.000000000000000000
-            XRadius = 20.000000000000000000
-            YRadius = 20.000000000000000000
-          end
           object recQntdExpirando: TRectangle
             Align = Client
             Fill.Color = claWhite
-            Margins.Left = -35.000000000000000000
+            Margins.Left = 5.000000000000000000
             Size.Width = 358.833343505859400000
             Size.Height = 108.000000000000000000
             Size.PlatformDefault = False

@@ -99,7 +99,8 @@ type
 implementation
 
 uses
-    uDesignSystem, frame.Documentos_LinhaTabelaDocumentos, modal.AdicionarDocumento, uMenu;
+    uDesignSystem, frame.Documentos_LinhaTabelaDocumentos, modal.AdicionarDocumento,
+    uMenu, uTelaUtils;
 
 {$R *.fmx}
 
@@ -129,6 +130,17 @@ begin
     recBtnAExpirar.Stroke.Color := TThemeColors.Yellow500;
     lbBtnAExpirar.StyledSettings := lbBtnAExpirar.StyledSettings - [TStyledSetting.FontColor];
     lbBtnAExpirar.TextSettings.FontColor := TThemeColors.Yellow800;
+
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAddDocumento);
+
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnValidos);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAExpirar);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnExpirados);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnTodosStatus);
+
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAtivos);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnDesativados);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnTodosativosDesa);
 
     BuscarDados;
 end;

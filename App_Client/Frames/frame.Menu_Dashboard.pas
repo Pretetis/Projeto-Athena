@@ -22,11 +22,9 @@ type
     layIconeValido: TLayout;
     cirIconeValido: TCircle;
     ShadowAzul: TShadowEffect;
-    recCorValido: TRectangle;
     recQntdValido: TRectangle;
     Path1: TPath;
     recDocumentosExpirados: TRectangle;
-    recCorExpirado: TRectangle;
     layIconeExpirado: TLayout;
     cirIconeExpirado: TCircle;
     pathExpirado: TPath;
@@ -35,7 +33,6 @@ type
     lbInfoExpirado: TLabel;
     shadowVermelho: TShadowEffect;
     recDocumentosExpirando: TRectangle;
-    recCorExpirando: TRectangle;
     layIconeExpirando: TLayout;
     cirExpirando: TCircle;
     pathExpirando: TPath;
@@ -69,7 +66,6 @@ type
     procedure FrameResize(Sender: TObject);
     procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
   private
-
     procedure OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
     { Private declarations }
   public
@@ -165,6 +161,7 @@ begin
         LJsonObj.Free;
     end;
 end;
+
 
 procedure TFrameMenuDashboard.vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
 begin

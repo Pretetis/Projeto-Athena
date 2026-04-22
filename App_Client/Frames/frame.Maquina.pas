@@ -51,7 +51,7 @@ type
 implementation
 
 uses
-  uMenu, card.Maquina, uDesignSystem;
+  uMenu, card.Maquina, uDesignSystem, uTelaUtils;
 
 {$R *.fmx}
 
@@ -71,6 +71,10 @@ begin
     recBtnDesativados.Stroke.Color := TThemeColors.Slate500;
     lbBtnDesativados.StyledSettings := lbBtnDesativados.StyledSettings - [TStyledSetting.FontColor];
     lbBtnDesativados.TextSettings.FontColor := $F064748B;
+
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAddMaquina);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAtivos);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnDesativados);
 end;
 
 procedure TFrameMaquinas.BtnFiltroClick(Sender: TObject);
