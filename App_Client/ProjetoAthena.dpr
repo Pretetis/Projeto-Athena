@@ -32,7 +32,8 @@ uses
   uGemini in 'Modulos\uGemini.pas',
   uMenuMobile in 'Units\uMenuMobile.pas' {fMenuMobile},
   frame.TelaFuncionario in 'Frames\frame.TelaFuncionario.pas' {fTelaFuncionario: TFrame},
-  frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame};
+  frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame},
+  uHash in 'Auxiliares\uHash.pas';
 
 {$R *.res}
 

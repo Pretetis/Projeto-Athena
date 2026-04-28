@@ -42,7 +42,6 @@ type
     procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
     procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
     procedure ListarDocumentosVencer;
-    procedure ResetarComponentesRest;
     procedure SolicitarAlarme(AMaq_id, ACnc_ID, ACnc_cnc: Integer; AMensagem, AProposta: string);
     procedure PesquisarDocumentos(ABusca: string; AStatus: string = ''; AAtivo: string = '');
     procedure EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
@@ -60,10 +59,11 @@ type
     procedure EnviarMaquina(ANome, ATipo, AModelo, AChapa, ACaminhoFoto: string);
     procedure EditarMaquina(AId, ANome, ATipo, AModelo, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
     procedure EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string>);
-
+    procedure BaixarDocumentoOffline(AUrlOrigem, ANomeArquivoPdf: string; ACallback: TProc<Boolean, string>);
 
     procedure ListarTotalDocumentos;
     procedure TratarRetornoJSON;
+    procedure ResetarComponentesRest;
 
     constructor Create(AParentForm: TForm; AOnResult: TOnRequestResult);
     destructor Destroy; override;
@@ -113,6 +113,73 @@ begin
     FRESTRequest.SynchronizedEvents := False;
 end;
 
+procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);
+begin
+    TLoading.Hide;
+    try
+        TratarRetornoJSON;
+    finally
+        Self.Free;
+    end;
+end;
+
+procedure TModuloRequest.TratarRetornoJSON;
+var
+    LStatusCode: Integer;
+    LContent: string;
+    LJSONArray: TJSONArray;
+begin
+
+    if (FContexto = ctxEnviarDocumento)  or (FContexto = ctxEditarDocumento)   or
+       (FContexto = ctxCriarFuncionario) or (FContexto = ctxEditarFuncionario) or
+       (FContexto = ctxCriarMaquina)     or (FContexto = ctxEditarMaquina)     then
+    begin
+        if Assigned(FOnResult) then
+            FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);
+        Exit;
+    end;
+
+    if not Assigned(FRESTResponse) then
+    begin
+        if Assigned(FOnResult) then FOnResult(Self, '', 0, FContexto);
+        Exit;
+    end;
+
+    LStatusCode := FRESTResponse.StatusCode;
+    LContent := FRESTResponse.Content;
+
+    if LStatusCode = 404 then
+        TFramePopUp.Show(FParentForm, E, 'URL não encontrada (404). Verifique o EndPoint.')
+    else if LStatusCode >= 500 then
+    begin
+        TFramePopUp.Show(FParentForm, E, 'Erro 500 no Servidor: ' + LContent);
+    end;
+
+    if ((FContexto = ctxCarregarAlarmes) or (FContexto = ctxConferirUsuarios)) and Assigned(FCallbackAlarmes) then
+    begin
+        LJSONArray := nil;
+        try
+            if LStatusCode = 200 then
+            begin
+                try
+                    LJSONArray := TJSONObject.ParseJSONValue(LContent) as TJSONArray;
+                except
+                    LJSONArray := nil;
+                end;
+            end;
+
+            FCallbackAlarmes(LJSONArray);
+        finally
+            if LJSONArray <> nil then
+                LJSONArray.Free;
+        end;
+        Exit;
+    end;
+
+    if Assigned(FOnResult) then
+        FOnResult(Self, LContent, LStatusCode, FContexto);
+end;
+
 procedure TModuloRequest.ListarDocumentosVencer;
 begin
     FContexto := ctxDocumentosVencer;
@@ -121,16 +188,6 @@ begin
     FRESTClient.BaseURL := EndPoint + '/alertas/documentos-a-vencer';
     FRESTRequest.Method := rmGET;
 
-//    TLoading.ExecuteThread(
-//      procedure
-//      begin
-//          try
-//             FRESTRequest.Execute;
-//          except
-//          end;
-//      end,
-//      CallbackFimDaThread
-//    );
     TLoading.ExecuteThread(
       procedure
       begin
@@ -837,6 +894,7 @@ var
   LJson: TJSONObject;
 begin
   ResetarComponentesRest;
+  FRESTRequest.Timeout := 3000;
 
   FRESTClient.BaseURL := EndPoint + '/funcionarios/login'; // Ou a rota onde colocou o endpoint
   FRESTRequest.Method := rmPOST;
@@ -883,7 +941,7 @@ begin
                 LJsonRetorno.Free;
               end;
             end;
-            ACallback(True, 'Login efetuado com sucesso');
+                        ACallback(True, 'Login efetuado com sucesso');
           end
           else if FRESTResponse.StatusCode = 401 then
             ACallback(False, 'Senha incorreta!')
@@ -902,71 +960,58 @@ begin
   );
 end;
 
-procedure TModuloRequest.CallbackFimDaThread(Sender: TObject);
-begin
-    TLoading.Hide;
-    try
-        TratarRetornoJSON;
-    finally
-        Self.Free;
-    end;
-end;
-
-procedure TModuloRequest.TratarRetornoJSON;
+procedure TModuloRequest.BaixarDocumentoOffline(AUrlOrigem, ANomeArquivoPdf: string; ACallback: TProc<Boolean, string>);
 var
-    LStatusCode: Integer;
-    LContent: string;
-    LJSONArray: TJSONArray;
+  LPathPasta, LPathCompleto: string;
 begin
+  // 1. Define o caminho da pasta multiplataforma (Windows: Meus Documentos / Android: Pasta segura do App)
+  LPathPasta := TPath.Combine(TPath.GetDocumentsPath, 'AthenaDocs');
 
-    if (FContexto = ctxEnviarDocumento) or (FContexto = ctxEditarDocumento) or
-       (FContexto = ctxCriarFuncionario) or (FContexto = ctxEditarFuncionario) or
-       (FContexto = ctxCriarMaquina) or (FContexto = ctxEditarMaquina) then
+  // 2. Cria a pasta caso ela não exista
+  if not TDirectory.Exists(LPathPasta) then
+    TDirectory.CreateDirectory(LPathPasta);
+
+  LPathCompleto := TPath.Combine(LPathPasta, ANomeArquivoPdf);
+
+  // 3. Roda em thread para não travar a UI
+  TLoading.ExecuteThread(
+    procedure
+    var
+      LHttp: TIdHTTP;
+      LStream: TFileStream;
     begin
-        if Assigned(FOnResult) then
-            FOnResult(Self, FIdResponse, FIdStatusCode, FContexto);
-        Exit;
-    end;
-
-    if not Assigned(FRESTResponse) then
-    begin
-        if Assigned(FOnResult) then FOnResult(Self, '', 0, FContexto);
-        Exit;
-    end;
-
-    LStatusCode := FRESTResponse.StatusCode;
-    LContent := FRESTResponse.Content;
-
-    if LStatusCode = 404 then
-        TFramePopUp.Show(FParentForm, E, 'URL não encontrada (404). Verifique o EndPoint.')
-    else if LStatusCode >= 500 then
-    begin
-        TFramePopUp.Show(FParentForm, E, 'Erro 500 no Servidor: ' + LContent);
-    end;
-
-    if ((FContexto = ctxCarregarAlarmes) or (FContexto = ctxConferirUsuarios)) and Assigned(FCallbackAlarmes) then
-    begin
-        LJSONArray := nil;
+      LHttp := TIdHTTP.Create(nil);
+      LStream := TFileStream.Create(LPathCompleto, fmCreate);
+      try
         try
-            if LStatusCode = 200 then
+          // Reutiliza a autenticação já padronizada no seu sistema
+          LHttp.Request.BasicAuthentication := True;
+          LHttp.Request.Username := UserName; // Da sua unit uParametros
+          LHttp.Request.Password := Password;
+
+          // Efetua o download do PDF preenchendo o FileStream
+          LHttp.Get(AUrlOrigem, LStream);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            ACallback(True, LPathCompleto);
+          end);
+        except
+          on E: Exception do
+          begin
+            TThread.Synchronize(nil, procedure
             begin
-                try
-                    LJSONArray := TJSONObject.ParseJSONValue(LContent) as TJSONArray;
-                except
-                    LJSONArray := nil;
-                end;
-            end;
-
-            FCallbackAlarmes(LJSONArray);
-        finally
-            if LJSONArray <> nil then
-                LJSONArray.Free;
+              ACallback(False, E.Message);
+            end);
+          end;
         end;
-        Exit;
-    end;
-
-    if Assigned(FOnResult) then
-        FOnResult(Self, LContent, LStatusCode, FContexto);
+      finally
+        LStream.Free;
+        LHttp.Free;
+      end;
+    end,
+    CallbackFimDaThread
+  );
 end;
 
 end.

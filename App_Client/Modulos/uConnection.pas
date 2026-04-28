@@ -8,40 +8,40 @@ uses
   FireDAC.Stan.Async, FireDAC.Phys.SQLite, FireDAC.Comp.Client;
 
 var
-  FDConnectionSIP: TFDConnection;
+  FDConnectionATHENA: TFDConnection;
 
-procedure ConnectSIP;
-procedure DisconectSIP;
+procedure ConnectATHENA;
+procedure DisconectATHENA;
 
 implementation
 
-procedure ConnectSIP;
+procedure ConnectATHENA;
 begin
-  if not Assigned(FDConnectionSIP) then
-    FDConnectionSIP := TFDConnection.Create(nil);
+  if not Assigned(FDConnectionATHENA) then
+    FDConnectionATHENA := TFDConnection.Create(nil);
 
-  FDConnectionSIP.Params.Clear;
-  FDConnectionSIP.Params.Values['DriverID'] := 'SQLite';
+  FDConnectionATHENA.Params.Clear;
+  FDConnectionATHENA.Params.Values['DriverID'] := 'SQLite';
 
   {$IFDEF MSWINDOWS}
     if not DirectoryExists(GetCurrentDir + '\db') then CreateDir(GetCurrentDir + '\db');
-    FDConnectionSIP.Params.Values['Database'] := GetCurrentDir + '\db\banco.db';
+    FDConnectionATHENA.Params.Values['Database'] := GetCurrentDir + '\db\banco.db';
   {$ELSE}
-    FDConnectionSIP.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'banco.db');
+    FDConnectionATHENA.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'banco.db');
   {$ENDIF}
 
-  FDConnectionSIP.LoginPrompt := False;
-  FDConnectionSIP.Connected := True;
+  FDConnectionATHENA.LoginPrompt := False;
+  FDConnectionATHENA.Connected := True;
 
-  FDConnectionSIP.ExecSQL('CREATE TABLE IF NOT EXISTS USUARIO (NOME VARCHAR(50), USUARIO VARCHAR(50), SENHA VARCHAR(50));');
+  FDConnectionATHENA.ExecSQL('CREATE TABLE IF NOT EXISTS USUARIO (NOME VARCHAR(100), USUARIO VARCHAR(100), SENHA VARCHAR(100));');
 end;
 
-procedure DisconectSIP;
+procedure DisconectATHENA;
 begin
-  if Assigned(FDConnectionSIP) then
+  if Assigned(FDConnectionATHENA) then
   begin
-    FDConnectionSIP.Connected := False;
-    FreeAndNil(FDConnectionSIP);
+    FDConnectionATHENA.Connected := False;
+    FreeAndNil(FDConnectionATHENA);
   end;
 end;
 

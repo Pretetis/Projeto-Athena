@@ -24,11 +24,11 @@ begin
     {$IFDEF MSWINDOWS}
     if (AUsuario.Trim = '') or (not Assigned(AForm)) then Exit;
 
-    if not Assigned(FDConnectionSIP) or (not FDConnectionSIP.Connected) then Exit;
+    if not Assigned(FDConnectionATHENA) or (not FDConnectionATHENA.Connected) then Exit;
 
     qry := TFDQuery.Create(nil);
     try
-        qry.Connection := FDConnectionSIP;
+        qry.Connection := FDConnectionATHENA;
 
         qry.SQL.Text := 'SELECT COUNT(*) FROM FORM_CONFIG WHERE USUARIO = :USUARIO AND FORM_NAME = :FORM_NAME';
         qry.ParamByName('USUARIO').AsString := AUsuario;
@@ -71,11 +71,11 @@ begin
     {$IFDEF MSWINDOWS}
     if (AUsuario.Trim = '') or (not Assigned(AForm)) then Exit;
 
-    if not Assigned(FDConnectionSIP) or (not FDConnectionSIP.Connected) then Exit;
+    if not Assigned(FDConnectionATHENA) or (not FDConnectionATHENA.Connected) then Exit;
 
     qry := TFDQuery.Create(nil);
     try
-        qry.Connection := FDConnectionSIP;
+        qry.Connection := FDConnectionATHENA;
         qry.SQL.Text := 'SELECT * FROM FORM_CONFIG WHERE USUARIO = :USUARIO AND FORM_NAME = :FORM_NAME';
         qry.ParamByName('USUARIO').AsString := AUsuario;
         qry.ParamByName('FORM_NAME').AsString := SHARED_FORM_KEY;

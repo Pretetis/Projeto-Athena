@@ -7,7 +7,9 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Objects, FMX.Edit, FMX.Controls.Presentation, FMX.StdCtrls,
   REST.Client, REST.Authenticator.Basic, system.json, REST.Types, FMX.Ani,
-  System.IOUtils, System.IniFiles, FMX.ListBox, uRequests, System.Actions, FMX.ActnList, FMX.MediaLibrary.Actions, FMX.StdActns;
+  System.IOUtils, System.IniFiles, FMX.ListBox, uRequests, System.Actions, FMX.ActnList,
+  FMX.MediaLibrary.Actions, FMX.StdActns, System.Hash, FireDAC.Comp.Client,
+  FireDAC.FMXUI.Wait, FireDAC.Comp.UI, FireDAC.UI.Intf, FireDAC.Stan.Intf;
 
 type
   TfLogin = class(TForm)
@@ -21,6 +23,7 @@ type
     edtSenha: TEdit;
     lbSugestoes: TListBox;
     recListaUsuarios: TRectangle;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     procedure rectAcessarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -33,6 +36,8 @@ type
     procedure SelecionarUsuarioLista(Sender: TObject);
     procedure CarregarListaUsuariosDoServidor;
     procedure RetornoRequest(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
+    procedure SalvarCredenciaisOffline(AUsuario, ASenha, ANome: string);
+    function TentarLoginOffline(AUsuario, ASenha: string): Boolean;
   public
   end;
 
@@ -42,12 +47,13 @@ var
 implementation
 
 uses
-  uMenu, uMenuMobile, uParametros, FMX.frame.PopUpToast;
+  uMenu, uMenuMobile, uParametros, FMX.frame.PopUpToast, uConnection;
 
 {$R *.fmx}
 
 procedure TfLogin.FormCreate(Sender: TObject);
 begin
+  ConnectATHENA;
   FListaUsuariosCache := TStringList.Create;
   recListaUsuarios.Visible := False;
 
@@ -75,81 +81,119 @@ end;
 
 procedure TfLogin.rectAcessarClick(Sender: TObject);
 var
-  Req: TModuloRequest;
+    Req: TModuloRequest;
+    LUsuarioDigitado, LSenhaDigitada: string;
 begin
-  if (Trim(edtUsuario.Text) = '') or (Trim(edtSenha.Text) = '') then
-  begin
-    TFramePopUp.Show(Self, A, 'Preencha usuário e senha!');
-    Exit;
-  end;
+    LUsuarioDigitado := Trim(edtUsuario.Text);
+    LSenhaDigitada := Trim(edtSenha.Text);
 
-  Req := TModuloRequest.Create(Self, nil);
-  Req.EfetuarLogin(edtUsuario.Text, edtSenha.Text,
-      procedure(Sucesso: Boolean; Msg: string)
-      var
-        Ini: TIniFile;
-      begin
-          if Sucesso then
-          begin
-              // 1. Salva localmente para os próximos acessos
-              Ini := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'athena_config.ini'));
-              try
-                Ini.WriteString('Credenciais', 'Usuario', Trim(edtUsuario.Text));
-                Ini.WriteString('Credenciais', 'Senha', Trim(edtSenha.Text));
-              finally
-                Ini.Free;
-              end;
+    if (LUsuarioDigitado = '') or (LSenhaDigitada = '') then
+    begin
+        TFramePopUp.Show(Self, A, 'Preencha usuário e senha!');
+        Exit;
+    end;
 
-              // 2. AQUI: Atualiza as variáveis globais dos parâmetros!
-              mNomeUsuario := Trim(edtUsuario.Text);
-              mUsuario := Trim(edtUsuario.Text);
+    // Req := TModuloRequest.Create(Self, nil);
+    Req := TModuloRequest.Create(Self, RetornoRequest);
+    Req.EfetuarLogin(LUsuarioDigitado, LSenhaDigitada,
+        procedure(Sucesso: Boolean; Msg: string)
+        begin
+            TThread.Queue(nil, procedure
+            var
+              Ini: TIniFile;
+            begin
+                try // <--- BLINDAGEM MÁXIMA INICIA AQUI
+                    if Sucesso then
+                    begin
+                        Ini := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'athena_config.ini'));
+                        try
+                          Ini.WriteString('Credenciais', 'Usuario', LUsuarioDigitado);
+                          Ini.WriteString('Credenciais', 'Senha', LSenhaDigitada);
+                          Ini.WriteString('Perfil', 'Setor', mSetor);
+                          Ini.WriteString('Perfil', 'Funcao', mFuncao);
+                          Ini.WriteString('Perfil', 'IdFuncionario', mIdFuncionario);
+                          Ini.WriteInteger('Perfil', 'NivelAcesso', mNivelAcesso);
+                        finally
+                          Ini.Free;
+                        end;
 
-              // 3. Redireciona para o Menu
-            {$IFDEF ANDROID}
-              if not Assigned(fMenuMobile) then
-                Application.CreateForm(TfMenuMobile, fMenuMobile);
-              fMenuMobile.Show;
-              Application.MainForm := fMenuMobile;
-            {$ELSE}
-              if not Assigned(fMenu) then
-                Application.CreateForm(TfMenu, fMenu);
-              fMenu.Show;
-              Application.MainForm := fMenu;
-            {$ENDIF}
-            Self.Close;
-          end
-          else
-          begin
-            TFramePopUp.Show(Self, E, Msg); // Usa seu popup amigável de erro
-          end;
-      end
-  );
+                        mNomeUsuario := LUsuarioDigitado;
+                        mUsuario := LUsuarioDigitado;
+
+                        SalvarCredenciaisOffline(LUsuarioDigitado, LSenhaDigitada, mNomeUsuario);
+
+                      {$IFDEF ANDROID}
+                        if not Assigned(fMenuMobile) then
+                          Application.CreateForm(TfMenuMobile, fMenuMobile);
+                        fMenuMobile.Show;
+                        Application.MainForm := fMenuMobile;
+                      {$ELSE}
+                        if not Assigned(fMenu) then
+                          Application.CreateForm(TfMenu, fMenu);
+                        fMenu.Show;
+                        Application.MainForm := fMenu;
+                      {$ENDIF}
+                        Self.Close;
+                    end
+                    else
+                    begin
+                        // Protegemos o acesso offline para ele não afogar a Exception
+                        try
+                            if TentarLoginOffline(LUsuarioDigitado, LSenhaDigitada) then
+                            begin
+                                {$IFDEF ANDROID}
+                                  if not Assigned(fMenuMobile) then Application.CreateForm(TfMenuMobile, fMenuMobile);
+                                  fMenuMobile.Show;
+                                  Application.MainForm := fMenuMobile;
+                                {$ELSE}
+                                  if not Assigned(fMenu) then Application.CreateForm(TfMenu, fMenu);
+                                  fMenu.Show;
+                                  Application.MainForm := fMenu;
+                                {$ENDIF}
+                                Self.Close;
+                            end
+                            else
+                            begin
+                                TFramePopUp.Show(Self, E, Msg + ' (Falha também no acesso offline)');
+                            end;
+                        except
+                            on ExOffline: Exception do
+                                ShowMessage('ERRO CRÍTICO NO BANCO OFFLINE: ' + ExOffline.Message);
+                        end;
+                    end;
+                except
+                    on ExGeral: Exception do
+                        ShowMessage('ERRO GERAL DE ROTEAMENTO: ' + ExGeral.Message);
+                end; // <--- FIM DA BLINDAGEM
+            end);
+        end
+    );
 end;
 
 procedure TfLogin.FiltrarUsuarios(Texto: String);
 var S: String; LItem: TListBoxItem;
 begin
-  lbSugestoes.Items.Clear;
-  if (Trim(Texto) = '') then
-  begin
-    recListaUsuarios.Visible := False;
-    Exit;
-  end;
+    lbSugestoes.Items.Clear;
+    if (Trim(Texto) = '') then
+    begin
+      recListaUsuarios.Visible := False;
+      Exit;
+    end;
 
-  lbSugestoes.BeginUpdate;
-  try
-    for S in FListaUsuariosCache do
-      if S.Contains(Texto.ToUpper) then
-      begin
-        LItem := TListBoxItem.Create(lbSugestoes);
-        LItem.Text := S;
-        LItem.OnClick := SelecionarUsuarioLista;
-        lbSugestoes.AddObject(LItem);
-      end;
-  finally
-    lbSugestoes.EndUpdate;
-  end;
-  recListaUsuarios.Visible := lbSugestoes.Count > 0;
+    lbSugestoes.BeginUpdate;
+    try
+        for S in FListaUsuariosCache do
+            if S.Contains(Texto.ToUpper) then
+            begin
+                LItem := TListBoxItem.Create(lbSugestoes);
+                LItem.Text := S;
+                LItem.OnClick := SelecionarUsuarioLista;
+                lbSugestoes.AddObject(LItem);
+            end;
+    finally
+      lbSugestoes.EndUpdate;
+    end;
+    recListaUsuarios.Visible := lbSugestoes.Count > 0;
 end;
 
 procedure TfLogin.SelecionarUsuarioLista(Sender: TObject);
@@ -166,11 +210,15 @@ end;
 
 procedure TfLogin.edtUsuarioExit(Sender: TObject);
 begin
-  // Esconde a lista após um pequeno delay para permitir o clique
   TThread.CreateAnonymousThread(procedure begin
     Sleep(200);
     TThread.Synchronize(nil, procedure begin
-      recListaUsuarios.Visible := False;
+      // Verifica se o Form ainda existe e não está sendo destruído
+      if Assigned(Self) and not (csDestroying in Self.ComponentState) then
+      begin
+        if Assigned(recListaUsuarios) then
+          recListaUsuarios.Visible := False;
+      end;
     end);
   end).Start;
 end;
@@ -211,4 +259,79 @@ begin
   FListaUsuariosCache.Free;
 end;
 
+procedure TfLogin.SalvarCredenciaisOffline(AUsuario, ASenha, ANome: string);
+var
+  Qry: TFDQuery;
+  LHashSenha: string;
+begin
+  if not Assigned(FDConnectionATHENA) then ConnectATHENA;
+
+  // GERADOR DE HASH NATIVO DO DELPHI
+  LHashSenha := THashSHA2.GetHashString(ASenha, THashSHA2.TSHA2Version.SHA256).ToLower;
+
+  Qry := TFDQuery.Create(nil);
+  try
+    Qry.Connection := FDConnectionATHENA;
+    Qry.ExecSQL('DELETE FROM USUARIO WHERE USUARIO = :U', [AUsuario]);
+    Qry.ExecSQL('INSERT INTO USUARIO (NOME, USUARIO, SENHA) VALUES (:N, :U, :S)',
+      [ANome, AUsuario, LHashSenha]);
+  finally
+    Qry.Free;
+  end;
+end;
+
+function TfLogin.TentarLoginOffline(AUsuario, ASenha: string): Boolean;
+var
+  Qry: TFDQuery;
+  LHashDigitado: string;
+  Ini: TIniFile;
+begin
+  Result := False;
+
+  if not Assigned(FDConnectionATHENA) then ConnectATHENA;
+
+  LHashDigitado := THashSHA2.GetHashString(ASenha, THashSHA2.TSHA2Version.SHA256).ToLower;
+
+  Qry := TFDQuery.Create(nil);
+  try
+    Qry.Connection := FDConnectionATHENA;
+    // O comando UPPER protege contra erros de digitação de maiúsculas/minúsculas!
+    Qry.SQL.Text := 'SELECT NOME, SENHA FROM USUARIO WHERE UPPER(USUARIO) = UPPER(:U)';
+    Qry.ParamByName('U').AsString := AUsuario;
+    Qry.Open;
+
+    if not Qry.IsEmpty then
+    begin
+      if Qry.FieldByName('SENHA').AsString = LHashDigitado then
+      begin
+        mNomeUsuario := Qry.FieldByName('NOME').AsString;
+        mUsuario := AUsuario;
+        Ini := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'athena_config.ini'));
+        try
+          mSetor := Ini.ReadString('Perfil', 'Setor', '');
+          mFuncao := Ini.ReadString('Perfil', 'Funcao', '');
+          mIdFuncionario := Ini.ReadString('Perfil', 'IdFuncionario', '');
+          mNivelAcesso := Ini.ReadInteger('Perfil', 'NivelAcesso', 3); // 3 é o padrão
+        finally
+          Ini.Free;
+        end;
+        Result := True;
+      end
+      else
+      begin
+        // Retiramos o TThread.Synchronize daqui pois o Queue já nos garante na Main Thread
+        ShowMessage('Senha recusada no SQLite!' + #13#10 +
+                    'Banco: ' + Qry.FieldByName('SENHA').AsString + #13#10 +
+                    'Digit: ' + LHashDigitado);
+      end;
+    end
+    else
+    begin
+        // Mesma coisa: aviso direto na tela!
+        ShowMessage('Usuário não encontrado no banco local: ' + AUsuario);
+    end;
+  finally
+    Qry.Free;
+  end;
+end;
 end.

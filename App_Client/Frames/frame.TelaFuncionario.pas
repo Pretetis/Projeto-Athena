@@ -4,16 +4,23 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Controls.Presentation,
-  FMX.Layouts, FMX.Objects, FMX.Edit, FMX.Effects,
-  System.JSON, System.Threading, System.Net.HttpClient, System.Net.HttpClientComponent, System.Net.URLClient,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit, FMX.Effects,
+  System.JSON, System.Threading, System.Net.HttpClient, System.Net.HttpClientComponent,
+  System.Net.URLClient,
   uRequests, uParametros;
 
 type
+  TDocDownloadInfo = record
+    Id: string;
+    Url: string;
+    FileName: string;
+  end;
+
   TfTelaFuncionario = class(TFrame)
     recFundo: TRectangle;
     Layout1: TLayout;
-    recFoto: TRectangle; // Recomendo usar TCircle para a foto como no Card
+    recFoto: TRectangle;
     lbNomeFuncionario: TLabel;
     lbCargo: TLabel;
     lbSetor: TLabel;
@@ -53,6 +60,8 @@ type
     procedure CarregarFotoAssincrona(AIdFuncionario: string);
     procedure LimparTabela;
     procedure BuscarDocumentos;
+    procedure IniciarDownloadEmSegundoPlano(AListaDocs: TArray<TDocDownloadInfo>);
+    procedure ProcessarJsonDocumentos(const AJsonContent: string);
   public
     constructor Create(AOwner: TComponent); override;
     procedure CarregarDadosTela;
@@ -61,14 +70,13 @@ type
 implementation
 
 uses
-  frame.LinhaTelaFuncionario, uDesignSystem;
-
+  frame.LinhaTelaFuncionario, uDesignSystem, System.IOUtils, System.DateUtils, IdHTTP;
 {$R *.fmx}
 
 constructor TfTelaFuncionario.Create(AOwner: TComponent);
 begin
   inherited;
-  LimparTabela;
+  // LimparTabela;
   // Limpa os dados visuais antes de carregar
   lbNomeFuncionario.Text := 'Carregando...';
   lbCargo.Text := '';
@@ -78,11 +86,21 @@ end;
 
 procedure TfTelaFuncionario.CarregarDadosTela;
 begin
-  // Utiliza a variável global mNomeUsuario do uParametros para buscar o funcionário exato
-  FReqFunc := TModuloRequest.Create(nil, OnRequestFuncionarioResult);
-  FReqFunc.ListarFuncionarios(mUsuario, 'true'); // Apenas funcionário ativo
-end;
+  // 1. IMPORTANTE: Recupera o ID do cache global para o filtro funcionar offline
+  FIdFuncionario := mIdFuncionario;
 
+  // 2. Preenchimento visual imediato
+  lbNomeFuncionario.Text := mNomeUsuario;
+  lbCargo.Text := mFuncao;
+  lbSetor.Text := mSetor;
+
+  // 3. Tenta atualizar os dados do servidor (se estiver online)
+  FReqFunc := TModuloRequest.Create(nil, OnRequestFuncionarioResult);
+  FReqFunc.ListarFuncionarios(mUsuario, 'true');
+
+  // 4. Dispara a busca de documentos (que agora vai ler o cache se falhar a rede)
+  BuscarDocumentos;
+end;
 procedure TfTelaFuncionario.OnRequestFuncionarioResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 var
   LJsonArray: TJSONArray;
@@ -131,60 +149,191 @@ begin
   FReqDoc.PesquisarDocumentos(LBusca, '', 'true'); // Passamos 'true' para trazer apenas os ativos
 end;
 
+//procedure TfTelaFuncionario.OnRequestDocumentosResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
+//var
+//  LJsonArray: TJSONArray;
+//  LJsonObj: TJSONObject;
+//  i: Integer;
+//  LFrame: TfLinhaTelaFuncionario;
+//
+//  // Variáveis para a fila de download
+//  LListaDownload: TArray<TDocDownloadInfo>;
+//  LDataStr: string;
+//  LDataValidade: TDate;
+//begin
+//  LimparTabela;
+//  if AStatusCode = 200 then
+//  begin
+//    LJsonArray := TJSONObject.ParseJSONValue(AJsonContent) as TJSONArray;
+//    if Assigned(LJsonArray) then
+//    begin
+//      try
+//        vscrollboxLinhaPlanilha.BeginUpdate;
+//        try
+//          SetLength(LListaDownload, 0); // Zera a lista
+//
+//          for i := 0 to LJsonArray.Count - 1 do
+//          begin
+//            LJsonObj := LJsonArray.Items[i] as TJSONObject;
+//
+//            // Dupla checagem
+//            if LJsonObj.GetValue<string>('entidadeId', '') <> FIdFuncionario then
+//              Continue;
+//
+//            // Transforma a data do JSON para verificar se está vencido
+//            LDataStr := LJsonObj.GetValue<string>('dataValidade', '');
+//            LDataValidade := Date;
+//            try
+//              LDataValidade := ISO8601ToDate(LDataStr);
+//            except
+//              // Se a data vier em branco ou fora do padrão, mantém o Date atual para não explodir
+//            end;
+//
+//            // Criação visual do Card do Documento (seu código original)
+//            LFrame := TfLinhaTelaFuncionario.Create(Self);
+//            LFrame.FDocId := LJsonObj.GetValue<string>('_id');
+//            LFrame.FNomeDoc := LJsonObj.GetValue<string>('nomeDocumento', 'Sem Nome');
+//            LFrame.FNomeEntidade := LJsonObj.GetValue<string>('nomeEntidade', lbNomeFuncionario.Text);
+//
+//            LFrame.Name := 'DocFunc_' + i.ToString;
+//            LFrame.Parent := vscrollboxLinhaPlanilha;
+//            LFrame.Align := TAlignLayout.Top;
+//            LFrame.Margins.Bottom := 4;
+//            LFrame.Position.Y := 99999;
+//
+//            LFrame.CarregarDados(
+//              LFrame.FNomeDoc,
+//              LJsonObj.GetValue<string>('tipoDocumento', '-'),
+//              LJsonObj.GetValue<string>('dataValidade', DateToStr(Date))
+//            );
+//
+//            // --- LÓGICA DE DOWNLOAD OFFLINE ---
+//            // Verifica se o documento é válido (a data de validade é >= hoje)
+//            if Trunc(LDataValidade) >= Trunc(Date) then
+//            begin
+//              SetLength(LListaDownload, Length(LListaDownload) + 1);
+//              LListaDownload[High(LListaDownload)].Id := LFrame.FDocId;
+//              LListaDownload[High(LListaDownload)].FileName := 'Doc_' + LFrame.FDocId + '.pdf';
+//
+//              // Ajuste a rota '/documentos/download/' conforme configurou na sua API Node.js
+//              LListaDownload[High(LListaDownload)].Url := EndPoint + '/documentos/download/' + LFrame.FDocId;
+//            end;
+//
+//          end;
+//        finally
+//          vscrollboxLinhaPlanilha.EndUpdate;
+//          Self.Width := Self.Width + 1;
+//          Application.ProcessMessages;
+//          Self.Width := Self.Width - 1;
+//        end;
+//
+//        // Se houver documentos válidos, dispara a Thread de download em background
+//        if Length(LListaDownload) > 0 then
+//          IniciarDownloadEmSegundoPlano(LListaDownload);
+//
+//      finally
+//        LJsonArray.Free;
+//      end;
+//    end;
+//  end;
+//end;
 procedure TfTelaFuncionario.OnRequestDocumentosResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
+var
+  LArquivoCache: string;
+begin
+  // Define onde o cache de texto será salvo
+  LArquivoCache := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'docs_cache.json');
+
+  if AStatusCode = 200 then
+  begin
+    // MODO ONLINE: Salva a lista fresca e processa
+    System.IOUtils.TFile.WriteAllText(LArquivoCache, AJsonContent, TEncoding.UTF8);
+    ProcessarJsonDocumentos(AJsonContent);
+  end
+  else
+  begin
+    // MODO OFFLINE: Tenta ler o arquivo de cache
+    if System.IOUtils.TFile.Exists(LArquivoCache) then
+    begin
+      ProcessarJsonDocumentos(System.IOUtils.TFile.ReadAllText(LArquivoCache, TEncoding.UTF8));
+    end
+    else
+    begin
+      LimparTabela;
+      // Opcional: mostrar um TFramePopUp de que não há dados baixados
+    end;
+  end;
+end;
+
+procedure TfTelaFuncionario.ProcessarJsonDocumentos(const AJsonContent: string);
 var
   LJsonArray: TJSONArray;
   LJsonObj: TJSONObject;
   i: Integer;
   LFrame: TfLinhaTelaFuncionario;
+  LListaDownload: TArray<TDocDownloadInfo>;
+  LDataStr: string;
+  LDataValidade: TDate;
 begin
   LimparTabela;
-  if AStatusCode = 200 then
+  LJsonArray := TJSONObject.ParseJSONValue(AJsonContent) as TJSONArray;
+  if Assigned(LJsonArray) then
   begin
-    LJsonArray := TJSONObject.ParseJSONValue(AJsonContent) as TJSONArray;
-    if Assigned(LJsonArray) then
-    begin
+    try
+      vscrollboxLinhaPlanilha.BeginUpdate;
       try
-        vscrollboxLinhaPlanilha.BeginUpdate;
-        try
-          for i := 0 to LJsonArray.Count - 1 do
-          begin
-            LJsonObj := LJsonArray.Items[i] as TJSONObject;
+        SetLength(LListaDownload, 0);
+        for i := 0 to LJsonArray.Count - 1 do
+        begin
+          LJsonObj := LJsonArray.Items[i] as TJSONObject;
 
-            // Dupla checagem para garantir que o documento é do funcionário (caso a busca genérica traga lixo)
-            if LJsonObj.GetValue<string>('entidadeId', '') <> FIdFuncionario then
-              Continue;
+          if LJsonObj.GetValue<string>('entidadeId', '') <> FIdFuncionario then
+            Continue;
 
-            LFrame := TfLinhaTelaFuncionario.Create(Self);
-
-            // Popula os dados
-            LFrame.FDocId := LJsonObj.GetValue<string>('_id');
-            LFrame.FNomeDoc := LJsonObj.GetValue<string>('nomeDocumento', 'Sem Nome');
-            LFrame.FNomeEntidade := LJsonObj.GetValue<string>('nomeEntidade', lbNomeFuncionario.Text);
-
-            // Configurações de UI
-            LFrame.Name := 'DocFunc_' + i.ToString;
-            LFrame.Parent := vscrollboxLinhaPlanilha;
-            LFrame.Align := TAlignLayout.Top;
-            LFrame.Margins.Bottom := 4;
-            LFrame.Position.Y := 99999;
-
-            LFrame.CarregarDados(
-              LFrame.FNomeDoc,
-              LJsonObj.GetValue<string>('tipoDocumento', '-'),
-              LJsonObj.GetValue<string>('dataValidade', DateToStr(Date))
-            );
+          LDataStr := LJsonObj.GetValue<string>('dataValidade', '');
+          LDataValidade := Date;
+          try
+            LDataValidade := ISO8601ToDate(LDataStr);
+          except
           end;
-        finally
-          vscrollboxLinhaPlanilha.EndUpdate;
-          // Força o redesenho do scroll
-          Self.Width := Self.Width + 1;
-          Application.ProcessMessages;
-          Self.Width := Self.Width - 1;
+
+          LFrame := TfLinhaTelaFuncionario.Create(Self);
+          LFrame.FDocId := LJsonObj.GetValue<string>('_id');
+          LFrame.FNomeDoc := LJsonObj.GetValue<string>('nomeDocumento', 'Sem Nome');
+          LFrame.FNomeEntidade := LJsonObj.GetValue<string>('nomeEntidade', lbNomeFuncionario.Text);
+
+          LFrame.Name := 'DocFunc_' + i.ToString;
+          LFrame.Parent := vscrollboxLinhaPlanilha;
+          LFrame.Align := TAlignLayout.Top;
+          LFrame.Margins.Bottom := 4;
+          LFrame.Position.Y := 99999;
+
+          LFrame.CarregarDados(
+            LFrame.FNomeDoc,
+            LJsonObj.GetValue<string>('tipoDocumento', '-'),
+            LJsonObj.GetValue<string>('dataValidade', DateToStr(Date))
+          );
+
+          if Trunc(LDataValidade) >= Trunc(Date) then
+          begin
+            SetLength(LListaDownload, Length(LListaDownload) + 1);
+            LListaDownload[High(LListaDownload)].Id := LFrame.FDocId;
+            LListaDownload[High(LListaDownload)].FileName := 'Doc_' + LFrame.FDocId + '.pdf';
+            LListaDownload[High(LListaDownload)].Url := EndPoint + '/documentos/download/' + LFrame.FDocId;
+          end;
         end;
       finally
-        LJsonArray.Free;
+        vscrollboxLinhaPlanilha.EndUpdate;
+        Self.Width := Self.Width + 1;
+        Application.ProcessMessages;
+        Self.Width := Self.Width - 1;
       end;
+
+      if Length(LListaDownload) > 0 then
+        IniciarDownloadEmSegundoPlano(LListaDownload);
+
+    finally
+      LJsonArray.Free;
     end;
   end;
 end;
@@ -193,10 +342,17 @@ procedure TfTelaFuncionario.LimparTabela;
 var
   i: Integer;
 begin
-  for i := vscrollboxLinhaPlanilha.Content.ChildrenCount - 1 downto 0 do
+  // Defesa FMX: Só tenta limpar se o Content já existir fisicamente na tela
+  if Assigned(vscrollboxLinhaPlanilha) and Assigned(vscrollboxLinhaPlanilha.Content) then
   begin
-    if vscrollboxLinhaPlanilha.Content.Children[i] is TfLinhaTelaFuncionario then
-      vscrollboxLinhaPlanilha.Content.Children[i].Free;
+    for i := vscrollboxLinhaPlanilha.Content.ChildrenCount - 1 downto 0 do
+    begin
+      if vscrollboxLinhaPlanilha.Content.Children[i] is TfLinhaTelaFuncionario then
+      begin
+        // No Delphi 10.3 Mobile, DisposeOf destrói o componente visual com segurança
+        vscrollboxLinhaPlanilha.Content.Children[i].DisposeOf;
+      end;
+    end;
   end;
 end;
 
@@ -257,6 +413,56 @@ procedure TfTelaFuncionario.tmrBuscaTimer(Sender: TObject);
 begin
   tmrBusca.Enabled := False;
   BuscarDocumentos;
+end;
+
+procedure TfTelaFuncionario.IniciarDownloadEmSegundoPlano(AListaDocs: TArray<TDocDownloadInfo>);
+begin
+  TTask.Run(
+    procedure
+    var
+      LHttp: TIdHTTP;
+      LStream: TFileStream;
+      LPathPasta, LPathCompleto: string;
+      I: Integer;
+    begin
+      // Usamos System.IOUtils direto no comando para blindar o conflito!
+      LPathPasta := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'AthenaDocs');
+
+      if not System.IOUtils.TDirectory.Exists(LPathPasta) then
+        System.IOUtils.TDirectory.CreateDirectory(LPathPasta);
+
+      LHttp := TIdHTTP.Create(nil);
+      try
+        // Usa as credenciais globais do sistema (de uParametros)
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
+        for I := Low(AListaDocs) to High(AListaDocs) do
+        begin
+          LPathCompleto := System.IOUtils.TPath.Combine(LPathPasta, AListaDocs[I].FileName);
+
+          // Baixa apenas se o documento AINDA NÃO EXISTIR localmente
+          if not System.IOUtils.TFile.Exists(LPathCompleto) then
+          begin
+            LStream := TFileStream.Create(LPathCompleto, fmCreate);
+            try
+              try
+                // Efetua o download silencioso do PDF para a pasta
+                LHttp.Get(AListaDocs[I].Url, LStream);
+              except
+                // Ignora erros isolados (ex: falha de rede em um único doc)
+              end;
+            finally
+              LStream.Free;
+            end;
+          end;
+        end;
+      finally
+        LHttp.Free;
+      end;
+    end
+  );
 end;
 
 end.

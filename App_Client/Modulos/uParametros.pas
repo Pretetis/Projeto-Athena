@@ -40,8 +40,8 @@ var
 const
     userName = ' ';
     password = ' ';
-
-  endPoint       = 'http://localhost:3000';  //Testes Computador DEV
+  //Testes Computador DEV
+  endpoint = 'http://192.168.0.58:3000';
 
 //    endPoint       = '';   //produção
 
