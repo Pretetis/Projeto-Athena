@@ -3,7 +3,7 @@ unit modal.ConsentimentoLGPD;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.WebBrowser, FMX.Effects, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts;
 
 type
@@ -29,48 +29,68 @@ type
     Layout2: TLayout;
     Rectangle1: TRectangle;
     Layout4: TLayout;
-    CheckBox1: TCheckBox;
+    cbFoto: TCheckBox;
     Layout5: TLayout;
-    CheckBox2: TCheckBox;
+    cbConsentimentoTotal: TCheckBox;
+    procedure recBtnSalvarClick(Sender: TObject);
+    procedure recBtnCancelarDocumentoClick(Sender: TObject);
   private
-    { Private declarations }
+    FOnAccept: TProc<Boolean>; // Retorna o aceite da foto
+    FOnCancel: TProc;
   public
-    constructor Create(AOwner: TComponent);
-    { Public declarations }
+    // Usamos um class procedure para chamar o Frame já com o texto da API e as rotinas de retorno
+    class procedure Exibir(AOwner: TComponent; AParent: TControl; ATextoLGPD: string; AOnAccept: TProc<Boolean>; AOnCancel: TProc);
   end;
 
 implementation
 
 {$R *.fmx}
 
-constructor TFrameModalConsentimentoLGPD.Create(AOwner: TComponent);
+class procedure TFrameModalConsentimentoLGPD.Exibir(AOwner: TComponent; AParent: TControl; ATextoLGPD: string; AOnAccept: TProc<Boolean>; AOnCancel: TProc);
 var
-    TextoLGPD: string;
+  Frame: TFrameModalConsentimentoLGPD;
+  TextoHtml: string;
 begin
-    // Monta o HTML com CSS para justificar (text-align) e dar espaçamento (line-height)
-    TextoLGPD :=
-      '<html>' +
-      '<head>' +
-      '<style>' +
-      '  body { ' +
-      '    font-family: Arial, sans-serif; ' +
-      '    font-size: 16px; ' +
-      '    color: #333333; ' +
-      '    text-align: justify; ' + // Justifica o texto
-      '    line-height: 1.6; ' +    // Aumenta o espaçamento entre linhas
-      '    padding: 15px; ' +       // Dá uma margem interna nas bordas
-      '  }' +
-      '</style>' +
-      '</head>' +
-      '<body>' +
-      '  <h3>Termo de Consentimento LGPD</h3>' +
-      '  <p>Para continuarmos, precisamos do seu consentimento de acordo com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Seus dados serão utilizados exclusivamente para...</p>' +
-      '  <p>Aqui entra o restante do seu texto longo, que agora terá barras de rolagem nativas, estará perfeitamente justificado e fácil de ler.</p>' +
-      '</body>' +
-      '</html>';
+  Frame := TFrameModalConsentimentoLGPD.Create(AOwner);
+  Frame.Parent := AParent;
+  Frame.Align := TAlignLayout.Contents;
+  Frame.BringToFront;
 
-    // Carrega o HTML diretamente no componente
-    wbConsentimento.LoadFromStrings(TextoLGPD, '');
+  Frame.FOnAccept := AOnAccept;
+  Frame.FOnCancel := AOnCancel;
+
+  // Monta o HTML com o texto que veio do banco e substitui quebras de linha nativas por <br>
+  TextoHtml :=
+    '<html><head><style>' +
+    '  body { font-family: Arial, sans-serif; font-size: 14px; color: #333333; text-align: justify; line-height: 1.6; padding: 15px; }' +
+    '</style></head><body>' +
+    ATextoLGPD.Replace(#10, '<br>').Replace(#13, '') +
+    '</body></html>';
+
+  Frame.wbConsentimento.LoadFromStrings(TextoHtml, '');
+end;
+
+procedure TFrameModalConsentimentoLGPD.recBtnSalvarClick(Sender: TObject);
+begin
+  // Bloqueia caso o consentimento obrigatório não esteja marcado
+  if not cbConsentimentoTotal.IsChecked then
+  begin
+    ShowMessage('É obrigatório aceitar o termo principal de LGPD para continuar.');
+    Exit;
+  end;
+
+  if Assigned(FOnAccept) then
+    FOnAccept(cbFoto.IsChecked); // Passa se aceitou ou não o uso da foto
+
+  Self.Free;
+end;
+
+procedure TFrameModalConsentimentoLGPD.recBtnCancelarDocumentoClick(Sender: TObject);
+begin
+  if Assigned(FOnCancel) then
+    FOnCancel;
+
+  Self.Free;
 end;
 
 end.

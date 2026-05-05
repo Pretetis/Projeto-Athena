@@ -34,7 +34,7 @@ uses
   frame.TelaFuncionario in 'Frames\frame.TelaFuncionario.pas' {fTelaFuncionario: TFrame},
   frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame},
   modal.ConsentimentoLGPD in 'Modais\modal.ConsentimentoLGPD.pas' {FrameModalConsentimentoLGPD: TFrame},
-  modal.ConfiguracoesFuncionario in 'Modais\modal.ConfiguracoesFuncionario.pas' {Frame1: TFrame};
+  modal.ConfiguracoesFuncionario in 'Modais\modal.ConfiguracoesFuncionario.pas' {FrameModalConfiguracoesFuncionario: TFrame};
 
 {$R *.res}
 

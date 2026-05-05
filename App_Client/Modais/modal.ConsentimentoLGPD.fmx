@@ -67,6 +67,7 @@ object FrameModalConsentimentoLGPD: TFrameModalConsentimentoLGPD
         Size.Height = 72.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
+        OnClick = recBtnCancelarDocumentoClick
         object pathFecharModal: TPath
           Align = Client
           Data.Path = {
@@ -145,6 +146,7 @@ object FrameModalConsentimentoLGPD: TFrameModalConsentimentoLGPD
             Stroke.Kind = None
             XRadius = 10.000000000000000000
             YRadius = 10.000000000000000000
+            OnClick = recBtnCancelarDocumentoClick
             object lbBtnCancelarDocumento: TLabel
               Align = Client
               StyledSettings = []
@@ -177,6 +179,7 @@ object FrameModalConsentimentoLGPD: TFrameModalConsentimentoLGPD
             Stroke.Kind = None
             XRadius = 10.000000000000000000
             YRadius = 10.000000000000000000
+            OnClick = recBtnSalvarClick
             object Path2: TPath
               Align = Left
               Data.Path = {
@@ -228,7 +231,7 @@ object FrameModalConsentimentoLGPD: TFrameModalConsentimentoLGPD
             Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            object CheckBox1: TCheckBox
+            object cbFoto: TCheckBox
               Align = Client
               StyledSettings = [Style, FontColor]
               Size.Width = 395.000000000000000000
@@ -250,7 +253,7 @@ object FrameModalConsentimentoLGPD: TFrameModalConsentimentoLGPD
             Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            object CheckBox2: TCheckBox
+            object cbConsentimentoTotal: TCheckBox
               Align = Client
               StyledSettings = [Style, FontColor]
               Size.Width = 395.000000000000000000

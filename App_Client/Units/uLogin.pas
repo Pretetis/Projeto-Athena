@@ -38,6 +38,7 @@ type
     procedure RetornoRequest(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
     procedure SalvarCredenciaisOffline(AUsuario, ASenha, ANome: string);
     function TentarLoginOffline(AUsuario, ASenha: string): Boolean;
+    procedure AbrirSistemaPrincipal;
   public
   end;
 
@@ -47,7 +48,8 @@ var
 implementation
 
 uses
-  uMenu, uMenuMobile, uParametros, FMX.frame.PopUpToast, uConnection;
+  uMenu, uMenuMobile, uParametros, FMX.frame.PopUpToast, uConnection,
+  modal.ConsentimentoLGPD;
 
 {$R *.fmx}
 
@@ -78,7 +80,112 @@ begin
   CarregarListaUsuariosDoServidor;
 end;
 
+procedure TfLogin.AbrirSistemaPrincipal;
+begin
+  {$IFDEF ANDROID}
+    if not Assigned(fMenuMobile) then
+      Application.CreateForm(TfMenuMobile, fMenuMobile);
+    fMenuMobile.Show;
+    Application.MainForm := fMenuMobile;
+  {$ELSE}
+    if not Assigned(fMenu) then
+      Application.CreateForm(TfMenu, fMenu);
+    fMenu.Show;
+    Application.MainForm := fMenu;
+  {$ENDIF}
+  Self.Close;
+end;
 
+//procedure TfLogin.rectAcessarClick(Sender: TObject);
+//var
+//    Req: TModuloRequest;
+//    LUsuarioDigitado, LSenhaDigitada: string;
+//begin
+//    LUsuarioDigitado := Trim(edtUsuario.Text);
+//    LSenhaDigitada := Trim(edtSenha.Text);
+//
+//    if (LUsuarioDigitado = '') or (LSenhaDigitada = '') then
+//    begin
+//        TFramePopUp.Show(Self, A, 'Preencha usuário e senha!');
+//        Exit;
+//    end;
+//
+//    // Req := TModuloRequest.Create(Self, nil);
+//    Req := TModuloRequest.Create(Self, RetornoRequest);
+//    Req.EfetuarLogin(LUsuarioDigitado, LSenhaDigitada,
+//        procedure(Sucesso: Boolean; Msg: string)
+//        begin
+//            TThread.Queue(nil, procedure
+//            var
+//              Ini: TIniFile;
+//            begin
+//                try // <--- BLINDAGEM MÁXIMA INICIA AQUI
+//                    if Sucesso then
+//                    begin
+//                        Ini := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'athena_config.ini'));
+//                        try
+//                          Ini.WriteString('Credenciais', 'Usuario', LUsuarioDigitado);
+//                          Ini.WriteString('Credenciais', 'Senha', LSenhaDigitada);
+//                          Ini.WriteString('Perfil', 'Setor', mSetor);
+//                          Ini.WriteString('Perfil', 'Funcao', mFuncao);
+//                          Ini.WriteString('Perfil', 'IdFuncionario', mIdFuncionario);
+//                          Ini.WriteInteger('Perfil', 'NivelAcesso', mNivelAcesso);
+//                        finally
+//                          Ini.Free;
+//                        end;
+//
+//                        mNomeUsuario := LUsuarioDigitado;
+//                        mUsuario := LUsuarioDigitado;
+//
+//                        SalvarCredenciaisOffline(LUsuarioDigitado, LSenhaDigitada, mNomeUsuario);
+//
+//                      {$IFDEF ANDROID}
+//                        if not Assigned(fMenuMobile) then
+//                          Application.CreateForm(TfMenuMobile, fMenuMobile);
+//                        fMenuMobile.Show;
+//                        Application.MainForm := fMenuMobile;
+//                      {$ELSE}
+//                        if not Assigned(fMenu) then
+//                          Application.CreateForm(TfMenu, fMenu);
+//                        fMenu.Show;
+//                        Application.MainForm := fMenu;
+//                      {$ENDIF}
+//                        Self.Close;
+//                    end
+//                    else
+//                    begin
+//                        // Protegemos o acesso offline para ele não afogar a Exception
+//                        try
+//                            if TentarLoginOffline(LUsuarioDigitado, LSenhaDigitada) then
+//                            begin
+//                                {$IFDEF ANDROID}
+//                                  if not Assigned(fMenuMobile) then Application.CreateForm(TfMenuMobile, fMenuMobile);
+//                                  fMenuMobile.Show;
+//                                  Application.MainForm := fMenuMobile;
+//                                {$ELSE}
+//                                  if not Assigned(fMenu) then Application.CreateForm(TfMenu, fMenu);
+//                                  fMenu.Show;
+//                                  Application.MainForm := fMenu;
+//                                {$ENDIF}
+//                                Self.Close;
+//                            end
+//                            else
+//                            begin
+//                                TFramePopUp.Show(Self, E, Msg + ' (Falha também no acesso offline)');
+//                            end;
+//                        except
+//                            on ExOffline: Exception do
+//                                ShowMessage('ERRO CRÍTICO NO BANCO OFFLINE: ' + ExOffline.Message);
+//                        end;
+//                    end;
+//                except
+//                    on ExGeral: Exception do
+//                        ShowMessage('ERRO GERAL DE ROTEAMENTO: ' + ExGeral.Message);
+//                end; // <--- FIM DA BLINDAGEM
+//            end);
+//        end
+//    );
+//end;
 procedure TfLogin.rectAcessarClick(Sender: TObject);
 var
     Req: TModuloRequest;
@@ -93,16 +200,16 @@ begin
         Exit;
     end;
 
-    // Req := TModuloRequest.Create(Self, nil);
     Req := TModuloRequest.Create(Self, RetornoRequest);
+
     Req.EfetuarLogin(LUsuarioDigitado, LSenhaDigitada,
-        procedure(Sucesso: Boolean; Msg: string)
+        procedure(Sucesso: Boolean; Msg: string; TermosAceitos: Boolean; PrimeiroAcesso: Boolean)
         begin
             TThread.Queue(nil, procedure
             var
               Ini: TIniFile;
             begin
-                try // <--- BLINDAGEM MÁXIMA INICIA AQUI
+                try
                     if Sucesso then
                     begin
                         Ini := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'athena_config.ini'));
@@ -119,52 +226,63 @@ begin
 
                         mNomeUsuario := LUsuarioDigitado;
                         mUsuario := LUsuarioDigitado;
-
+                        mPrimeiroAcesso := PrimeiroAcesso;
                         SalvarCredenciaisOffline(LUsuarioDigitado, LSenhaDigitada, mNomeUsuario);
 
-                      {$IFDEF ANDROID}
-                        if not Assigned(fMenuMobile) then
-                          Application.CreateForm(TfMenuMobile, fMenuMobile);
-                        fMenuMobile.Show;
-                        Application.MainForm := fMenuMobile;
-                      {$ELSE}
-                        if not Assigned(fMenu) then
-                          Application.CreateForm(TfMenu, fMenu);
-                        fMenu.Show;
-                        Application.MainForm := fMenu;
-                      {$ENDIF}
-                        Self.Close;
+                        if not TermosAceitos then
+                        begin
+                            // IMPORTANTE: Criamos um NOVO TModuloRequest aqui, pois o "Req" já foi destruído!
+                            TModuloRequest.Create(Self, RetornoRequest).BuscarTermoConsentimentoLGPD(
+                              procedure(BSucesso: Boolean; BMsg, BTexto: string)
+                              begin
+                                if BSucesso then
+                                begin
+                                  TFrameModalConsentimentoLGPD.Exibir(Self, layCentral, BTexto,
+                                    procedure(AceitouFoto: Boolean)
+                                    begin
+                                      // OUTRA NOVA INSTÂNCIA: para enviar o aceite!
+                                      TModuloRequest.Create(Self, RetornoRequest).EnviarAceiteLGPD(mIdFuncionario, AceitouFoto,
+                                        procedure(LgpdSucesso: Boolean; LgpdMsg: string)
+                                        begin
+                                          if LgpdSucesso then
+                                            AbrirSistemaPrincipal
+                                          else
+                                            TFramePopUp.Show(Self, E, 'Erro ao gravar aceite: ' + LgpdMsg);
+                                        end
+                                      );
+                                    end,
+                                    procedure
+                                    begin
+                                      TFramePopUp.Show(Self, A, 'O aceite dos termos da LGPD é obrigatório para acessar o aplicativo.');
+                                    end
+                                  );
+                                end
+                                else
+                                  TFramePopUp.Show(Self, E, 'Erro de comunicação ao buscar LGPD: ' + BMsg);
+                              end
+                            );
+                        end
+                        else
+                        begin
+                            AbrirSistemaPrincipal;
+                        end;
                     end
                     else
                     begin
-                        // Protegemos o acesso offline para ele não afogar a Exception
                         try
                             if TentarLoginOffline(LUsuarioDigitado, LSenhaDigitada) then
-                            begin
-                                {$IFDEF ANDROID}
-                                  if not Assigned(fMenuMobile) then Application.CreateForm(TfMenuMobile, fMenuMobile);
-                                  fMenuMobile.Show;
-                                  Application.MainForm := fMenuMobile;
-                                {$ELSE}
-                                  if not Assigned(fMenu) then Application.CreateForm(TfMenu, fMenu);
-                                  fMenu.Show;
-                                  Application.MainForm := fMenu;
-                                {$ENDIF}
-                                Self.Close;
-                            end
+                                AbrirSistemaPrincipal
                             else
-                            begin
                                 TFramePopUp.Show(Self, E, Msg + ' (Falha também no acesso offline)');
-                            end;
                         except
-                            on ExOffline: Exception do
-                                ShowMessage('ERRO CRÍTICO NO BANCO OFFLINE: ' + ExOffline.Message);
+//                            on ExOffline: Exception do
+//                                ShowMessage('ERRO CRÍTICO NO BANCO OFFLINE: ' + ExOffline.Message);
                         end;
                     end;
                 except
                     on ExGeral: Exception do
                         ShowMessage('ERRO GERAL DE ROTEAMENTO: ' + ExGeral.Message);
-                end; // <--- FIM DA BLINDAGEM
+                end;
             end);
         end
     );
@@ -212,8 +330,8 @@ procedure TfLogin.edtUsuarioExit(Sender: TObject);
 begin
   TThread.CreateAnonymousThread(procedure begin
     Sleep(200);
+    // Sem o TThreadProc
     TThread.Synchronize(nil, procedure begin
-      // Verifica se o Form ainda existe e não está sendo destruído
       if Assigned(Self) and not (csDestroying in Self.ComponentState) then
       begin
         if Assigned(recListaUsuarios) then
@@ -319,16 +437,12 @@ begin
       end
       else
       begin
-        // Retiramos o TThread.Synchronize daqui pois o Queue já nos garante na Main Thread
-        ShowMessage('Senha recusada no SQLite!' + #13#10 +
-                    'Banco: ' + Qry.FieldByName('SENHA').AsString + #13#10 +
-                    'Digit: ' + LHashDigitado);
+        TFramePopUp.Show(Self, A,'Senha recusada no SQLite!');
       end;
     end
     else
     begin
-        // Mesma coisa: aviso direto na tela!
-        ShowMessage('Usuário não encontrado no banco local: ' + AUsuario);
+        TFramePopUp.Show(Self, A,'Usuário não encontrado no banco local: ' + AUsuario);
     end;
   finally
     Qry.Free;

@@ -5,6 +5,21 @@ const mongoose = require('mongoose');
 
 const Funcionario = require('../models/Funcionario');
 const Documento = require('../models/Documento');
+const LGPD = require('../models/LGPD');
+
+// ==========================================
+// 0. BUSCAR TEXTO DE CONSENTIMENTO ATIVO
+// GET /lgpd/consentimento
+// ==========================================
+router.get('/consentimento', async (req, res) => {
+  try {
+    const consentimento = await LGPD.findOne({ isAtivo: true });
+    if (!consentimento) return res.status(404).send('Nenhum texto de consentimento ativo encontrado.');
+    res.json(consentimento);
+  } catch (err) {
+    res.status(500).send('Erro ao buscar consentimento: ' + err.message);
+  }
+});
 
 // ==========================================
 // 1. PORTABILIDADE DE DADOS (Art. 18, II LGPD)

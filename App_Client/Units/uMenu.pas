@@ -73,7 +73,7 @@ implementation
 
 uses
 
-  uDesignSystem, uParametros;
+  uDesignSystem, uParametros, modal.ConfiguracoesFuncionario;
 
 {$R *.fmx}
 {$R *.LgXhdpiPh.fmx ANDROID}
@@ -166,46 +166,6 @@ begin
     end;
 end;
 
-//procedure TfMenu.MenuBtnClick(Sender: TObject);
-//var
-//  Rec: TRectangle;
-//begin
-//    if not (Sender is TRectangle) then Exit;
-//
-//    Rec := TRectangle(Sender);
-//
-//    if Rec = FBotaoAtivo then Exit;
-//
-//    if Assigned(FBotaoAtivo) then
-//        FBotaoAtivo.Fill.Kind := TBrushKind.None;
-//
-//    FBotaoAtivo := Rec;
-//
-//    FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
-//    FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
-//
-//    if Rec.Name = 'recBtnDashboard' then
-//    begin
-//        CarregarDashboard;
-//    end
-//    else if Rec.Name = 'recBtnDocumentos' then
-//    begin
-//        CarregarDocumentos;
-//    end
-//    else if Rec.Name = 'recBtnFuncionarios' then
-//    begin
-//        CarregarFuncionarios;
-//    end
-//    else if Rec.Name = 'recBtnMaquinas' then
-//    begin
-//        CarregarMaquinas;
-//    end
-//    else if Rec.Name = 'recBtnEmpresas' then
-//    begin
-//        CarregarFuncionarioIndividual;
-//    end;
-//end;
-
 procedure TfMenu.MenuBtnClick(Sender: TObject);
 var
   Rec: TRectangle;
@@ -244,32 +204,38 @@ begin
 end;
 
 procedure TfMenu.FormShow(Sender: TObject);
-var
-  LSetor: string;
 begin
   IniciarCatalogos;
   CarregarDadosPerfil;
 
-  LSetor := UpperCase(Trim(mSetor));
+  if mPrimeiroAcesso then
+  begin
+    TFrameModalConfiguracoesFuncionario.Exibir(Self, layPrincipal,
+      procedure
+      begin
 
-  if (LSetor = 'ADMINISTRATIVO') or (LSetor = 'RH') then
+      end
+    );
+  end;
+
+  if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
   begin
     // Fluxo Normal - Tem acesso a tudo
     MenuBtnClick(recBtnDashboard);
   end
   else
   begin
-    // Funcionário Comum - Esconde as outras telas
-    recBtnDashboard.Visible := False;
-    recBtnDocumentos.Visible := False;
-    recBtnFuncionarios.Visible := False;
-    recBtnMaquinas.Visible := False;
+    // Fluxo Restrito (Funcionário Comum)
+    layMenu.Visible := False; // Esconde o menu lateral/inferior inteiro!
 
-    // Altera o texto do botão (opcional, já que era Empresas)
-    lbEmpresas.Text := 'Meu Perfil';
+    // Traz o container de telas para a frente e deixa sempre visível
+    layPrincipal.Visible := True;
+    layPrincipal.BringToFront;
+    //MenuBtnClick(recBtnEmpresas);
 
-    // Já abre direto a tela dele
-    MenuBtnClick(recBtnEmpresas);
+    // Carrega direto a tela do funcionário
+    CarregarFuncionarioIndividual;
+
   end;
 end;
 
@@ -303,8 +269,6 @@ begin
 
     FFrameDocumentos.Visible := True;
     FFrameDocumentos.BringToFront;
-
-    // Se a tela Documentos tiver um método CarregarDados, chame aqui.
 end;
 
 procedure TfMenu.CarregarFuncionarios;

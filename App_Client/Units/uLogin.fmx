@@ -4,8 +4,8 @@ object fLogin: TfLogin
   BorderIcons = [biSystemMenu]
   BorderStyle = SizeToolWin
   Caption = 'Acesso'
-  ClientHeight = 471
-  ClientWidth = 399
+  ClientHeight = 760
+  ClientWidth = 529
   Fill.Color = claWhitesmoke
   Fill.Kind = Solid
   Position = ScreenCenter
@@ -15,7 +15,7 @@ object fLogin: TfLogin
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  DesignerMasterStyle = 3
+  DesignerMasterStyle = 0
   object layCentral: TLayout
     Align = Center
     Margins.Bottom = 10.000000000000000000
@@ -146,7 +146,7 @@ object fLogin: TfLogin
         Margins.Right = 6.000000000000000000
         Margins.Bottom = 6.000000000000000000
         Size.Width = 268.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 33.000000000000000000
         Size.PlatformDefault = False
         TextPrompt = 'Usu'#225'rio'
         StyledSettings = []
@@ -231,21 +231,21 @@ object fLogin: TfLogin
     Margins.Right = 5.000000000000000000
     Position.X = 5.000000000000000000
     Position.Y = 5.000000000000000000
-    Size.Width = 389.000000000000000000
+    Size.Width = 519.000000000000000000
     Size.Height = 80.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
     object lineTop: TLine
       Align = Client
       LineType = Bottom
-      Size.Width = 389.000000000000000000
+      Size.Width = 519.000000000000000000
       Size.Height = 80.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF102E4E
       object lblInformacao: TLabel
         Align = Client
         StyledSettings = [Family]
-        Size.Width = 389.000000000000000000
+        Size.Width = 519.000000000000000000
         Size.Height = 80.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Size = 26.000000000000000000

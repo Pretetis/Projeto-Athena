@@ -36,12 +36,14 @@ var
   mNivelAcesso: Integer;
   mIdFuncionario: string;
   mFuncao: string;
+  mTermosAceitos: Boolean;
+  mPrimeiroAcesso: Boolean;
 
 const
     userName = ' ';
     password = ' ';
   //Testes Computador DEV
-  endpoint = 'http://192.168.0.58:3000';
+  endpoint = 'http://localhost:3000';
 
 //    endPoint       = '';   //produção
 

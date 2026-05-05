@@ -206,7 +206,8 @@ router.post('/login', async (req, res) => {
           nome: func.nome,
           funcao: func.funcao,
           setor: func.setor,
-          nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
+          nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3,
+          termosAceitos: func.termosAceitos
         }
       });
     }
@@ -224,7 +225,8 @@ router.post('/login', async (req, res) => {
         nome: func.nome, 
         funcao: func.funcao, 
         setor: func.setor, 
-        nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
+        nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3,
+        termosAceitos: func.termosAceitos
       }
     });
 
@@ -233,7 +235,54 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// 5. TROCAR SENHA DO FUNCIONÁRIO
+// 5. ACEITAR TERMOS LGPD
+// POST /funcionarios/:id/aceitar-termos
+// Body opcional: { aceitarFotoPerfil: Boolean }
+router.post('/:id/aceitar-termos', async (req, res) => {
+  try {
+    const func = await Funcionario.findById(req.params.id);
+    if (!func) return res.status(404).send('Funcionário não encontrado.');
+
+    if (func.termosAceitos) {
+      return res.status(409).send('Termos já foram aceitos anteriormente.');
+    }
+
+    func.termosAceitos = true;
+    func.dataAceiteTermos = new Date();
+
+    if (req.body.aceitarFotoPerfil !== undefined) {
+      func.termosAceitosFotoPerfil = req.body.aceitarFotoPerfil;
+    }
+
+    await func.save();
+
+    res.json({
+      mensagem: 'Termos LGPD aceitos com sucesso.',
+      dataAceite: func.dataAceiteTermos,
+      termosAceitosFotoPerfil: func.termosAceitosFotoPerfil
+    });
+  } catch (err) {
+    res.status(500).send('Erro ao registrar aceite: ' + err.message);
+  }
+});
+
+// 6. TROCAR SENHA DO FUNCIONÁRIO
+// DEV: RESETAR PRIMEIRO ACESSO (apaga a senha para simular novo funcionário)
+// POST /funcionarios/:id/resetar-acesso
+router.post('/:id/resetar-acesso', async (req, res) => {
+  try {
+    const func = await Funcionario.findByIdAndUpdate(
+      req.params.id,
+      { $unset: { senha: '' } },
+      { new: true }
+    );
+    if (!func) return res.status(404).send('Funcionário não encontrado.');
+    res.json({ mensagem: `Acesso de "${func.nome}" resetado. Próximo login será tratado como primeiro acesso.` });
+  } catch (err) {
+    res.status(500).send('Erro ao resetar acesso: ' + err.message);
+  }
+});
+
 // PUT /funcionarios/:id/senha
 // Body: { senhaAtual: String, novaSenha: String }
 router.put('/:id/senha', async (req, res) => {

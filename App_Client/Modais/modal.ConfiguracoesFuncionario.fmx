@@ -1,4 +1,4 @@
-object Frame1: TFrame1
+object FrameModalConfiguracoesFuncionario: TFrameModalConfiguracoesFuncionario
   Size.Width = 452.000000000000000000
   Size.Height = 533.000000000000000000
   Size.PlatformDefault = False
@@ -67,6 +67,7 @@ object Frame1: TFrame1
         Size.Height = 49.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
+        OnClick = recBtnCancelarDocumentoClick
         object pathFecharModal: TPath
           Align = Client
           Data.Path = {
@@ -314,6 +315,7 @@ object Frame1: TFrame1
           Stroke.Kind = None
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
+          OnClick = recBtnCancelarDocumentoClick
           object lbBtnCancelarDocumento: TLabel
             Align = Client
             StyledSettings = []
@@ -346,6 +348,7 @@ object Frame1: TFrame1
           Stroke.Kind = None
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
+          OnClick = recBtnSalvarClick
           object Path2: TPath
             Align = Left
             Data.Path = {

@@ -14,7 +14,8 @@ type
                       ctxCarregarMaquinas, ctxCarregarEmpresas, ctxDesativarDocumento,
                       ctxReativarDocumento, ctxEditarDocumento, ctxListarFuncionarios,
                       ctxCriarFuncionario, ctxProximaChapa, ctxEditarFuncionario,
-                      ctxListarMaquinas, ctxCriarMaquina, ctxEditarMaquina);
+                      ctxListarMaquinas, ctxCriarMaquina, ctxEditarMaquina,
+                      ctxLerLGPD, ctxAceitarLGPD);
 
   TOnRequestResult = procedure(Sender: TObject;
                                const AJsonContent: string;
@@ -38,6 +39,8 @@ type
   public
     property UltimoMaqIdSolicitado: Integer read FUltimoMaqIdSolicitado;
 
+    procedure TratarRetornoJSON;
+    procedure ResetarComponentesRest;
     procedure CallbackFimDaThread(Sender: TObject);
     procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
     procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
@@ -58,12 +61,13 @@ type
     procedure ListarMaquinas(ABusca, AAtivo: string);
     procedure EnviarMaquina(ANome, ATipo, AModelo, AChapa, ACaminhoFoto: string);
     procedure EditarMaquina(AId, ANome, ATipo, AModelo, AChapa: string; AAtivo: Boolean; ACaminhoFoto: string);
-    procedure EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string>);
+    procedure EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string, Boolean, Boolean>);
+    procedure AlterarSenha(AFuncionarioId, ASenhaAtual, ANovaSenha: string; ACallback: TProc<Boolean, string>);
     procedure BaixarDocumentoOffline(AUrlOrigem, ANomeArquivoPdf: string; ACallback: TProc<Boolean, string>);
-
+    procedure AceitarLGPD(AIdFuncionario: string; AAceitaFoto: Boolean);
     procedure ListarTotalDocumentos;
-    procedure TratarRetornoJSON;
-    procedure ResetarComponentesRest;
+    procedure BuscarTermoConsentimentoLGPD(ACallback: TProc<Boolean, string, string>);
+    procedure EnviarAceiteLGPD(AFuncionarioId: string; AAceitarFoto: Boolean; ACallback: TProc<Boolean, string>);
 
     constructor Create(AParentForm: TForm; AOnResult: TOnRequestResult);
     destructor Destroy; override;
@@ -889,14 +893,15 @@ begin
     end;
 end;
 
-procedure TModuloRequest.EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string>);
+procedure TModuloRequest.EfetuarLogin(ANome, ASenha: string; ACallback: TProc<Boolean, string, Boolean, Boolean>);
 var
   LJson: TJSONObject;
+  LPrimeiroAcesso: Boolean;
 begin
   ResetarComponentesRest;
   FRESTRequest.Timeout := 3000;
 
-  FRESTClient.BaseURL := EndPoint + '/funcionarios/login'; // Ou a rota onde colocou o endpoint
+  FRESTClient.BaseURL := EndPoint + '/funcionarios/login';
   FRESTRequest.Method := rmPOST;
 
   LJson := TJSONObject.Create;
@@ -920,11 +925,17 @@ begin
         var
           LJsonRetorno: TJSONObject;
           LJsonFunc: TJSONObject;
+          LTermosAceitos: Boolean;
         begin
           if FRESTResponse.StatusCode in [200, 201] then
           begin
-            // Lê o JSON de retorno
             LJsonRetorno := TJSONObject.ParseJSONValue(FRESTResponse.Content) as TJSONObject;
+            LTermosAceitos := False;
+
+            LPrimeiroAcesso := False;
+            if Assigned(LJsonRetorno.Values['primeiroAcesso']) then
+              LPrimeiroAcesso := LJsonRetorno.GetValue<Boolean>('primeiroAcesso', False);
+
             if Assigned(LJsonRetorno) then
             begin
               try
@@ -935,29 +946,84 @@ begin
                   mNivelAcesso := LJsonFunc.GetValue<Integer>('nivelAcesso', 3);
                   mIdFuncionario := LJsonFunc.GetValue<string>('id', '');
                   mFuncao := LJsonFunc.GetValue<string>('funcao', '');
-                end;
 
+                  // Blindagem do Booleano LGPD
+                  if Assigned(LJsonFunc.Values['termosAceitos']) then
+                  begin
+                    if LJsonFunc.Values['termosAceitos'] is TJSONTrue then
+                      LTermosAceitos := True
+                    else if LJsonFunc.Values['termosAceitos'].Value.ToLower = 'true' then
+                      LTermosAceitos := True;
+                  end;
+                end;
               finally
                 LJsonRetorno.Free;
               end;
             end;
-                        ACallback(True, 'Login efetuado com sucesso');
+            // SUCCESSO: 4 parâmetros (True, Msg, TermosLGPD, PrimeiroAcesso)
+            ACallback(True, 'Login efetuado com sucesso', LTermosAceitos, LPrimeiroAcesso);
           end
           else if FRESTResponse.StatusCode = 401 then
-            ACallback(False, 'Senha incorreta!')
+            // FALHA: 4 parâmetros (False, Msg, TermosLGPD=False, PrimeiroAcesso=False)
+            ACallback(False, 'Senha incorreta!', False, False)
           else
-            ACallback(False, FRESTResponse.Content);
+            // FALHA: 4 parâmetros
+            ACallback(False, FRESTResponse.Content, False, False);
         end);
       except
         on E: Exception do
           TThread.Synchronize(nil, procedure
           begin
-            ACallback(False, 'Erro de conexão: ' + E.Message);
+            // FALHA DE CONEXÃO: 4 parâmetros
+            ACallback(False, 'Erro de conexão: ' + E.Message, False, False);
           end);
       end;
     end,
     CallbackFimDaThread
   );
+end;
+
+procedure TModuloRequest.AlterarSenha(AFuncionarioId, ASenhaAtual, ANovaSenha: string; ACallback: TProc<Boolean, string>);
+var
+  LJson: TJSONObject;
+begin
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/funcionarios/' + AFuncionarioId + '/senha';
+  FRESTRequest.Method := rmPUT;
+
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('senhaAtual', ASenhaAtual);
+    LJson.AddPair('novaSenha', ANovaSenha);
+    FRESTRequest.AddBody(LJson.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    LJson.Free;
+  end;
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        FRESTRequest.Execute;
+        TThread.Synchronize(nil, procedure
+        begin
+          if FRESTResponse.StatusCode = 200 then
+            ACallback(True, 'Senha alterada com sucesso.')
+          else
+            ACallback(False, FRESTResponse.Content);
+        end);
+      except
+        on E: Exception do
+          TThread.Synchronize(nil, procedure begin ACallback(False, E.Message); end);
+      end;
+    end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.AceitarLGPD(AIdFuncionario: string; AAceitaFoto: Boolean);
+begin
+
 end;
 
 procedure TModuloRequest.BaixarDocumentoOffline(AUrlOrigem, ANomeArquivoPdf: string; ACallback: TProc<Boolean, string>);
@@ -1013,5 +1079,83 @@ begin
     CallbackFimDaThread
   );
 end;
+
+procedure TModuloRequest.BuscarTermoConsentimentoLGPD(ACallback: TProc<Boolean, string, string>);
+begin
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/lgpd/consentimento';
+  FRESTRequest.Method := rmGET;
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        FRESTRequest.Execute;
+        TThread.Synchronize(nil, procedure
+        var
+          LJson: TJSONObject;
+          LTexto: string;
+        begin
+          if FRESTResponse.StatusCode = 200 then
+          begin
+            LJson := TJSONObject.ParseJSONValue(FRESTResponse.Content) as TJSONObject;
+            if Assigned(LJson) then
+            begin
+              LTexto := LJson.GetValue<string>('LGPD', '');
+              LJson.Free;
+              ACallback(True, 'Sucesso', LTexto);
+            end
+            else
+              ACallback(False, 'JSON Invalido', '');
+          end
+          else
+            ACallback(False, FRESTResponse.Content, '');
+        end);
+      except
+        on E: Exception do
+          TThread.Synchronize(nil, procedure begin ACallback(False, E.Message, ''); end);
+      end;
+    end,
+    CallbackFimDaThread
+  );
+end;
+
+procedure TModuloRequest.EnviarAceiteLGPD(AFuncionarioId: string; AAceitarFoto: Boolean; ACallback: TProc<Boolean, string>);
+var
+  LJson: TJSONObject;
+begin
+  ResetarComponentesRest;
+  FRESTClient.BaseURL := EndPoint + '/funcionarios/' + AFuncionarioId + '/aceitar-termos';
+  FRESTRequest.Method := rmPOST;
+
+  LJson := TJSONObject.Create;
+  try
+    LJson.AddPair('aceitarFotoPerfil', TJSONBool.Create(AAceitarFoto));
+    FRESTRequest.AddBody(LJson.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    LJson.Free;
+  end;
+
+  TLoading.ExecuteThread(
+    procedure
+    begin
+      try
+        FRESTRequest.Execute;
+        TThread.Synchronize(nil, procedure
+        begin
+          if FRESTResponse.StatusCode in [200, 201] then
+            ACallback(True, 'Termos aceitos com sucesso!')
+          else
+            ACallback(False, FRESTResponse.Content);
+        end);
+      except
+        on E: Exception do
+          TThread.Synchronize(nil, procedure begin ACallback(False, E.Message); end);
+      end;
+    end,
+    CallbackFimDaThread
+  );
+end;
+
 
 end.

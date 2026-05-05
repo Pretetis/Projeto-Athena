@@ -76,7 +76,7 @@ var
 implementation
 
 uses
-  uDesignSystem, uParametros;
+  uDesignSystem, uParametros, modal.ConfiguracoesFuncionario;
 
 {$R *.fmx}
 
@@ -123,6 +123,17 @@ procedure TfMenuMobile.FormShow(Sender: TObject);
 begin
   IniciarCatalogos;
   CarregarDadosPerfil;
+
+  if mPrimeiroAcesso then
+  begin
+    // CORREÇÃO: Passando o layPrincipal como container do modal
+    TFrameModalConfiguracoesFuncionario.Exibir(Self, layHostName,
+      procedure
+      begin
+        // O que acontece quando ele troca a senha com sucesso? A vida segue!
+      end
+    );
+  end;
 
   if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
   begin
@@ -188,37 +199,6 @@ end;
 { ==============================================================================
   NAVEGAÇÃO DO MENU
   ============================================================================== }
-
-//procedure TfMenuMobile.MenuBtnClick(Sender: TObject);
-//var
-//  Rec: TRectangle;
-//  Lay: TLayout;
-//begin
-//  if not (Sender is TRectangle) then Exit;
-//
-//  Rec := TRectangle(Sender);
-//  Lay := TLayout(Sender);
-//
-//  // Controle visual do botão ativo (cor do Theme)
-//  if Assigned(FBotaoAtivo) and (FBotaoAtivo <> Rec) then
-//    FBotaoAtivo.Fill.Kind := TBrushKind.None;
-//
-//  FBotaoAtivo := Rec;
-//  FBotaoAtivo.Fill.Color := TThemeColors.Indigo600;
-//  FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
-//
-//  // Roteamento para as telas
-//  if Rec.Name = 'recBtnDashboard' then
-//    CarregarDashboard
-//  else if Rec.Name = 'recBtnDocumentos' then
-//    CarregarDocumentos
-//  else if Rec.Name = 'recBtnFuncionarios' then
-//    CarregarFuncionarios
-//  else if Rec.Name = 'recBtnMaquinas' then
-//    CarregarMaquinas
-//  else if Lay.Name = 'layTitulo' then
-//    CarregarFuncionarioIndividual;
-//end;
 
 procedure TfMenuMobile.MenuBtnClick(Sender: TObject);
 var

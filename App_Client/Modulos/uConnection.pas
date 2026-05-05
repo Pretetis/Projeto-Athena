@@ -33,6 +33,8 @@ begin
   FDConnectionATHENA.LoginPrompt := False;
   FDConnectionATHENA.Connected := True;
 
+  // FDConnectionATHENA.ExecSQL('DROP TABLE IF EXISTS USUARIO');
+
   FDConnectionATHENA.ExecSQL('CREATE TABLE IF NOT EXISTS USUARIO (NOME VARCHAR(100), USUARIO VARCHAR(100), SENHA VARCHAR(100));');
 end;
 
