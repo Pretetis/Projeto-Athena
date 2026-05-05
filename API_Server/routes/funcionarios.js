@@ -53,7 +53,7 @@ router.post('/', upload.single('foto'), async (req, res) => {
       return res.status(400).send('JSON inválido: ' + e.message);
     }
 
-    const { nome, funcao, setor, chapa } = dados;
+    const { nome, funcao, setor, chapa, termosAceitos, baseLegal } = dados;
     let fileId = null;
 
     if (req.file) {
@@ -75,7 +75,14 @@ router.post('/', upload.single('foto'), async (req, res) => {
       fileId = uploadStream.id;
     }
 
-    const novoFunc = new Funcionario({ nome, funcao, setor, chapa, fotoId: fileId });
+    const dadosLgpd = {};
+    if (termosAceitos) {
+      dadosLgpd.termosAceitos = true;
+      dadosLgpd.dataAceiteTermos = new Date();
+    }
+    if (baseLegal) dadosLgpd.baseLegal = baseLegal;
+
+    const novoFunc = new Funcionario({ nome, funcao, setor, chapa, fotoId: fileId, ...dadosLgpd });
     await novoFunc.save();
     res.status(201).json({ mensagem: 'Funcionário cadastrado com sucesso!', id: novoFunc._id });
 
@@ -91,12 +98,19 @@ router.get('/:id/foto', async (req, res) => {
   try {
     const gfsBucket = req.gfsBucket;
     const func = await Funcionario.findById(req.params.id);
-    
-    if (!func || !func.fotoId) return res.status(404).send('Funcionário sem foto.'); 
+
+    if (!func) return res.status(404).send('Funcionário não encontrado.');
+
+    // LGPD: se o funcionário não autorizou uso da foto, não expõe a imagem
+    if (func.termosAceitosFotoPerfil === false) {
+      return res.status(403).send('Uso da foto de perfil não autorizado pelo titular.');
+    }
+
+    if (!func.fotoId) return res.status(404).send('Funcionário sem foto.');
 
     const fileId = new mongoose.Types.ObjectId(func.fotoId);
     const files = await gfsBucket.find({ _id: fileId }).toArray();
-    
+
     if (files.length === 0) return res.status(404).send('Arquivo físico não encontrado.');
 
     res.set('Content-Type', files[0].contentType || 'image/jpeg');
@@ -168,28 +182,32 @@ router.post('/login', async (req, res) => {
       return res.status(400).send('Nome e senha são obrigatórios.');
     }
 
-    // Procura o funcionário pelo nome (case insensitive)
-    const func = await Funcionario.findOne({ nome: new RegExp(`^${nome}$`, 'i') });
+    // Procura o funcionário pelo nome (case insensitive); senha excluída por padrão no schema
+    const func = await Funcionario.findOne({ nome: new RegExp(`^${nome}$`, 'i') }).select('+senha');
     
     if (!func) {
       return res.status(404).send('Funcionário não encontrado.');
     }
 
-    // A MÁGICA AQUI: Se o funcionário não tem senha cadastrada, salvamos a digitada
+    // Primeiro acesso: senha padrão é o primeiro nome do funcionário
     if (!func.senha) {
-      func.senha = senha; 
-      // Nota: Em um ambiente real de produção, use bcrypt para criar um hash da senha aqui!
-      await func.save();
-      return res.json({ 
-        sucesso: true, 
-        mensagem: 'Primeiro acesso identificado. Senha registrada com sucesso!',
-        funcionario: { 
-        id: func._id, 
-        nome: func.nome, 
-        funcao: func.funcao, 
-        setor: func.setor, 
-        nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
+      const primeiroNome = func.nome.split(' ')[0];
+      if (senha !== primeiroNome) {
+        return res.status(401).send('Senha incorreta. No primeiro acesso, use seu primeiro nome como senha.');
       }
+      func.senha = primeiroNome;
+      await func.save();
+      return res.json({
+        sucesso: true,
+        primeiroAcesso: true,
+        mensagem: 'Primeiro acesso identificado. Troque sua senha antes de continuar.',
+        funcionario: {
+          id: func._id,
+          nome: func.nome,
+          funcao: func.funcao,
+          setor: func.setor,
+          nivelAcesso: func.nivelAcesso !== undefined ? func.nivelAcesso : 3
+        }
       });
     }
 
@@ -212,6 +230,43 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     res.status(500).send('Erro interno: ' + err.message);
+  }
+});
+
+// 5. TROCAR SENHA DO FUNCIONÁRIO
+// PUT /funcionarios/:id/senha
+// Body: { senhaAtual: String, novaSenha: String }
+router.put('/:id/senha', async (req, res) => {
+  try {
+    const { senhaAtual, novaSenha } = req.body;
+
+    if (!senhaAtual || !novaSenha) {
+      return res.status(400).send('senhaAtual e novaSenha são obrigatórios.');
+    }
+
+    if (novaSenha.length < 4) {
+      return res.status(400).send('A nova senha deve ter ao menos 4 caracteres.');
+    }
+
+    // Busca incluindo senha (excluída por padrão no schema)
+    const func = await Funcionario.findById(req.params.id).select('+senha');
+    if (!func) return res.status(404).send('Funcionário não encontrado.');
+
+    // Primeiro acesso: ainda não tem senha definida
+    if (!func.senha) {
+      return res.status(400).send('Funcionário sem senha cadastrada. Use o login para definir a senha inicial.');
+    }
+
+    if (func.senha !== senhaAtual) {
+      return res.status(401).send('Senha atual incorreta.');
+    }
+
+    func.senha = novaSenha;
+    await func.save();
+
+    res.json({ mensagem: 'Senha alterada com sucesso.' });
+  } catch (err) {
+    res.status(500).send('Erro ao alterar senha: ' + err.message);
   }
 });
 

@@ -172,7 +172,7 @@ router.post('/', upload.single('pdf'), async (req, res) => {
       return res.status(400).send('JSON inválido: ' + e.message);
     }
 
-    const { entidadeId, entidadeTipo, tipoDocumento, nomeDocumento, dataValidade } = dados;
+    const { entidadeId, entidadeTipo, tipoDocumento, nomeDocumento, dataValidade, isDadoSensivel, baseLegal, inseridoPor } = dados;
     if (!entidadeId) return res.status(400).send('entidadeId obrigatório.');
 
     const fileName = `${Date.now()}-athena-${req.file.originalname}`;
@@ -193,7 +193,10 @@ router.post('/', upload.single('pdf'), async (req, res) => {
           entidadeTipo,
           tipoDocumento,
           dataValidade,
-          fileId: uploadStream.id
+          fileId: uploadStream.id,
+          isDadoSensivel: isDadoSensivel || false,
+          baseLegal: baseLegal || 'Execução de Contrato',
+          inseridoPor: inseridoPor || null
         });
         await novoDoc.save();
         res.status(201).json({ mensagem: 'Documento salvo com sucesso!', fileId: uploadStream.id });

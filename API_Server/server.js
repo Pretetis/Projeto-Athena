@@ -9,6 +9,7 @@ const documentosRoutes = require('./routes/documentos');
 const funcionariosRoutes = require('./routes/funcionarios');
 const maquinasRoutes = require('./routes/maquinas');
 const utilidadesRoutes = require('./routes/utilidades');
+const lgpdRoutes = require('./routes/lgpd');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use('/documentos', documentosRoutes);
 app.use('/funcionarios', funcionariosRoutes);
 app.use('/maquinas', maquinasRoutes);
+app.use('/lgpd', lgpdRoutes);
 app.use('/', utilidadesRoutes); // Lookups e outras rotas gerais
 
 // 5. Iniciar Cron Jobs

@@ -422,39 +422,58 @@ begin
     var
       LHttp: TIdHTTP;
       LStream: TFileStream;
-      LPathPasta, LPathCompleto: string;
-      I: Integer;
+      LPathPasta, LPathCompleto, LUrl, LFileName: string;
+      I, LPage: Integer;
+      LSucessoDownload: Boolean;
     begin
-      // Usamos System.IOUtils direto no comando para blindar o conflito!
       LPathPasta := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'AthenaDocs');
-
       if not System.IOUtils.TDirectory.Exists(LPathPasta) then
         System.IOUtils.TDirectory.CreateDirectory(LPathPasta);
 
       LHttp := TIdHTTP.Create(nil);
       try
-        // Usa as credenciais globais do sistema (de uParametros)
         LHttp.Request.BasicAuthentication := True;
         LHttp.Request.Username := UserName;
         LHttp.Request.Password := Password;
 
         for I := Low(AListaDocs) to High(AListaDocs) do
         begin
-          LPathCompleto := System.IOUtils.TPath.Combine(LPathPasta, AListaDocs[I].FileName);
+          LPage := 1;
 
-          // Baixa apenas se o documento AINDA NÃO EXISTIR localmente
-          if not System.IOUtils.TFile.Exists(LPathCompleto) then
+          while True do // Loop infinito de páginas, só quebra quando acabar o PDF
           begin
+            LFileName := 'Doc_' + AListaDocs[I].Id + '_pg' + LPage.ToString + '.jpg';
+            LPathCompleto := System.IOUtils.TPath.Combine(LPathPasta, LFileName);
+
+            // Usa a rota de preview em vez do download direto
+            LUrl := EndPoint + '/documentos/' + AListaDocs[I].Id + '/preview?page=' + LPage.ToString;
+
+            // Se a imagem desta página já existe, pula para a próxima página
+            if System.IOUtils.TFile.Exists(LPathCompleto) then
+            begin
+              Inc(LPage);
+              Continue;
+            end;
+
+            LSucessoDownload := False;
             LStream := TFileStream.Create(LPathCompleto, fmCreate);
             try
               try
-                // Efetua o download silencioso do PDF para a pasta
-                LHttp.Get(AListaDocs[I].Url, LStream);
+                LHttp.Get(LUrl, LStream);
+                LSucessoDownload := True;
               except
-                // Ignora erros isolados (ex: falha de rede em um único doc)
+                // Erro 404/500 significa que chegamos ao fim das páginas do documento
               end;
             finally
               LStream.Free;
+            end;
+
+            if LSucessoDownload then
+              Inc(LPage) // Vai para a próxima página do mesmo PDF
+            else
+            begin
+              System.IOUtils.TFile.Delete(LPathCompleto); // Deleta o arquivo vazio/corrompido gerado
+              Break; // Sai do "while" de páginas e vai para o próximo documento da lista
             end;
           end;
         end;

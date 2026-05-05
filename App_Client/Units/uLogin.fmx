@@ -258,7 +258,7 @@ object fLogin: TfLogin
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'FMX'
-    Left = 344
-    Top = 16
+    Left = 296
+    Top = 32
   end
 end

@@ -33,7 +33,8 @@ uses
   uMenuMobile in 'Units\uMenuMobile.pas' {fMenuMobile},
   frame.TelaFuncionario in 'Frames\frame.TelaFuncionario.pas' {fTelaFuncionario: TFrame},
   frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame},
-  uHash in 'Auxiliares\uHash.pas';
+  modal.ConsentimentoLGPD in 'Modais\modal.ConsentimentoLGPD.pas' {FrameModalConsentimentoLGPD: TFrame},
+  modal.ConfiguracoesFuncionario in 'Modais\modal.ConfiguracoesFuncionario.pas' {Frame1: TFrame};
 
 {$R *.res}
 

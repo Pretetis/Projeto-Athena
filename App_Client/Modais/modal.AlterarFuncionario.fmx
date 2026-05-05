@@ -405,7 +405,7 @@ object FrameAlterarFuncionario: TFrameAlterarFuncionario
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Estado do Documento'
+          Text = 'Estado do Colaborador'
           TabOrder = 0
         end
         object GridPanelLayout1: TGridPanelLayout
@@ -463,7 +463,7 @@ object FrameAlterarFuncionario: TFrameAlterarFuncionario
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
               TextSettings.FontColor = xFFDC2626
-              Text = 'Desativar Documento'
+              Text = 'Desativar Colaborador'
               TabOrder = 0
             end
             object pathBtnDesativarDoc: TPath
@@ -511,7 +511,7 @@ object FrameAlterarFuncionario: TFrameAlterarFuncionario
               Size.PlatformDefault = False
               TextSettings.Font.Family = 'Roboto'
               TextSettings.FontColor = xFF166534
-              Text = 'Ativar Documento'
+              Text = 'Ativar Colaborador'
               TabOrder = 0
             end
             object pathBtnAivo: TPath

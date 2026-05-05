@@ -102,66 +102,23 @@ procedure TFrameVisualizarDocumento.Resize;
 var
   LMargem: Single;
 begin
-  inherited;
+    inherited;
 
-  if Assigned(recOverlay) and Assigned(recFundo) then
-  begin
-    {$IFDEF ANDROID}
-        LMargem := recOverlay.Width * 0.04;
-    {$ELSE}
-        LMargem := recOverlay.Width * 0.20;
-    {$ENDIF}
+    if Assigned(recOverlay) and Assigned(recFundo) then
+    begin
+        {$IFDEF ANDROID}
+            LMargem := recOverlay.Width * 0.04;
+        {$ELSE}
+            LMargem := recOverlay.Width * 0.20;
+        {$ENDIF}
 
-    recFundo.Margins.Left := LMargem;
-    recFundo.Margins.Right := LMargem;
-  end;
+        recFundo.Margins.Left  := LMargem;
+        recFundo.Margins.Right := LMargem;
+    end;
 end;
 
 procedure TFrameVisualizarDocumento.AbrirModal(const ADocId, ANomeDoc, AEntidade: string);
-var
-    {$IFDEF ANDROID}
-        LIntent: JIntent;
-        LBuilder: JMyStrictMode_VmPolicy_Builder;
-    {$ENDIF}
-    LPathPasta, LPathCompleto: string;
 begin
-    LPathPasta := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'AthenaDocs');
-    LPathCompleto := System.IOUtils.TPath.Combine(LPathPasta, 'Doc_' + ADocId + '.pdf');
-
-    // 2. MODO OFFLINE: Se o arquivo já existe no celular, abre direto no leitor de PDF do usuário!
-    if System.IOUtils.TFile.Exists(LPathCompleto) then
-    begin
-        {$IFDEF MSWINDOWS}
-        Winapi.ShellAPI.ShellExecute(0, 'open', PChar(LPathCompleto), nil, nil, 1);
-        {$ENDIF}
-
-        {$IFDEF ANDROID}
-        begin
-          // Desliga a restrição do FileUriExposedException usando as classes manuais
-          LBuilder := TJMyStrictMode_VmPolicy_Builder.JavaClass.init;
-          TJMyStrictMode.JavaClass.setVmPolicy(LBuilder.build);
-
-          LIntent := TJIntent.JavaClass.init(TJIntent.JavaClass.ACTION_VIEW);
-          LIntent.setDataAndType(StrToJURI('file://' + LPathCompleto), StringToJString('application/pdf'));
-          LIntent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_CLEAR_TOP);
-
-          // Tenta abrir o PDF. Se o usuário não tiver leitor, avisa na tela em vez de quebrar!
-          try
-            TAndroidHelper.Context.startActivity(LIntent);
-          except
-            ShowMessage('Nenhum leitor de PDF encontrado neste aparelho. Por favor, instale um aplicativo para ler PDFs (como o Adobe Acrobat).');
-          end;
-        end;
-        {$ENDIF}
-
-        Self.DisposeOf;
-        Exit;
-    end;
-
-    // =========================================================================
-    // 3. MODO ONLINE: Se o arquivo NÃO existe localmente, continua código original
-    // =========================================================================
-
     FDocId := ADocId;
     FPageAtiva := 1;
     lbTitulo.Text := ANomeDoc;
@@ -171,10 +128,34 @@ begin
 
     Self.Visible := True;
     Self.BringToFront;
-
     imgVisualizacao.Bitmap := nil;
 
-    TThread.CreateAnonymousThread(
+    CarregarPagina(FPageAtiva);
+end;
+
+procedure TFrameVisualizarDocumento.CarregarPagina(APagina: Integer);
+var
+    LPathLocal: string;
+begin
+    lbPagina.Text := 'Página: ' + APagina.ToString;
+
+    // 1. Monta o caminho de onde a imagem deveria estar salva offline
+    LPathLocal := System.IOUtils.TPath.Combine(System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'AthenaDocs'),
+                                'Doc_' + FDocId + '_pg' + APagina.ToString + '.jpg');
+
+    // 2. VERIFICAÇÃO OFFLINE: O arquivo existe no tablet/celular?
+    if System.IOUtils.TFile.Exists(LPathLocal) then
+    begin
+        // Lê a imagem direto do armazenamento (rápido e offline!)
+        TThread.ForceQueue(nil, procedure
+        begin
+          imgVisualizacao.Bitmap.LoadFromFile(LPathLocal);
+        end);
+    end
+    else
+    begin
+      // 3. VERIFICAÇÃO ONLINE: Não tem offline, então busca da API Node.js
+      TThread.CreateAnonymousThread(
         procedure
         var
           LHttp: TIdHTTP;
@@ -188,53 +169,22 @@ begin
                 LHttp.Request.Password := Password;
 
                 try
-                  LHttp.Get(EndPoint + '/documentos/' + FDocId + '/preview', LStream);
-                  LStream.Position := 0;
+                    LHttp.Get(EndPoint + '/documentos/' + FDocId + '/preview?page=' + APagina.ToString, LStream);
+                    LStream.Position := 0;
 
-                  TThread.Synchronize(nil,
-                    procedure
+                    TThread.Synchronize(nil, procedure
                     begin
                         imgVisualizacao.Bitmap.LoadFromStream(LStream);
                     end);
                 except
-                    TThread.Synchronize(nil, procedure begin
-                        ShowMessage('Não foi possível carregar a visualização online. Verifique sua conexão.');
-                    end);
+                  // Se der erro aqui (ex: sem net), podemos colocar um toast: "Você está sem internet e este doc não foi baixado."
                 end;
             finally
                 LStream.Free;
                 LHttp.Free;
             end;
         end).Start;
-
-    CarregarPagina(FPageAtiva);
-end;
-
-procedure TFrameVisualizarDocumento.CarregarPagina(APagina: Integer);
-begin
-  lbPagina.Text := 'Página: ' + APagina.ToString;
-
-  TThread.CreateAnonymousThread(
-      procedure
-      var LHttp: TIdHTTP; LStream: TMemoryStream;
-      begin
-          LHttp := TIdHTTP.Create(nil);
-          LStream := TMemoryStream.Create;
-          try
-              LHttp.Request.BasicAuthentication := True;
-              LHttp.Request.Username := UserName;
-              LHttp.Request.Password := Password;
-
-              LHttp.Get(EndPoint + '/documentos/' + FDocId + '/preview?page=' + APagina.ToString, LStream);
-              LStream.Position := 0;
-
-              TThread.Synchronize(nil, procedure begin
-                  imgVisualizacao.Bitmap.LoadFromStream(LStream);
-              end);
-          finally
-              LStream.Free; LHttp.Free;
-          end;
-      end).Start;
+    end;
 end;
 
 procedure TFrameVisualizarDocumento.layAnteriorClick(Sender: TObject);
