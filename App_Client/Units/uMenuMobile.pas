@@ -23,9 +23,6 @@ type
     recBtnFuncionarios: TRectangle;
     pathFuncionarios: TPath;
     lbFuncionarios: TLabel;
-    recBtnEmpresas: TRectangle;
-    pathEmpresas: TPath;
-    lbEmpresas: TLabel;
     recBtnDocumentos: TRectangle;
     pathDocumentos: TPath;
     lbDocumentos: TLabel;
@@ -35,7 +32,6 @@ type
     Layout4: TLayout;
     Layout5: TLayout;
     Layout6: TLayout;
-    Layout7: TLayout;
     Layout8: TLayout;
     recFundo: TRectangle;
     scrollboxContainerFrame: TScrollBox;
@@ -45,6 +41,12 @@ type
     lbCargo: TLabel;
     lbMenu: TLabel;
     Line1: TLine;
+    GridPanelLayout1: TGridPanelLayout;
+    GridPanelLayout2: TGridPanelLayout;
+    Line2: TLine;
+    Line3: TLine;
+    Line4: TLine;
+    Line5: TLine;
     procedure MenuBtnClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -165,11 +167,11 @@ begin
   Margem := Self.Width * 0.1;
 
   // Aplica a margem em todos os botões do menu
-  Layout4.Margins.Left := Margem;
-  Layout5.Margins.Left := Margem;
-  Layout6.Margins.Left := Margem;
-  Layout7.Margins.Left := Margem;
-  Layout8.Margins.Left := Margem;
+//  Layout4.Margins.Left := Margem;
+//  Layout5.Margins.Left := Margem;
+//  Layout6.Margins.Left := Margem;
+//  //Layout7.Margins.Left := Margem;
+//  Layout8.Margins.Left := Margem;
 
   lbMenu.Margins.Left := Self.Width * 0.1;
 
@@ -400,7 +402,22 @@ begin
               cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
             end);
           except
-            // Se der erro (ex: usuário não cadastrou foto), falha em silêncio e mantém o círculo vazio/padrão
+              TThread.Synchronize(nil, procedure
+            var
+              ResStream: TResourceStream;
+              begin
+                if FindResource(HInstance, 'AVATAR_PADRAO', RT_RCDATA) <> 0 then
+                begin
+                  ResStream := TResourceStream.Create(HInstance, 'AVATAR_PADRAO', RT_RCDATA);
+                  try
+                    cirFotoPerfil.Fill.Bitmap.Bitmap.LoadFromStream(ResStream);
+                    cirFotoPerfil.Fill.Kind := TBrushKind.Bitmap;
+                    cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                  finally
+                    ResStream.Free;
+                  end;
+                end;
+              end);
           end;
         finally
           LStream.Free;

@@ -47,7 +47,7 @@ type
 implementation
 
 uses
-  uMenu, uMenuMobile, modal.AlterarFuncionario;
+  uMenu, uMenuMobile, modal.AlterarFuncionario, IdHTTP;
 
 {$R *.fmx}
 
@@ -58,38 +58,64 @@ begin
   TTask.Run(
     procedure
     var
-      LHttp: TNetHTTPClient;
-      LResponse: IHTTPResponse;
+      LHttp: TIdHTTP;
       LStream: TMemoryStream;
-    begin
-        LHttp := TNetHTTPClient.Create(nil);
-        LStream := TMemoryStream.Create;
-        try
+
+      procedure AplicarAvatarPadrao;
+      begin
+        TThread.Synchronize(nil, procedure
+        var
+          ResStream: TResourceStream;
+        begin
+          if Assigned(Self) and Assigned(cirFotoFuncionario) then
+          begin
             try
-                LResponse := LHttp.Get(EndPoint + '/funcionarios/' + AIdFuncionario + '/foto', LStream);
-
-                if LResponse.StatusCode = 200 then
-                begin
-                  LStream.Position := 0;
-
-                  TThread.Synchronize(nil,
-                    procedure
-                    begin
-                        if Assigned(Self) and Assigned(cirFotoFuncionario) then
-                        begin
-                            cirFotoFuncionario.Fill.Kind := TBrushKind.Bitmap;
-                            cirFotoFuncionario.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
-                            cirFotoFuncionario.Fill.Bitmap.WrapMode := TWrapMode.TileStretch; // Ajusta pra não distorcer
-                        end;
-                    end);
-                end;
+              ResStream := TResourceStream.Create(MainInstance, 'AVATAR_PADRAO', RT_RCDATA);
+              try
+                cirFotoFuncionario.Fill.Kind := TBrushKind.Bitmap;
+                cirFotoFuncionario.Fill.Bitmap.Bitmap.LoadFromStream(ResStream);
+                cirFotoFuncionario.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                cirFotoFuncionario.Repaint;
+              finally
+                ResStream.Free;
+              end;
             except
-              // Ignora erros de rede silenciosamente para os cards não quebrarem
             end;
-        finally
-            LStream.Free;
-            LHttp.Free;
+          end;
+        end);
+      end;
+
+    begin
+      LHttp := TIdHTTP.Create(nil);
+      LStream := TMemoryStream.Create;
+      try
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
+        try
+          LHttp.Get(EndPoint + '/funcionarios/' + AIdFuncionario + '/foto', LStream);
+
+          LStream.Position := 0;
+
+          TThread.Synchronize(nil,
+            procedure
+            begin
+              if Assigned(Self) and Assigned(cirFotoFuncionario) then
+              begin
+                cirFotoFuncionario.Fill.Kind := TBrushKind.Bitmap;
+                cirFotoFuncionario.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+                cirFotoFuncionario.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                cirFotoFuncionario.Repaint;
+              end;
+            end);
+        except
+          AplicarAvatarPadrao;
         end;
+      finally
+        LStream.Free;
+        LHttp.Free;
+      end;
     end);
 end;
 

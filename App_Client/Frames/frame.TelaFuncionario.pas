@@ -101,6 +101,7 @@ begin
   // 4. Dispara a busca de documentos (que agora vai ler o cache se falhar a rede)
   BuscarDocumentos;
 end;
+
 procedure TfTelaFuncionario.OnRequestFuncionarioResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 var
   LJsonArray: TJSONArray;
@@ -361,30 +362,72 @@ begin
   TTask.Run(
     procedure
     var
-      LHttp: TNetHTTPClient;
-      LResponse: IHTTPResponse;
+      LHttp: TIdHTTP;
       LStream: TMemoryStream;
+
+      procedure AplicarAvatarPadrao;
+      begin
+        TThread.Synchronize(nil, procedure
+        var
+          ResStream: TResourceStream;
+          LMensagemErro: string;
+        begin
+          if Assigned(Self) and Assigned(recFoto) then
+          begin
+            try
+              // Trocamos HInstance por MainInstance!
+              ResStream := TResourceStream.Create(MainInstance, 'AVATAR_PADRAO', RT_RCDATA);
+              try
+                recFoto.Fill.Kind := TBrushKind.Bitmap;
+                recFoto.Fill.Bitmap.Bitmap.LoadFromStream(ResStream);
+                recFoto.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                recFoto.Repaint;
+              finally
+                ResStream.Free;
+              end;
+            except
+              on E: Exception do
+              begin
+                LMensagemErro := E.Message;
+                ShowMessage('Motivo da falha do Avatar: ' + LMensagemErro);
+
+                recFoto.Fill.Kind := TBrushKind.Solid;
+                recFoto.Fill.Color := TAlphaColors.Green;
+                recFoto.Repaint;
+              end;
+            end;
+          end;
+        end);
+      end;
+
     begin
-      LHttp := TNetHTTPClient.Create(nil);
+      LHttp := TIdHTTP.Create(nil);
       LStream := TMemoryStream.Create;
       try
+        // Agora sim a API vai liberar o acesso à foto!
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
         try
-          LResponse := LHttp.Get(EndPoint + '/funcionarios/' + AIdFuncionario + '/foto', LStream);
-          if LResponse.StatusCode = 200 then
-          begin
-            LStream.Position := 0;
-            TThread.Synchronize(nil,
-              procedure
+          LHttp.Get(EndPoint + '/funcionarios/' + AIdFuncionario + '/foto', LStream);
+
+          // Se o TIdHTTP não der erro, a foto existe!
+          LStream.Position := 0;
+          TThread.Synchronize(nil,
+            procedure
+            begin
+              if Assigned(Self) and Assigned(recFoto) then
               begin
-                if Assigned(Self) and Assigned(recFoto) then
-                begin
-                  recFoto.Fill.Kind := TBrushKind.Bitmap;
-                  recFoto.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
-                  recFoto.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
-                end;
-              end);
-          end;
+                recFoto.Fill.Kind := TBrushKind.Bitmap;
+                recFoto.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+                recFoto.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                recFoto.Repaint;
+              end;
+            end);
         except
+          // Qualquer erro na API (404 sem foto, 403 LGPD) cai aqui!
+          AplicarAvatarPadrao;
         end;
       finally
         LStream.Free;

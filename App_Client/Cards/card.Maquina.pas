@@ -46,7 +46,7 @@ type
 implementation
 
 uses
-  uMenu, uMenuMobile, modal.AlterarMaquina;
+  uMenu, uMenuMobile, modal.AlterarMaquina, IdHTTP;
 
 {$R *.fmx}
 
@@ -57,38 +57,67 @@ begin
   TTask.Run(
     procedure
     var
-      LHttp: TNetHTTPClient;
-      LResponse: IHTTPResponse;
+      LHttp: TIdHTTP;
       LStream: TMemoryStream;
-    begin
-        LHttp := TNetHTTPClient.Create(nil);
-        LStream := TMemoryStream.Create;
-        try
+
+      procedure AplicarAvatarPadrao;
+      begin
+        TThread.Synchronize(nil, procedure
+        var
+          ResStream: TResourceStream;
+        begin
+          if Assigned(Self) and Assigned(cirFotoMaquina) then
+          begin
             try
-                LResponse := LHttp.Get(EndPoint + '/maquinas/' + AIdMaquina + '/foto', LStream);
-
-                if LResponse.StatusCode = 200 then
-                begin
-                  LStream.Position := 0;
-
-                  TThread.Synchronize(nil,
-                    procedure
-                    begin
-                        if Assigned(Self) and Assigned(cirFotoMaquina) then
-                        begin
-                            cirFotoMaquina.Fill.Kind := TBrushKind.Bitmap;
-                            cirFotoMaquina.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
-                            cirFotoMaquina.Fill.Bitmap.WrapMode := TWrapMode.TileStretch; // Ajusta pra não distorcer
-                        end;
-                    end);
-                end;
+              ResStream := TResourceStream.Create(MainInstance, 'MAQUINA_PADRAO', RT_RCDATA);
+              try
+                cirFotoMaquina.Fill.Kind := TBrushKind.Bitmap;
+                cirFotoMaquina.Fill.Bitmap.Bitmap.LoadFromStream(ResStream);
+                cirFotoMaquina.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                cirFotoMaquina.Repaint;
+              finally
+                ResStream.Free;
+              end;
             except
-              // Ignora erros de rede silenciosamente para os cards não quebrarem
+              cirFotoMaquina.Fill.Kind := TBrushKind.Solid;
+              cirFotoMaquina.Fill.Color := TAlphaColors.Lightslategray;
+              cirFotoMaquina.Repaint;
             end;
-        finally
-            LStream.Free;
-            LHttp.Free;
+          end;
+        end);
+      end;
+
+    begin
+      LHttp := TIdHTTP.Create(nil);
+      LStream := TMemoryStream.Create;
+      try
+        LHttp.Request.BasicAuthentication := True;
+        LHttp.Request.Username := UserName;
+        LHttp.Request.Password := Password;
+
+        try
+          LHttp.Get(EndPoint + '/maquinas/' + AIdMaquina + '/foto', LStream);
+
+          LStream.Position := 0;
+
+          TThread.Synchronize(nil,
+            procedure
+            begin
+              if Assigned(Self) and Assigned(cirFotoMaquina) then
+              begin
+                cirFotoMaquina.Fill.Kind := TBrushKind.Bitmap;
+                cirFotoMaquina.Fill.Bitmap.Bitmap.LoadFromStream(LStream);
+                cirFotoMaquina.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                cirFotoMaquina.Repaint;
+              end;
+            end);
+        except
+          AplicarAvatarPadrao;
         end;
+      finally
+        LStream.Free;
+        LHttp.Free;
+      end;
     end);
 end;
 

@@ -22,9 +22,9 @@ inherited fMenu_LgXhdpiPh: TfMenu_LgXhdpiPh
           Size.Height = 695.000000000000000000
           inherited VertScrollBox1: TVertScrollBox
             Size.Width = 75.000000000000000000
-            Size.Height = 593.000000000000000000
+            Size.Height = 535.000000000000000000
             Viewport.Width = 75.000000000000000000
-            Viewport.Height = 593.000000000000000000
+            Viewport.Height = 535.000000000000000000
             inherited recBtnMaquinas: TRectangle
               Size.Width = 55.000000000000000000
               inherited lbMaquinas: TLabel
@@ -79,6 +79,14 @@ inherited fMenu_LgXhdpiPh: TfMenu_LgXhdpiPh
           end
           inherited Line1: TLine
             Size.Width = 15.000000000000000000
+          end
+          inherited recBtnConfig: TRectangle
+            Position.Y = 642.000000000000000000
+            Size.Width = 55.000000000000000000
+            inherited lbConfig: TLabel
+              Size.Width = 0.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+            end
           end
         end
       end

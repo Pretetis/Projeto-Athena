@@ -26,7 +26,9 @@ object fTelaFuncionario: TfTelaFuncionario
         Size.Width = 150.000000000000000000
         Size.Height = 180.000000000000000000
         Size.PlatformDefault = False
-        Stroke.Thickness = 0.400000005960464500
+        Stroke.Thickness = 0.000000000000000000
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
       end
       object lbNomeFuncionario: TLabel
         Align = Top

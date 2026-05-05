@@ -1,5 +1,7 @@
 program ProjetoAthena;
 
+{$R *.dres}
+
 uses
   System.StartUpCopy,
   FMX.Forms,

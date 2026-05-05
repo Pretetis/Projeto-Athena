@@ -39,10 +39,14 @@ type
     lbNomeFuncionario: TLabel;
     lbCargo: TLabel;
     Line1: TLine;
+    recBtnConfig: TRectangle;
+    pathConfig: TPath;
+    lbConfig: TLabel;
     procedure FormShow(Sender: TObject);
     procedure MenuBtnMouseEnter(Sender: TObject);
     procedure MenuBtnMouseLeave(Sender: TObject);
     procedure MenuBtnClick(Sender: TObject);
+    procedure recBtnConfigClick(Sender: TObject);
 
   public
     procedure CarregarDashboard;
@@ -117,6 +121,16 @@ begin
     end;
 end;
 
+procedure TfMenu.recBtnConfigClick(Sender: TObject);
+begin
+    TFrameModalConfiguracoesFuncionario.Exibir(Self, layPrincipal,
+      procedure
+      begin
+
+      end
+    );
+end;
+
 procedure TfMenu.FecharTelasAbertas;
 begin
     if Assigned(FFrameDashboard) then
@@ -175,7 +189,7 @@ begin
   if Sender is TComponent then
     NomeComponente := TComponent(Sender).Name
   else
-    Exit; // Se não for um componente válido, aborta
+    Exit;
 
   // 2. Regra visual (SÓ acontece se quem chamou foi um TRectangle)
   if Sender is TRectangle then
@@ -365,7 +379,23 @@ begin
               cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
             end);
           except
-            // Se der erro (ex: usuário não cadastrou foto), falha em silêncio e mantém o círculo vazio/padrão
+              TThread.Synchronize(nil, procedure
+            var
+              ResStream: TResourceStream;
+              begin
+                // Tenta buscar o recurso 'AVATAR_PADRAO' embutido no projeto
+                if FindResource(HInstance, 'AVATAR_PADRAO', RT_RCDATA) <> 0 then
+                begin
+                  ResStream := TResourceStream.Create(HInstance, 'AVATAR_PADRAO', RT_RCDATA);
+                  try
+                    cirFotoPerfil.Fill.Bitmap.Bitmap.LoadFromStream(ResStream);
+                    cirFotoPerfil.Fill.Kind := TBrushKind.Bitmap;
+                    cirFotoPerfil.Fill.Bitmap.WrapMode := TWrapMode.TileStretch;
+                  finally
+                    ResStream.Free;
+                  end;
+                end;
+              end);
           end;
         finally
           LStream.Free;
