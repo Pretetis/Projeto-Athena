@@ -1,11 +1,12 @@
 object fMenu: TfMenu
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Athena'
   ClientHeight = 800
   ClientWidth = 1500
   Fill.Color = claWhitesmoke
   Fill.Kind = Solid
+  Position = ScreenCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]

@@ -81,19 +81,23 @@ type
 implementation
 
 uses
-    frame.Menu_LinhaTabelaAlerta, FMX.frame.PopUpToast;
+    frame.Menu_LinhaTabelaAlerta, FMX.frame.PopUpToast, uLoading;
 
 {$R *.fmx}
+
 
 procedure TFrameMenuDashboard.CarregarDados;
 var
   LReqResumo, LReqLista: TModuloRequest;
 begin
-    LReqResumo := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
+    TLoading.Show(Self, 'Carregando informações...');
+
+    LReqResumo := TModuloRequest.Create(nil, OnRequestResult);
     LReqResumo.ListarTotalDocumentos;
 
-    LReqLista := TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult);
+    LReqLista := TModuloRequest.Create(nil, OnRequestResult);
     LReqLista.ListarDocumentosVencer;
+
 end;
 
 procedure TFrameMenuDashboard.FrameResize(Sender: TObject);
@@ -112,9 +116,9 @@ begin
   end;
 
   {$IFDEF ANDROID}
-  lbInfoValido.Margins.Left    := recQntdValido.Width    * 0.05;
-  lbInfoExpirado.Margins.Left  := recQntdExpirado.Width  * 0.05;
-  lbInfoExpirando.Margins.Left := recQntdExpirando.Width * 0.05;
+  lbInfoValido.Margins.Left    := recQntdValido.Width    * 0.10;
+  lbInfoExpirado.Margins.Left  := recQntdExpirado.Width  * 0.10;
+  lbInfoExpirando.Margins.Left := recQntdExpirando.Width * 0.10;
   {$ELSEIF defined(MSWINDOWS)}
   lbInfoValido.Margins.Left    := recQntdValido.Width    * 0.20;
   lbInfoExpirado.Margins.Left  := recQntdExpirado.Width  * 0.20;
@@ -122,8 +126,6 @@ begin
   {$ENDIF}
 
 end;
-
-
 
 procedure TFrameMenuDashboard.OnRequestResult(Sender: TObject; const AJsonContent: string;
   AStatusCode: Integer; AContext: TContextoRequest);

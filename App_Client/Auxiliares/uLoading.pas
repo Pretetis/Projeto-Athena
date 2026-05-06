@@ -16,12 +16,17 @@ type
       class var Arco : TArc;
       class var Mensagem : TLabel;
       class var Animacao : TFloatAnimation;
+
+      // Método centralizado para não repetir a lógica de criação do layout
+      class procedure InternalShow(const AOwner: TComponent; const AParent: TFmxObject; const AWidth: Single; const msg: string);
     public
-      class procedure Show(const Frm : Tform; const msg : string = '');
+      // OVERLOAD: Agora o Delphi sabe lidar tanto com Forms quanto com Frames
+      class procedure Show(const AFrm : TForm; const msg : string = ''); overload;
+      class procedure Show(const ACtrl : TControl; const msg : string = ''); overload;
+
       class procedure Hide;
       class procedure ChangeText(NewText: string); static;
-		  class procedure ExecuteThread(proc: TProc;
-                                    procTerminate: TMyThreadMethod);
+      class procedure ExecuteThread(proc: TProc; procTerminate: TMyThreadMethod);
   end;
 
 implementation
@@ -30,136 +35,134 @@ implementation
 
 class procedure TLoading.Hide;
 begin
-	if Assigned(Layout) then
-	begin
-		try
-			if Assigned(Mensagem) then
-				Mensagem.DisposeOf;
+    if Assigned(Layout) then
+    begin
+        try
+            if Assigned(Mensagem) then Mensagem.DisposeOf;
+            if Assigned(Animacao) then Animacao.DisposeOf;
+            if Assigned(Arco) then Arco.DisposeOf;
+            if Assigned(Fundo) then Fundo.DisposeOf;
+            if Assigned(Layout) then Layout.DisposeOf;
+        except
+        end;
+    end;
 
-			if Assigned(Animacao) then
-				Animacao.DisposeOf;
-
-			if Assigned(Arco) then
-				Arco.DisposeOf;
-
-			if Assigned(Fundo) then
-				Fundo.DisposeOf;
-
-			if Assigned(Layout) then
-				Layout.DisposeOf;
-
-		except
-		end;
-	end;
-
-	Mensagem := nil;
-	Animacao := nil;
-	Arco := nil;
-	Layout := nil;
-	Fundo := nil;
+    Mensagem := nil;
+    Animacao := nil;
+    Arco := nil;
+    Layout := nil;
+    Fundo := nil;
 end;
 
-class procedure TLoading.Show(const Frm : Tform; const msg: string = '');
+class procedure TLoading.InternalShow(const AOwner: TComponent; const AParent: TFmxObject; const AWidth: Single; const msg: string);
 var
-        FService: IFMXVirtualKeyboardService;
+    FService: IFMXVirtualKeyboardService;
 begin
-	// Panel de fundo opaco...
-	Fundo := TRectangle.Create(Frm);
-	Fundo.Opacity := 0;
-	Fundo.Parent := Frm;
-	Fundo.Visible := true;
-	Fundo.Align := TAlignLayout.Contents;
-	Fundo.Fill.Color := TAlphaColorRec.Black;
-	Fundo.Fill.Kind := TBrushKind.Solid;
-	Fundo.Stroke.Kind := TBrushKind.None;
-	Fundo.Visible := true;
+    // Prevenção contra múltiplos cliques
+    if Assigned(Layout) then Exit;
 
+    // Panel de fundo opaco...
+    Fundo := TRectangle.Create(AOwner);
+    Fundo.Opacity := 0;
+    Fundo.Parent := AParent;
+    Fundo.Visible := true;
+    Fundo.Align := TAlignLayout.Contents;
+    Fundo.Fill.Color := TAlphaColorRec.Black;
+    Fundo.Fill.Kind := TBrushKind.Solid;
+    Fundo.Stroke.Kind := TBrushKind.None;
 
-	// Layout contendo o texto e o arco...
-	Layout := TLayout.Create(Frm);
-	Layout.Opacity := 0;
-	Layout.Parent := Frm;
-	Layout.Visible := true;
-	Layout.Align := TAlignLayout.Contents;
-	Layout.Width := 250;
-	Layout.Height := 78;
-	Layout.Visible := true;
+    // Layout contendo o texto e o arco...
+    Layout := TLayout.Create(AOwner);
+    Layout.Opacity := 0;
+    Layout.Parent := AParent;
+    Layout.Visible := true;
+    Layout.Align := TAlignLayout.Contents;
+    Layout.Width := 250;
+    Layout.Height := 78;
 
-	// Arco da animacao...
-	Arco := TArc.Create(Frm);
-	Arco.Visible := true;
-	Arco.Parent := Layout;
-	Arco.Align := TAlignLayout.Center;
-	Arco.Margins.Bottom := 55;
-	Arco.Width := 25;
-	Arco.Height := 25;
-	Arco.EndAngle := 280;
-	Arco.Stroke.Color := $FFFEFFFF;
-	Arco.Stroke.Thickness := 2;
-	Arco.Position.X := trunc((Layout.Width - Arco.Width) / 2);
-	Arco.Position.Y := 0;
+    // Arco da animacao...
+    Arco := TArc.Create(AOwner);
+    Arco.Visible := true;
+    Arco.Parent := Layout;
+    Arco.Align := TAlignLayout.Center;
+    Arco.Margins.Bottom := 55;
+    Arco.Width := 25;
+    Arco.Height := 25;
+    Arco.EndAngle := 280;
+    Arco.Stroke.Color := $FFFEFFFF;
+    Arco.Stroke.Thickness := 2;
+    Arco.Position.X := trunc((Layout.Width - Arco.Width) / 2);
+    Arco.Position.Y := 0;
 
-	// Animacao...
-	Animacao := TFloatAnimation.Create(Frm);
-	Animacao.Parent := Arco;
-	Animacao.StartValue := 0;
-	Animacao.StopValue := 360;
-	Animacao.Duration := 0.8;
-	Animacao.Loop := true;
-	Animacao.PropertyName := 'RotationAngle';
-	Animacao.AnimationType := TAnimationType.InOut;
-	Animacao.Interpolation := TInterpolationType.Linear;
-	Animacao.Start;
+    // Animacao...
+    Animacao := TFloatAnimation.Create(AOwner);
+    Animacao.Parent := Arco;
+    Animacao.StartValue := 0;
+    Animacao.StopValue := 360;
+    Animacao.Duration := 0.8;
+    Animacao.Loop := true;
+    Animacao.PropertyName := 'RotationAngle';
+    Animacao.AnimationType := TAnimationType.InOut;
+    Animacao.Interpolation := TInterpolationType.Linear;
+    Animacao.Start;
 
-	// Label do texto...
-	Mensagem := TLabel.Create(Frm);
-	Mensagem.Parent := Layout;
-	Mensagem.Align := TAlignLayout.Center;
-	Mensagem.Margins.Top := 60;
-	Mensagem.Font.Size := 13;
-	Mensagem.Height := 70;
-	Mensagem.Width := Frm.Width - 100;
-	Mensagem.FontColor := $FFFEFFFF;
-	Mensagem.TextSettings.HorzAlign := TTextAlign.Center;
-	Mensagem.TextSettings.VertAlign := TTextAlign.Leading;
-	Mensagem.StyledSettings := [TStyledSetting.Family, TStyledSetting.Style];
-	Mensagem.Text := msg;
-	Mensagem.VertTextAlign := TTextAlign.Leading;
-	Mensagem.Trimming := TTextTrimming.None;
-	Mensagem.TabStop := false;
-	Mensagem.SetFocus;
+    // Label do texto...
+    Mensagem := TLabel.Create(AOwner);
+    Mensagem.Parent := Layout;
+    Mensagem.Align := TAlignLayout.Center;
+    Mensagem.Margins.Top := 60;
+    Mensagem.Font.Size := 13;
+    Mensagem.Height := 70;
+    Mensagem.Width := AWidth - 100;
+    Mensagem.FontColor := $FFFEFFFF;
+    Mensagem.TextSettings.HorzAlign := TTextAlign.Center;
+    Mensagem.TextSettings.VertAlign := TTextAlign.Leading;
+    Mensagem.StyledSettings := [TStyledSetting.Family, TStyledSetting.Style];
+    Mensagem.Text := msg;
+    Mensagem.VertTextAlign := TTextAlign.Leading;
+    Mensagem.Trimming := TTextTrimming.None;
+    Mensagem.TabStop := false;
 
-	// Exibe os controles...
-	Fundo.AnimateFloat('Opacity', 0.7);
-	Layout.AnimateFloat('Opacity', 1);
-	Layout.BringToFront;
+    // Exibe os controles...
+    Fundo.AnimateFloat('Opacity', 0.7);
+    Layout.AnimateFloat('Opacity', 1);
+    Layout.BringToFront;
 
-	// Esconde o teclado virtual...
-	TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService,
-													  IInterface(FService));
-	if (FService <> nil) then
-	begin
-		FService.HideVirtualKeyboard;
-	end;
-	FService := nil;
+    // Esconde o teclado virtual...
+    TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService,
+                                                      IInterface(FService));
+    if (FService <> nil) then
+    begin
+        FService.HideVirtualKeyboard;
+    end;
+    FService := nil;
+end;
+
+// Assinatura 1: Disparado quando uRequests mandar um TForm
+class procedure TLoading.Show(const AFrm: TForm; const msg: string);
+begin
+    InternalShow(AFrm, AFrm, AFrm.Width, msg);
+end;
+
+// Assinatura 2: Disparado quando seus Frames mandarem o Self (TControl)
+class procedure TLoading.Show(const ACtrl: TControl; const msg: string);
+begin
+    InternalShow(ACtrl, ACtrl, ACtrl.Width, msg);
 end;
 
 class procedure TLoading.ChangeText(NewText : string);
 begin
-	if Assigned(Layout) then
-	begin
-
-		try
-			if Assigned(Mensagem) then
-				Mensagem.Text := NewText;
-
-		except
-		end;
-	end;
+    if Assigned(Layout) then
+    begin
+        try
+            if Assigned(Mensagem) then
+                Mensagem.Text := NewText;
+        except
+        end;
+    end;
 end;
 
-class procedure TLoading.ExecuteThread(proc: TProc;
-                                       procTerminate: TMyThreadMethod);
+class procedure TLoading.ExecuteThread(proc: TProc; procTerminate: TMyThreadMethod);
 var
   t: TThread;
 begin
@@ -170,5 +173,5 @@ begin
 
   t.Start;
 end;
-end.
 
+end.

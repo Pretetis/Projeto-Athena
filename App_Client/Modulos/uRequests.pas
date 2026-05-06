@@ -45,7 +45,6 @@ type
     procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
     procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
     procedure ListarDocumentosVencer;
-    procedure SolicitarAlarme(AMaq_id, ACnc_ID, ACnc_cnc: Integer; AMensagem, AProposta: string);
     procedure PesquisarDocumentos(ABusca: string; AStatus: string = ''; AAtivo: string = '');
     procedure EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
     procedure CarregarCatalogoFuncionarios;
@@ -259,57 +258,6 @@ begin
         except
 
         end;
-      end,
-      CallbackFimDaThread
-    );
-end;
-
-procedure TModuloRequest.SolicitarAlarme(AMaq_id: Integer;
-                                         ACnc_ID: Integer;
-                                         ACnc_cnc: Integer;
-                                         AMensagem: string;
-                                         AProposta: string);
-var
-    LJson: TJSONObject;
-begin
-    FContexto := ctxSolicitarAlarme;
-
-    TLoading.Show(FParentForm, 'Enviando solicitação...');
-    ResetarComponentesRest;
-
-    FRESTClient.BaseURL := EndPoint + '/alarme/adicionar';
-    FRESTRequest.Method := rmPOST;
-
-    LJson := TJSONObject.Create;
-    try
-        LJson.AddPair('ALR_PROPOSTA', AProposta);
-        LJson.AddPair('ALR_DATA_PEDIDO', DateToISO8601(Now));
-        LJson.AddPair('ALR_OPERADOR', mNomeUsuario);
-        LJson.AddPair('ALR_TEXTO', AMensagem);
-
-        LJson.AddPair('MAQ_ID', TJSONNumber.Create(AMaq_id));
-        LJson.AddPair('CNC_ID', TJSONNumber.Create(ACnc_ID));
-        LJson.AddPair('CNC_CNC', TJSONNumber.Create(ACnc_cnc));
-        LJson.AddPair('ALR_TIPO_ENVIO', TJSONNumber.Create(1));
-        LJson.AddPair('ALR_STATUS', TJSONNumber.Create(0));
-
-        FRESTRequest.AddBody(LJson.ToString, TRESTContentType.ctAPPLICATION_JSON);
-    finally
-        LJson.Free;
-    end;
-
-    TLoading.ExecuteThread(
-      procedure
-      begin
-          try
-              FRESTRequest.Execute;
-          except
-              on Ex: Exception do
-                TThread.Synchronize(nil, procedure
-                begin
-                    TFramePopUp.Show(FParentForm, E, 'Erro ao enviar alarme: ' + Ex.Message);
-                end);
-          end;
       end,
       CallbackFimDaThread
     );

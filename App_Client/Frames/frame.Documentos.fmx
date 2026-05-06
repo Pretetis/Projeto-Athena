@@ -92,17 +92,18 @@ object FrameDocumentos: TFrameDocumentos
                 PNG = {
                   89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
                   1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  014A494441546843EDD8314A03511006E09959D04A8285A4B2F200D662215878
-                  83D8E50A9E2167F00AE93C829D8507F00056169ACA1C60DFFC1621B80C115F84
-                  DD38E1FFBAFDDFC0F2C3DB85F744888888686F690CFAE2EE37006E454454F5C1
-                  CC1EE34C5A000E002CF16DE9EE8771AE0F16833E00B8169151271AA9EA45E7B9
-                  37831454D5A39889C8490CFA3048C15D62C1EC58303B16CC8E05B363C1ECF6BE
-                  E056E741773F57D5E398FF06C095AACE423653D5A76E5603C0A799BDC4FC2755
-                  05DDFDCCDD9F9BA619C7B55D28A52CCCECD2CC5EE35A54B5455575FA5FCA8988
-                  344D3356D569CC37A92A9859554100F352CA22E6BB524A590098C77C93AA6F70
-                  2DE34F661000269D0BA7B5499CEB43D516CD8C05B363C1EC58303B16CC8E05B3
-                  6341AA0040DBB67D5F1F23DAB6FD00B0D551EDAF067989ACCE92A700EE647505
-                  726F666F7186888888682B5FB4DD921558AFA9AE0000000049454E44AE426082}
+                  014E494441546843EDD8314EC3401005D0998905158A28502A2A0E408D289028
+                  B841E87205CE90337085741C818E820370002A0A48457AAFF7534416D628880D
+                  921D26FAAFF3DF91AC2FAD2DED8A101111D1DE521FF425E77C03E0564444551F
+                  CCECD1CF8405E000C00ADF5639E7433FD707F3411F005C8BC8B8138D55F5A2F3
+                  DC9B410AAAEA91CF44E4C4077D18A4E02EB160742C181D0B46C782D1B160747B
+                  5F70ABF360CEF95C558F7DFE1B0057AA3A77D95C559FBA5909009F66F6E2F39F
+                  1415CC399F354DF35C55D5C4AFED424A69391A8D2ECDECD5AF79455B545567FF
+                  A59C8848555513559DF97C93A28291151504B048292D7DBE2B29A5258085CF37
+                  29FA065B117F32830030ED5C38B5A67EAE0F455B3432168C8E05A363C1E85830
+                  3A168C8E05A90000ADEBFABD3D46D475FD0160ABA3DA5F0DF212599F254F01DC
+                  C9FA0AE4DECCDEFC0C111111D156BE0087EF920F5D35FF8D0000000049454E44
+                  AE426082}
               end>
             Align = Left
             HitTest = False
@@ -144,7 +145,7 @@ object FrameDocumentos: TFrameDocumentos
           Distance = 2.000000000000000000
           Direction = 45.000000000000000000
           Softness = 0.500000000000000000
-          Opacity = 0.400000005960464400
+          Opacity = 0.400000005960464500
           ShadowColor = claBlack
         end
         object recBuscaDocumentos: TRectangle
@@ -315,7 +316,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -345,7 +346,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -375,7 +376,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -405,7 +406,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -461,7 +462,6 @@ object FrameDocumentos: TFrameDocumentos
                     Size.PlatformDefault = False
                     ImageIndex = 0
                     Images = DesignSystem.ilIconesSimples
-                    OnChanged = Glyph2Changed
                     object FillRGBEffect2: TFillRGBEffect
                       Color = xFF0F172A
                     end
@@ -487,7 +487,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -517,7 +517,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -547,7 +547,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464400
+                    Stroke.Thickness = 0.400000005960464500
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -589,7 +589,7 @@ object FrameDocumentos: TFrameDocumentos
         Distance = 2.000000000000000000
         Direction = 45.000000000000000000
         Softness = 0.500000000000000000
-        Opacity = 0.400000005960464400
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
       object layTituloPlanilha: TLayout
@@ -779,7 +779,7 @@ object FrameDocumentos: TFrameDocumentos
                 Margins.Top = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
                 Sides = [Right]
-                Size.Width = 235.455627441406200000
+                Size.Width = 235.455627441406300000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 Stroke.Color = xFF64748B
@@ -788,7 +788,7 @@ object FrameDocumentos: TFrameDocumentos
                   Align = Client
                   StyledSettings = [Size]
                   Margins.Left = 20.000000000000000000
-                  Size.Width = 215.455627441406200000
+                  Size.Width = 215.455627441406300000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Family = 'Roboto'
@@ -804,7 +804,7 @@ object FrameDocumentos: TFrameDocumentos
                 Margins.Top = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
                 Sides = [Right]
-                Size.Width = 235.455627441406200000
+                Size.Width = 235.455627441406300000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 Stroke.Color = xFF64748B
@@ -813,7 +813,7 @@ object FrameDocumentos: TFrameDocumentos
                   Align = Client
                   StyledSettings = [Size]
                   Margins.Left = 20.000000000000000000
-                  Size.Width = 215.455627441406200000
+                  Size.Width = 215.455627441406300000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Family = 'Roboto'
@@ -844,7 +844,7 @@ object FrameDocumentos: TFrameDocumentos
                   TextSettings.Font.Family = 'Roboto'
                   TextSettings.Font.StyleExt = {00070000000000000004000000}
                   TextSettings.FontColor = xFF64748B
-                  Text = 'VISUALIZAR'
+                  Text = 'EDITAR'
                   TabOrder = 0
                 end
               end

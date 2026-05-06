@@ -86,8 +86,6 @@ type
     procedure FrameResize(Sender: TObject);
     procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
     procedure edtBuscaDocumentosChangeTracking(Sender: TObject);
-    procedure Glyph2Changed(Sender: TObject);
-    procedure imgAdicionarClick(Sender: TObject);
 
   private
     FReq: TModuloRequest;
@@ -106,7 +104,7 @@ implementation
 
 uses
     uDesignSystem, frame.Documentos_LinhaTabelaDocumentos, modal.AdicionarDocumento,
-    uMenu, uTelaUtils;
+    uMenu, uTelaUtils, uLoading;
 
 {$R *.fmx}
 
@@ -309,6 +307,7 @@ end;
 procedure TFrameDocumentos.BuscarDados;
 var
   LStatusParam, LAtivoParam: string;
+  LReqDoc: TModuloRequest;
 begin
     LStatusParam := '';
 
@@ -327,8 +326,10 @@ begin
     if recBtnAtivos.Tag = 1 then LAtivoParam := 'true'
     else if recBtnDesativados.Tag = 1 then LAtivoParam := 'false';
 
-    FReq := TModuloRequest.Create(nil, RequestResult);
-    FReq.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
+    TLoading.Show(Self, 'Buscando documentos...');
+
+    LReqDoc := TModuloRequest.Create(nil, RequestResult);
+    LReqDoc.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
 end;
 
 procedure TFrameDocumentos.edtBuscaDocumentosChangeTracking(Sender: TObject);

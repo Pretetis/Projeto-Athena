@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-  uMenu, card.Maquina, uDesignSystem, uTelaUtils;
+  uMenu, card.Maquina, uDesignSystem, uTelaUtils, uLoading;
 
 {$R *.fmx}
 
@@ -134,6 +134,7 @@ end;
 procedure TFrameMaquinas.BuscarDados;
 var
   LAtivoParam: string;
+  LReqMaquina: TModuloRequest;
 begin
     LAtivoParam := '';
     if recBtnAtivos.Tag = 1 then
@@ -141,8 +142,10 @@ begin
     else if recBtnDesativados.Tag = 1 then
         LAtivoParam := 'false';
 
-    FReq := TModuloRequest.Create(nil, OnRequestResult);
-    FReq.ListarMaquinas(edtBuscaMaquina.Text, LAtivoParam);
+    TLoading.Show(Self, 'Buscando máquinas...');
+
+    LReqMaquina := TModuloRequest.Create(nil, OnRequestResult);
+    LReqMaquina.ListarMaquinas(edtBuscaMaquina.Text, LAtivoParam);
 end;
 
 procedure TFrameMaquinas.CarregarMaquinas;

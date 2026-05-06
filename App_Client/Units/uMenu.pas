@@ -222,35 +222,35 @@ begin
   IniciarCatalogos;
   CarregarDadosPerfil;
 
-  if mPrimeiroAcesso then
-  begin
-    TFrameModalConfiguracoesFuncionario.Exibir(Self, layPrincipal,
-      procedure
+  TThread.ForceQueue(nil,
+    procedure
+    begin
+      if mPrimeiroAcesso then
       begin
+        TFrameModalConfiguracoesFuncionario.Exibir(Self, layPrincipal,
+          procedure
+          begin
+             // Callback do modal
+          end
+        );
+      end;
 
+      if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
+      begin
+        // Fluxo Normal - Tem acesso a tudo
+        // AGORA o clique acontecerá com segurança, pois a UI já existe
+        MenuBtnClick(recBtnDashboard);
       end
-    );
-  end;
+      else
+      begin
+        // Fluxo Restrito (Funcionário Comum)
+        layMenu.Visible := False;
+        layPrincipal.Visible := True;
+        layPrincipal.BringToFront;
 
-  if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
-  begin
-    // Fluxo Normal - Tem acesso a tudo
-    MenuBtnClick(recBtnDashboard);
-  end
-  else
-  begin
-    // Fluxo Restrito (Funcionário Comum)
-    layMenu.Visible := False; // Esconde o menu lateral/inferior inteiro!
-
-    // Traz o container de telas para a frente e deixa sempre visível
-    layPrincipal.Visible := True;
-    layPrincipal.BringToFront;
-    //MenuBtnClick(recBtnEmpresas);
-
-    // Carrega direto a tela do funcionário
-    CarregarFuncionarioIndividual;
-
-  end;
+        CarregarFuncionarioIndividual;
+      end;
+    end);
 end;
 
 procedure TfMenu.CarregarDashboard;
@@ -267,7 +267,11 @@ begin
 
     FFrameDashboard.Visible := True;
     FFrameDashboard.BringToFront;
-    FFrameDashboard.CarregarDados;
+    TThread.ForceQueue(nil,
+      procedure
+      begin
+        FFrameDashboard.CarregarDados;
+      end);
 end;
 
 procedure TfMenu.CarregarDocumentos;

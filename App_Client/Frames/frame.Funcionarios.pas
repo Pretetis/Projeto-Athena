@@ -54,7 +54,7 @@ type
 implementation
 
 uses
-  uMenu, card.Funcionario, uDesignSystem, uTelaUtils;
+  uMenu, card.Funcionario, uDesignSystem, uTelaUtils, uLoading;
 
 {$R *.fmx}
 
@@ -139,6 +139,7 @@ end;
 procedure TFrameFuncionarios.BuscarDados;
 var
   LAtivoParam: string;
+  LReqFuncionario: TModuloRequest;
 begin
     LAtivoParam := '';
     if recBtnAtivos.Tag = 1 then
@@ -146,8 +147,10 @@ begin
     else if recBtnDesativados.Tag = 1 then
         LAtivoParam := 'false';
 
-    FReq := TModuloRequest.Create(nil, OnRequestResult);
-    FReq.ListarFuncionarios(edtBuscaFuncionarios.Text, LAtivoParam);
+    TLoading.Show(Self, 'Buscando funcionários...');
+
+    LReqFuncionario := TModuloRequest.Create(nil, OnRequestResult);
+    LReqFuncionario.ListarFuncionarios(edtBuscaFuncionarios.Text, LAtivoParam);
 end;
 
 procedure TFrameFuncionarios.CarregarFuncionarios;

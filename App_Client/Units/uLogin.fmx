@@ -1,6 +1,6 @@
 object fLogin: TfLogin
-  Left = 0
-  Top = 0
+  Left = 750
+  Top = 90
   BorderIcons = [biSystemMenu]
   BorderStyle = SizeToolWin
   Caption = 'Acesso'
@@ -8,13 +8,15 @@ object fLogin: TfLogin
   ClientWidth = 529
   Fill.Color = claWhitesmoke
   Fill.Kind = Solid
-  Position = ScreenCenter
+  Position = Designed
   Visible = True
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  Left = 750
+  Top = 90
   DesignerMasterStyle = 0
   object layCentral: TLayout
     Align = Center

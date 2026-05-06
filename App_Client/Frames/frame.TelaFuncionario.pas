@@ -73,7 +73,8 @@ type
 implementation
 
 uses
-  frame.LinhaTelaFuncionario, uDesignSystem, System.IOUtils, System.DateUtils, IdHTTP;
+  frame.LinhaTelaFuncionario, uDesignSystem, System.IOUtils, System.DateUtils, IdHTTP,
+  uLoading;
 {$R *.fmx}
 
 constructor TfTelaFuncionario.Create(AOwner: TComponent);
@@ -88,20 +89,18 @@ begin
 end;
 
 procedure TfTelaFuncionario.CarregarDadosTela;
+var
+  LReqFunc: TModuloRequest;
 begin
-  // 1. IMPORTANTE: Recupera o ID do cache global para o filtro funcionar offline
   FIdFuncionario := mIdFuncionario;
 
-  // 2. Preenchimento visual imediato
   lbNomeFuncionario.Text := mNomeUsuario;
   lbCargo.Text := mFuncao;
   lbSetor.Text := mSetor;
 
-  // 3. Tenta atualizar os dados do servidor (se estiver online)
-  FReqFunc := TModuloRequest.Create(nil, OnRequestFuncionarioResult);
-  FReqFunc.ListarFuncionarios(mUsuario, 'true');
+  LReqFunc := TModuloRequest.Create(nil, OnRequestFuncionarioResult);
+  LReqFunc.ListarFuncionarios(mUsuario, 'true');
 
-  // 4. Dispara a busca de documentos (que agora vai ler o cache se falhar a rede)
   BuscarDocumentos;
 end;
 
@@ -141,106 +140,23 @@ end;
 procedure TfTelaFuncionario.BuscarDocumentos;
 var
   LBusca: string;
+  LReqDoc: TModuloRequest;
 begin
-  // Se o usuário digitou algo, pesquisa por esse texto.
-  // Se estiver vazio, pesquisa pelo nome do funcionário para não carregar o banco todo.
   if Trim(edtBuscaDocumentos.Text) <> '' then
     LBusca := Trim(edtBuscaDocumentos.Text)
   else
     LBusca := Trim(lbNomeFuncionario.Text);
 
-  FReqDoc := TModuloRequest.Create(nil, OnRequestDocumentosResult);
-  FReqDoc.PesquisarDocumentos(LBusca, '', 'true'); // Passamos 'true' para trazer apenas os ativos
+  TLoading.Show(Self, 'Buscando documentos...');
+
+  // 1. Cria a requisição localmente
+  LReqDoc := TModuloRequest.Create(nil, OnRequestDocumentosResult);
+
+  // 2. Dispara a busca. A thread é criada internamente no uRequests.
+  // O TLoading.Hide e o .Free serão chamados automaticamente pelo CallbackFimDaThread do uRequests.
+  LReqDoc.PesquisarDocumentos(LBusca, '', 'true');
 end;
 
-//procedure TfTelaFuncionario.OnRequestDocumentosResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
-//var
-//  LJsonArray: TJSONArray;
-//  LJsonObj: TJSONObject;
-//  i: Integer;
-//  LFrame: TfLinhaTelaFuncionario;
-//
-//  // Variáveis para a fila de download
-//  LListaDownload: TArray<TDocDownloadInfo>;
-//  LDataStr: string;
-//  LDataValidade: TDate;
-//begin
-//  LimparTabela;
-//  if AStatusCode = 200 then
-//  begin
-//    LJsonArray := TJSONObject.ParseJSONValue(AJsonContent) as TJSONArray;
-//    if Assigned(LJsonArray) then
-//    begin
-//      try
-//        vscrollboxLinhaPlanilha.BeginUpdate;
-//        try
-//          SetLength(LListaDownload, 0); // Zera a lista
-//
-//          for i := 0 to LJsonArray.Count - 1 do
-//          begin
-//            LJsonObj := LJsonArray.Items[i] as TJSONObject;
-//
-//            // Dupla checagem
-//            if LJsonObj.GetValue<string>('entidadeId', '') <> FIdFuncionario then
-//              Continue;
-//
-//            // Transforma a data do JSON para verificar se está vencido
-//            LDataStr := LJsonObj.GetValue<string>('dataValidade', '');
-//            LDataValidade := Date;
-//            try
-//              LDataValidade := ISO8601ToDate(LDataStr);
-//            except
-//              // Se a data vier em branco ou fora do padrão, mantém o Date atual para não explodir
-//            end;
-//
-//            // Criação visual do Card do Documento (seu código original)
-//            LFrame := TfLinhaTelaFuncionario.Create(Self);
-//            LFrame.FDocId := LJsonObj.GetValue<string>('_id');
-//            LFrame.FNomeDoc := LJsonObj.GetValue<string>('nomeDocumento', 'Sem Nome');
-//            LFrame.FNomeEntidade := LJsonObj.GetValue<string>('nomeEntidade', lbNomeFuncionario.Text);
-//
-//            LFrame.Name := 'DocFunc_' + i.ToString;
-//            LFrame.Parent := vscrollboxLinhaPlanilha;
-//            LFrame.Align := TAlignLayout.Top;
-//            LFrame.Margins.Bottom := 4;
-//            LFrame.Position.Y := 99999;
-//
-//            LFrame.CarregarDados(
-//              LFrame.FNomeDoc,
-//              LJsonObj.GetValue<string>('tipoDocumento', '-'),
-//              LJsonObj.GetValue<string>('dataValidade', DateToStr(Date))
-//            );
-//
-//            // --- LÓGICA DE DOWNLOAD OFFLINE ---
-//            // Verifica se o documento é válido (a data de validade é >= hoje)
-//            if Trunc(LDataValidade) >= Trunc(Date) then
-//            begin
-//              SetLength(LListaDownload, Length(LListaDownload) + 1);
-//              LListaDownload[High(LListaDownload)].Id := LFrame.FDocId;
-//              LListaDownload[High(LListaDownload)].FileName := 'Doc_' + LFrame.FDocId + '.pdf';
-//
-//              // Ajuste a rota '/documentos/download/' conforme configurou na sua API Node.js
-//              LListaDownload[High(LListaDownload)].Url := EndPoint + '/documentos/download/' + LFrame.FDocId;
-//            end;
-//
-//          end;
-//        finally
-//          vscrollboxLinhaPlanilha.EndUpdate;
-//          Self.Width := Self.Width + 1;
-//          Application.ProcessMessages;
-//          Self.Width := Self.Width - 1;
-//        end;
-//
-//        // Se houver documentos válidos, dispara a Thread de download em background
-//        if Length(LListaDownload) > 0 then
-//          IniciarDownloadEmSegundoPlano(LListaDownload);
-//
-//      finally
-//        LJsonArray.Free;
-//      end;
-//    end;
-//  end;
-//end;
 procedure TfTelaFuncionario.OnRequestDocumentosResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 var
   LArquivoCache: string;
