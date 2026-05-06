@@ -44,7 +44,7 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    Rectangle3: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -59,7 +59,7 @@ type
     procedure lbInsideDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure lbInsideDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
     procedure layFecharModalClick(Sender: TObject);
-    procedure Rectangle3Click(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure recLimparClick(Sender: TObject);
   private
     FCaminhoArquivo: string;
@@ -146,7 +146,7 @@ begin
     recLimpar.Visible := False;
 end;
 
-procedure TFrameModalAdicionarFuncionario.Rectangle3Click(Sender: TObject);
+procedure TFrameModalAdicionarFuncionario.btnSalvarClick(Sender: TObject);
 begin
     SalvarFuncionario;
 end;
@@ -160,6 +160,8 @@ begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Preencha o nome');
         Exit;
     end;
+
+    btnSalvar.Enabled := False;
 
     LReq := TModuloRequest.Create(TForm(Self.Root.GetObject), OnRequestResult);
     LReq.EnviarFuncionario(
@@ -215,6 +217,7 @@ begin
         end
         else
           TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro: ' + AJsonContent);
+          btnSalvar.Enabled := True;
     end;
 end;
 

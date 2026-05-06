@@ -43,7 +43,7 @@ type
     layFinal: TLayout;
     recBtnCancelarAlteracao: TRectangle;
     lbBtnCancelarAlteracao: TLabel;
-    recBtnSalvar: TRectangle;
+    btnSalvar: TRectangle;
     lbBtnSalvar: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -67,7 +67,7 @@ type
     procedure pathFecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
     procedure recBtnDesativarDocClick(Sender: TObject);
-    procedure recBtnSalvarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
@@ -264,7 +264,7 @@ begin
     AtualizarVisualBotoesEstado;
 end;
 
-procedure TFrameAlterarDocumento.recBtnSalvarClick(Sender: TObject);
+procedure TFrameAlterarDocumento.btnSalvarClick(Sender: TObject);
 begin
     if Trim(FFuncionarioId) = '' then
     begin
@@ -272,6 +272,8 @@ begin
         edtFuncionario.SetFocus;
         Exit;
     end;
+
+    btnSalvar.Enabled := False;
 
     with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
         EditarDocumento(FDocId, edtTituloDoc.Text, edtTipoDoc.Text, FFuncionarioId, FEntidadeTipo, DateEdit1.Date, FAtivo, mNomeUsuario, FCaminhoArquivo);
@@ -294,6 +296,7 @@ begin
     else
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao processar: ' + AJsonContent);
+        btnSalvar.Enabled := True;
     end;
 end;
 

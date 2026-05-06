@@ -43,7 +43,7 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    recBtnSalvar: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -53,7 +53,7 @@ type
     FillRGBEffect3: TFillRGBEffect;
     imgFechar: TImage;
     FillRGBEffect1: TFillRGBEffect;
-    procedure recBtnSalvarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
@@ -81,13 +81,15 @@ begin
         BuscarProximaChapa;
 end;
 
-procedure TFrameModalAdicionarMaquina.recBtnSalvarClick(Sender: TObject);
+procedure TFrameModalAdicionarMaquina.btnSalvarClick(Sender: TObject);
 begin
     if Trim(edtNomeMaq.Text) = '' then
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Preencha o nome da Máquina.');
         Exit;
     end;
+
+    btnSalvar.Enabled := False;
 
     with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
         EnviarMaquina(edtNomeMaq.Text, edtTipo.Text, edtModelo.Text, edtChapa.Text, FCaminhoArquivo);
@@ -124,6 +126,7 @@ begin
         end
         else
             TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro: ' + AJsonContent);
+            btnSalvar.Enabled := True;
     end;
 end;
 

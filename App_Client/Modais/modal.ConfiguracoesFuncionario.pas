@@ -32,7 +32,7 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    Rectangle3: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -97,11 +97,12 @@ begin
     Exit;
   end;
 
-  // 1. Descobre quem é o Form principal que está segurando este Frame com o CAST correto
   if Self.Root.GetObject is TForm then
     LForm := TForm(Self.Root.GetObject)
   else
-    LForm := TForm(Application.MainForm); // <-- CORREÇÃO AQUI (Cast explícito para TForm)
+    LForm := TForm(Application.MainForm);
+
+  btnSalvar.Enabled := False;
 
   // 2. Chama a API passando o LForm em vez do Self
   TModuloRequest.Create(LForm, nil).AlterarSenha(mIdFuncionario, edtSenhaAtual.Text, edtNovaSenha.Text,
@@ -118,9 +119,11 @@ begin
           FOnSuccess;
 
         Self.Free;
+        btnSalvar.Enabled := True;
       end
       else
         ShowMessage('Falha ao alterar senha: ' + Msg);
+        btnSalvar.Enabled := True;
     end
   );
 end;

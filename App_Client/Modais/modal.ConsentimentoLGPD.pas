@@ -19,13 +19,13 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    recBtnSalvar: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
     wbConsentimento: TWebBrowser;
     Layout2: TLayout;
-    Rectangle1: TRectangle;
+    recFundoCinza: TRectangle;
     Layout4: TLayout;
     cbFoto: TCheckBox;
     Layout5: TLayout;
@@ -34,13 +34,12 @@ type
     FillRGBEffect3: TFillRGBEffect;
     imgFechar: TImage;
     FillRGBEffect1: TFillRGBEffect;
-    procedure recBtnSalvarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure recBtnCancelarDocumentoClick(Sender: TObject);
   private
-    FOnAccept: TProc<Boolean>; // Retorna o aceite da foto
+    FOnAccept: TProc<Boolean>;
     FOnCancel: TProc;
   public
-    // Usamos um class procedure para chamar o Frame já com o texto da API e as rotinas de retorno
     class procedure Exibir(AOwner: TComponent; AParent: TControl; ATextoLGPD: string; AOnAccept: TProc<Boolean>; AOnCancel: TProc);
   end;
 
@@ -72,7 +71,7 @@ begin
   Frame.wbConsentimento.LoadFromStrings(TextoHtml, '');
 end;
 
-procedure TFrameModalConsentimentoLGPD.recBtnSalvarClick(Sender: TObject);
+procedure TFrameModalConsentimentoLGPD.btnSalvarClick(Sender: TObject);
 begin
   // Bloqueia caso o consentimento obrigatório não esteja marcado
   if not cbConsentimentoTotal.IsChecked then

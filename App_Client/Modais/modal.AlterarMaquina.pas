@@ -43,7 +43,7 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    recBtnSalvar: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -65,7 +65,7 @@ type
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
-    procedure recBtnSalvarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure layFecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
     procedure recBtnDesativarClick(Sender: TObject);
@@ -149,13 +149,15 @@ begin
     Self.DisposeOf;
 end;
 
-procedure TFrameModalAlterarMaquina.recBtnSalvarClick(Sender: TObject);
+procedure TFrameModalAlterarMaquina.btnSalvarClick(Sender: TObject);
 begin
     if Trim(edtNomeMaq.Text) = '' then
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Preencha o nome da Máquina.');
         Exit;
     end;
+
+    btnSalvar.Enabled := False;
 
     with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
         EditarMaquina(FIdMaquina, edtNomeMaq.Text, edtTipo.Text, edtModelo.Text, edtChapa.Text, FAtivo, FCaminhoArquivo);
@@ -176,6 +178,7 @@ begin
     else
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao atualizar: ' + AJsonContent);
+        btnSalvar.Enabled := True;
     end;
 end;
 

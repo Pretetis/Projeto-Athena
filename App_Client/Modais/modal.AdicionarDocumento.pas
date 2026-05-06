@@ -176,6 +176,8 @@ begin
         Exit;
     end;
 
+    btnSalvar.Enabled := False;
+
     // 2. Envia para o Servidor
     FReq := TModuloRequest.Create(nil, RequestResult);
 
@@ -231,6 +233,7 @@ begin
         end
         else
             TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao enviar documento: ' + AJsonContent);
+            btnSalvar.Enabled := True;
     end;
 end;
 

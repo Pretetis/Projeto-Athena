@@ -44,7 +44,7 @@ type
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    Rectangle3: TRectangle;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -68,7 +68,7 @@ type
     procedure recBtnDesativarFuncClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure layFecharModalClick(Sender: TObject);
-    procedure Rectangle3Click(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure recLimparClick(Sender: TObject);
   private
     FIdFuncionario: string;
@@ -183,13 +183,15 @@ begin
     recLimpar.Visible := False;
 end;
 
-procedure TFrameAlterarFuncionario.Rectangle3Click(Sender: TObject);
+procedure TFrameAlterarFuncionario.btnSalvarClick(Sender: TObject);
 begin
     if Trim(edtNomeFunc.Text) = '' then
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'O nome é obrigatório!');
         Exit;
     end;
+
+    btnSalvar.Enabled := False;
 
     with TModuloRequest.Create(Self.Root.GetObject as TForm, OnRequestResult) do
         EditarFuncionario(FIdFuncionario, edtNomeFunc.Text, edtFuncao.Text, edtSetor.Text, edtChapa.Text, FAtivo, FCaminhoArquivo);
@@ -210,6 +212,7 @@ begin
     else
     begin
         TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao salvar: ' + AJsonContent);
+        btnSalvar.Enabled := True;
     end;
 end;
 
