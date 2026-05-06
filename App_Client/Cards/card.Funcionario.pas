@@ -8,7 +8,7 @@ uses
   FMX.Objects, FMX.Controls.Presentation, FMX.Effects, FMX.Layouts, System.Threading,
   System.Net.HttpClient, System.Net.HttpClientComponent, System.Net.URLClient,
 
-  uParametros;
+  uParametros, FMX.Filter.Effects, FMX.ImgList;
 
 type
   TFrameCardFuncionario = class(TFrame)
@@ -20,16 +20,19 @@ type
     layFinalMaior: TLayout;
     recFundoCinza: TRectangle;
     recBtnVisualizar: TRectangle;
-    pathBtnVisualizar: TPath;
     lbBtnVisualizar: TLabel;
     ShadowEffect2: TShadowEffect;
     cirFotoFuncionario: TCircle;
     lbChapa: TLabel;
-    pathChapa: TPath;
     lbSetor: TLabel;
-    pathSetor: TPath;
     recBtnEditarFlutuante: TRectangle;
     Label1: TLabel;
+    gpSetor: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    gpChapa: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
+    gbVisualizar: TGlyph;
+    FillRGBEffect3: TFillRGBEffect;
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure recBtnEditarFlutuanteClick(Sender: TObject);

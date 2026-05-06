@@ -74,9 +74,6 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
       RowCollection = <
         item
           Value = 100.000000000000000000
-        end
-        item
-          SizeStyle = Auto
         end>
       object recLinhaStatus: TRectangle
         Align = Client
@@ -123,32 +120,20 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
               Text = 'A EXPIRAR EM 5 DIAS'
               TabOrder = 0
             end
-            object pathStatus: TPath
-              Align = Left
-              Data.Path = {
-                1A000000000000000AD7AD41000090410100000014AE5B410000804002000000
-                5BF75241627F4240020000001D703F4147E52C4002000000F50F30412CC04F40
-                0200000030062B41F42B5B4002000000F2DA2641EED86B400200000000002441
-                0000804001000000000010400000904102000000464DD93F08A7974102000000
-                909F01402370A14102000000D5D73E404FDBA5410200000020A452401F49A741
-                02000000B82369409506A84102000000000080400000A841010000000000A041
-                0000A8410200000028D6A841AFFDA741020000001EFEAF41F6D1A04102000000
-                CCFBAF41CEFB97410200000010FBAF413B2E954102000000D43DAF41706D9241
-                020000000AD7AD41000090410000000000004041000010410100000000004041
-                0000504100000000000040410000884101000000F628404100008841}
-              Fill.Kind = None
+            object gpStatus: TGlyph
               Margins.Left = 5.000000000000000000
-              Margins.Top = 2.000000000000000000
+              Margins.Top = 4.000000000000000000
               Margins.Bottom = 4.000000000000000000
+              Align = Left
               Position.X = 5.000000000000000000
-              Position.Y = 2.000000000000000000
+              Position.Y = 4.000000000000000000
               Size.Width = 24.000000000000000000
-              Size.Height = 26.000000000000000000
+              Size.Height = 24.000000000000000000
               Size.PlatformDefault = False
-              Stroke.Color = xFFCA8A04
-              Stroke.Thickness = 2.500000000000000000
-              Stroke.Join = Round
-              WrapMode = Fit
+              ImageIndex = 0
+              object FillRGBEffect1: TFillRGBEffect
+                Color = xFFCA8A04
+              end
             end
           end
         end
@@ -212,14 +197,14 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
         Margins.Top = 5.000000000000000000
         Margins.Bottom = 5.000000000000000000
         Sides = []
-        Size.Width = 173.057922363281300000
+        Size.Width = 173.057922363281200000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         Stroke.Color = xFF64748B
         Stroke.Thickness = 0.600000023841857900
         object Layout2: TLayout
           Align = Client
-          Size.Width = 173.057922363281300000
+          Size.Width = 173.057922363281200000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -228,7 +213,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Position.X = 20.000000000000000000
-            Size.Width = 153.057922363281300000
+            Size.Width = 153.057922363281200000
             Size.Height = 20.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -245,7 +230,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
             StyledSettings = []
             Margins.Left = 20.000000000000000000
             Margins.Top = 2.000000000000000000
-            Size.Width = 153.057922363281300000
+            Size.Width = 153.057922363281200000
             Size.Height = 18.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -304,7 +289,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           Margins.Top = 2.000000000000000000
           Margins.Right = 10.000000000000000000
           Margins.Bottom = 2.000000000000000000
-          Size.Width = 120.743957519531300000
+          Size.Width = 120.743957519531200000
           Size.Height = 36.000000000000000000
           Size.PlatformDefault = False
           Stroke.Thickness = 0.000000000000000000
@@ -314,7 +299,7 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           object lbBtnVisualizar: TLabel
             Align = Client
             StyledSettings = [Size]
-            Size.Width = 120.743957519531300000
+            Size.Width = 120.743957519531200000
             Size.Height = 36.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -342,27 +327,20 @@ object FrameLinhaPlanilhaAlerta: TFrameLinhaPlanilhaAlerta
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           OnClick = recBtnDownloadClick
-          object pathDownload: TPath
-            Align = Client
-            Data.Path = {
-              0F00000000000000000040410000704101000000000040410000404000000000
-              0000A84100007041010000000000A84100009841020000000000A84129D6A041
-              0200000029D6A0410000A84102000000000098410000A841010000000000A040
-              0000A84102000000BC4E79400000A841020000000000404029D6A04102000000
-              0000404000009841010000000000404000007041000000000000E04000002041
-              010000000000404100007041010000000000884100002041}
-            Fill.Kind = None
+          object gpDownload: TGlyph
             Margins.Left = 4.000000000000000000
             Margins.Top = 4.000000000000000000
             Margins.Right = 4.000000000000000000
             Margins.Bottom = 4.000000000000000000
+            Align = Client
             Size.Width = 42.000000000000000000
             Size.Height = 28.000000000000000000
             Size.PlatformDefault = False
-            Stroke.Color = xFF4A4AFF
-            Stroke.Thickness = 2.000000000000000000
-            Stroke.Join = Round
-            WrapMode = Fit
+            ImageIndex = 0
+            Images = DesignSystem.ilBotoes
+            object FillRGBEffect2: TFillRGBEffect
+              Color = xFF4A4AFF
+            end
           end
         end
       end

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Layouts,
   FMX.Effects, FMX.DateTimeCtrls, FMX.ListBox, FMX.Edit, FMX.Objects, FMX.Controls.Presentation,
-  uRequests, System.StrUtils, System.JSON;
+  uRequests, System.StrUtils, System.JSON, FMX.Filter.Effects;
 type
   TFrameAlterarDocumento = class(TFrame)
     OpenDialog1: TOpenDialog;
@@ -14,7 +14,6 @@ type
     layTitulo: TLayout;
     lbTitulo: TLabel;
     Line1: TLine;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     layTituloDoc: TLayout;
     lbTituloDoc: TLabel;
@@ -45,7 +44,6 @@ type
     recBtnCancelarAlteracao: TRectangle;
     lbBtnCancelarAlteracao: TLabel;
     recBtnSalvar: TRectangle;
-    pathBtnSalvar: TPath;
     lbBtnSalvar: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -61,6 +59,10 @@ type
     layFecharModal: TLayout;
     recLimpar: TRectangle;
     pathLimpar: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure lbBtnCancelarAlteracaoClick(Sender: TObject);
     procedure pathFecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);

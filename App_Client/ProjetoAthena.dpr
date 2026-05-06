@@ -16,7 +16,6 @@ uses
   uFormConfig in 'Modulos\uFormConfig.pas',
   frame.Menu_Dashboard in 'Frames\frame.Menu_Dashboard.pas' {FrameMenuDashboard: TFrame},
   frame.Menu_LinhaTabelaAlerta in 'Frames\frame.Menu_LinhaTabelaAlerta.pas' {FrameLinhaPlanilhaAlerta: TFrame},
-  uDesignSystem in 'Modulos\uDesignSystem.pas',
   frame.Documentos in 'Frames\frame.Documentos.pas' {FrameDocumentos: TFrame},
   frame.Documentos_LinhaTabelaDocumentos in 'Frames\frame.Documentos_LinhaTabelaDocumentos.pas' {FrameLinhaPlanilhaDocumento: TFrame},
   modal.AdicionarDocumento in 'Modais\modal.AdicionarDocumento.pas' {FrameModalEnivarDocumento: TFrame},
@@ -36,7 +35,8 @@ uses
   frame.TelaFuncionario in 'Frames\frame.TelaFuncionario.pas' {fTelaFuncionario: TFrame},
   frame.LinhaTelaFuncionario in 'Frames\frame.LinhaTelaFuncionario.pas' {fLinhaTelaFuncionario: TFrame},
   modal.ConsentimentoLGPD in 'Modais\modal.ConsentimentoLGPD.pas' {FrameModalConsentimentoLGPD: TFrame},
-  modal.ConfiguracoesFuncionario in 'Modais\modal.ConfiguracoesFuncionario.pas' {FrameModalConfiguracoesFuncionario: TFrame};
+  modal.ConfiguracoesFuncionario in 'Modais\modal.ConfiguracoesFuncionario.pas' {FrameModalConfiguracoesFuncionario: TFrame},
+  uDesignSystem in 'Modulos\uDesignSystem.pas' {DesignSystem: TDataModule};
 
 {$R *.res}
 
@@ -45,5 +45,6 @@ begin
   Application.CreateForm(TfLogin, fLogin);
   Application.CreateForm(TfMenu, fMenu);
   Application.CreateForm(TfMenuMobile, fMenuMobile);
+  Application.CreateForm(TDesignSystem, DesignSystem);
   Application.Run;
 end.

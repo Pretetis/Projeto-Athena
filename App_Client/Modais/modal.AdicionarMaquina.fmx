@@ -9,7 +9,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
   object recOverlay: TRectangle
     Align = Contents
     Fill.Color = claBlack
-    Opacity = 0.400000005960464500
+    Opacity = 0.400000005960464400
     Size.Width = 521.000000000000000000
     Size.Height = 614.000000000000000000
     Size.PlatformDefault = False
@@ -68,27 +68,41 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
         Size.PlatformDefault = False
         TabOrder = 1
         OnClick = layFecharModalClick
-        object pathFecharModal: TPath
+        object imgFechar: TImage
+          MultiResBitmap = <
+            item
+              Width = 56
+              Height = 56
+              PNG = {
+                89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
+                1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                018B494441546843EDD9C16DC2500C06E03C0F51D402128330560F1DA1874E50
+                A94B541D81390021A11E3A837FF7F222A51681E4C50E81FA3BE6397EBF930844
+                A8AA104208218410AE23E903970078109197AAAA24A5F44644DFBAC612802711
+                79CEFBBD12D18FAE31C5CC1F9231F30EC05CD758013067E65D63BF775D7309E9
+                037D10D14A44361E4302988BC88688567ACD15804766DED657355FD92D8085AE
+                2D0560D1B2C7A3AE75A11F9D1CC0E471F5ECDD8B47108F9E835806B2EC65CA22
+                98450F5743020E39775425414BCEB9AA3E81FBD44E4A97E05D6A26EDDC00E7D6
+                749F496B19E4C0CC0775ECF686AB9D1AB2E9A687ABE521FFDCB53CDC618CE106
+                FD9AF8F7EEFA113D35DCDD7CC8B40C771F5F135D06E85233497D82F7A99D8492
+                C025E75CC590A043CE1D8545408B1E2E2C8359F632E111C8A36711CF209EBD3B
+                C92F7E4F0558EADA5200962D7BF8BFF86DFE37D1D8D8FCEAB6DCC971FF9B00B0
+                4F29AD89E8A8D78622A2634A690D60AFD75C019831F317337F7ADC392DDFC97A
+                BF995E0F218410420861AA7E01DCD062C77E0BE72A0000000049454E44AE4260
+                82}
+            end>
           Align = Client
-          Data.Path = {
-            06000000000000000000000000000000000000000000C0410000C04100000000
-            0000A0400000404101000000000098410000404100000000000040410000A040
-            010000000000404100009841}
-          Fill.Kind = None
           HitTest = False
-          Margins.Left = 5.000000000000000000
-          Margins.Top = 5.000000000000000000
-          Margins.Right = 5.000000000000000000
-          Margins.Bottom = 5.000000000000000000
-          RotationAngle = 45.000000000000000000
-          Size.Width = 40.000000000000000000
-          Size.Height = 39.000000000000000000
+          Margins.Left = 6.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 6.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Size.Width = 38.000000000000000000
+          Size.Height = 37.000000000000000000
           Size.PlatformDefault = False
-          Stroke.Color = xFF0F172A
-          Stroke.Thickness = 2.000000000000000000
-          Stroke.Cap = Round
-          Stroke.Join = Round
-          WrapMode = Fit
+          object FillRGBEffect1: TFillRGBEffect
+            Color = xFF0F172A
+          end
         end
       end
     end
@@ -128,7 +142,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           object edtNomeMaq: TEdit
@@ -178,7 +192,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           object edtTipo: TEdit
@@ -228,7 +242,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           object edtModelo: TEdit
@@ -278,7 +292,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           object edtChapa: TEdit
@@ -328,7 +342,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           Stroke.Dash = Dash
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
@@ -360,7 +374,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535500
+          Stroke.Thickness = 0.349999994039535600
           Stroke.Dash = Dash
           Visible = False
           XRadius = 8.000000000000000000
@@ -471,30 +485,11 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
           OnClick = recBtnSalvarClick
-          object Path2: TPath
-            Align = Left
-            Data.Path = {
-              06000000000000000000000000000000000000000000C0410000C04100000000
-              0000A0400000404101000000000098410000404100000000000040410000A040
-              010000000000404100009841}
-            Fill.Kind = None
-            Margins.Left = 10.000000000000000000
-            Margins.Bottom = 2.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 33.000000000000000000
-            Size.Height = 41.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xFFCBD5E1
-            Stroke.Thickness = 3.000000000000000000
-            Stroke.Cap = Round
-            Stroke.Join = Round
-            WrapMode = Fit
-          end
           object Label1: TLabel
             Align = Client
             StyledSettings = []
             Margins.Right = 10.000000000000000000
-            Size.Width = 87.000000000000000000
+            Size.Width = 89.000000000000000000
             Size.Height = 43.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Family = 'Roboto'
@@ -504,6 +499,41 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
             TextSettings.HorzAlign = Center
             Text = 'Salvar'
             TabOrder = 1
+          end
+          object imgAdicionar: TImage
+            MultiResBitmap = <
+              item
+                Width = 56
+                Height = 56
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
+                  1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  014E494441546843EDD8314A03411406E0F71E59AD2458482A2B0F602D168285
+                  37885DAEE0197206AF90CE23D85978000F6065A1A94CBDB3CC6F11169747C489
+                  B01B5FF8BF6EFF79B0FC30BB3023424444447B4B7DD0979CF30D805B1111557D
+                  30B3473F13168003002B7C5BE59C0FFD5C1FCC077D00702D22E34E3456D58BCE
+                  736F0629A8AA473E1391131FF4619082BBC482D1B160742C181D0B46C782D1ED
+                  7DC1ADCE8339E773553DF6F96F005CA9EADC6573557DEA6625007C9AD98BCF7F
+                  525430E77CD634CD73555513BFB60B29A5E56834BA34B357BFE6156D51559DFD
+                  9772222255554D5475E6F34D8A0A46565410C022A5B4F4F9AEA4949600163EDF
+                  A4E81B6C45FCC90C02C0B473E1D49AFAB93E146DD1C858303A168C8E05A363C1
+                  E858303A16A40200B4AEEBF7F61851D7F50780AD8E6A7F35C84B647D963C0570
+                  27EB2B907B337BF333444444445BF9025B019209C6AFAEB00000000049454E44
+                  AE426082}
+              end>
+            Align = Left
+            HitTest = False
+            Margins.Left = 8.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 8.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            object FillRGBEffect3: TFillRGBEffect
+              Color = xFFE0E0E0
+            end
           end
         end
       end

@@ -8,7 +8,7 @@ uses
   FMX.Effects, FMX.DateTimeCtrls, FMX.Layouts, FMX.ListBox, FMX.Edit, FMX.Objects,
   FMX.Controls.Presentation, System.JSON,
 
-   uRequests;
+   uRequests, FMX.Filter.Effects;
 
 type
   TFrameModalAdicionarFuncionario = class(TFrame)
@@ -18,7 +18,6 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     layFuncionario: TLayout;
     lbNomeFuncionario: TLabel;
@@ -46,13 +45,16 @@ type
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     Rectangle3: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
     edtChapa: TEdit;
     recLimpar: TRectangle;
     pathLimpar: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure lbInsideDropZoneClick(Sender: TObject);
     procedure lbInsideDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure lbInsideDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);

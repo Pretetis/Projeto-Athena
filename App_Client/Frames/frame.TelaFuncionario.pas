@@ -8,7 +8,7 @@ uses
   FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit, FMX.Effects,
   System.JSON, System.Threading, System.Net.HttpClient, System.Net.HttpClientComponent,
   System.Net.URLClient,
-  uRequests, uParametros;
+  uRequests, uParametros, FMX.Filter.Effects, FMX.ImgList;
 
 type
   TDocDownloadInfo = record
@@ -24,13 +24,10 @@ type
     lbNomeFuncionario: TLabel;
     lbCargo: TLabel;
     lbSetor: TLabel;
-    pathSetor: TPath;
     lbChapa: TLabel;
-    pathChapa: TPath;
     recFiltroDados: TRectangle;
     ShadowEffect2: TShadowEffect;
     recBuscaDocumentos: TRectangle;
-    pathBusca: TPath;
     edtBuscaDocumentos: TEdit;
     tmrBusca: TTimer;
     recPlanilhaDocumentos: TRectangle;
@@ -47,6 +44,12 @@ type
     layTituloPlanilha: TLayout;
     lbTituloPlanilhaAlerta: TLabel;
     vscrollboxLinhaPlanilha: TVertScrollBox;
+    gpBusca: TGlyph;
+    FillRGBEffect4: TFillRGBEffect;
+    gpSetor: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    gpChapa: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
     procedure edtBuscaDocumentosChangeTracking(Sender: TObject);
     procedure tmrBuscaTimer(Sender: TObject);
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);

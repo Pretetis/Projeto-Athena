@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Effects, System.JSON,
-  System.DateUtils, uRequests;
+  System.DateUtils, uRequests, FMX.Filter.Effects;
 
 type
   TFrameMenuDashboard = class(TFrame)
@@ -27,7 +27,6 @@ type
     recDocumentosExpirados: TRectangle;
     layIconeExpirado: TLayout;
     cirIconeExpirado: TCircle;
-    pathExpirado: TPath;
     recQntdExpirado: TRectangle;
     lbTituloExpirado: TLabel;
     lbInfoExpirado: TLabel;
@@ -35,7 +34,6 @@ type
     recDocumentosExpirando: TRectangle;
     layIconeExpirando: TLayout;
     cirExpirando: TCircle;
-    pathExpirando: TPath;
     recQntdExpirando: TRectangle;
     lbTituloExpirando: TLabel;
     lbInfoExpirando: TLabel;
@@ -63,6 +61,11 @@ type
     vscrollboxLinhaPlanilha: TScrollBox;
     layContainerLinhas: TLayout;
     layContainerCabecalho: TLayout;
+    Image1: TImage;
+    Image2: TImage;
+    FillRGBEffect2: TFillRGBEffect;
+    Image3: TImage;
+    FillRGBEffect3: TFillRGBEffect;
     procedure FrameResize(Sender: TObject);
     procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
   private

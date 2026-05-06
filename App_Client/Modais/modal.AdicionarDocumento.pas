@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.DateTimeCtrls,
-  System.DateUtils, uRequests, FMX.Effects, FMX.ListBox, System.StrUtils, System.JSON;
+  System.DateUtils, uRequests, FMX.Effects, FMX.ListBox, System.StrUtils, System.JSON, FMX.Filter.Effects;
 
 type
   TFrameModalEnivarDocumento = class(TFrame)
@@ -39,12 +39,10 @@ type
     OpenDialog1: TOpenDialog;
     Rectangle1: TRectangle;
     Rectangle2: TRectangle;
-    recBtnCancelarDocumento: TRectangle;
+    btnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
-    pathFecharModal: TPath;
     Layout1: TLayout;
-    Rectangle3: TRectangle;
-    Path2: TPath;
+    btnSalvar: TRectangle;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -53,10 +51,14 @@ type
     layFecharModal: TLayout;
     recLimpar: TRectangle;
     pathBtnDesativarDoc: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);
     procedure recDropZoneClick(Sender: TObject);
-    procedure Rectangle3Click(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
     procedure pathFecharModalClick(Sender: TObject);
     procedure lbBtnCancelarDocumentoClick(Sender: TObject);
     procedure edtFuncionarioChangeTracking(Sender: TObject);
@@ -137,7 +139,7 @@ begin
   recLimpar.Visible := False;
 end;
 
-procedure TFrameModalEnivarDocumento.Rectangle3Click(Sender: TObject);
+procedure TFrameModalEnivarDocumento.btnSalvarClick(Sender: TObject);
 begin
     // 1. Validações Básicas
     if Trim(edtFuncionario.Text) = '' then

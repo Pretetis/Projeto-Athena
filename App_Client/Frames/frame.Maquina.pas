@@ -7,7 +7,7 @@ uses
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Edit, FMX.Effects, FMX.Objects, FMX.Controls.Presentation,
   System.JSON,
-  uRequests, modal.AdicionarMaquina;
+  uRequests, modal.AdicionarMaquina, FMX.ImgList, FMX.Filter.Effects;
 
 type
   TFrameMaquinas = class(TFrame)
@@ -17,13 +17,11 @@ type
     lbTitulo: TLabel;
     layBtnAddMaquina: TLayout;
     recBtnAddMaquina: TRectangle;
-    pathAddDocumento: TPath;
     lbBtnAddFuncionario: TLabel;
     LayDadosMaquinas: TLayout;
     recFiltroDados: TRectangle;
     ShadowEffect2: TShadowEffect;
     recBuscaMaquinas: TRectangle;
-    pathBusca: TPath;
     edtBuscaMaquina: TEdit;
     tmrBusca: TTimer;
     recBtnAtivos: TRectangle;
@@ -32,6 +30,10 @@ type
     lbBtnDesativados: TLabel;
     vsbContainerVerticalCards: TVertScrollBox;
     flowlayCardHorzMaquina: TFlowLayout;
+    imgAdicionar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
+    gpBusca: TGlyph;
+    FillRGBEffect4: TFillRGBEffect;
     procedure FrameResize(Sender: TObject);
     procedure edtBuscaMaquinaChangeTracking(Sender: TObject);
     procedure tmrBuscaTimer(Sender: TObject);

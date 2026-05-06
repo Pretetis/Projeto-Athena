@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Effects, FMX.Edit, FMX.Objects, FMX.Controls.Presentation,
-  uRequests;
+  uRequests, FMX.Filter.Effects;
 
 type
   TFrameModalAlterarMaquina = class(TFrame)
@@ -16,7 +16,6 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     layFuncionario: TLayout;
     lbNomeFuncionario: TLabel;
@@ -45,7 +44,6 @@ type
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     recBtnSalvar: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -60,6 +58,10 @@ type
     pathBtnAivo: TPath;
     recLimpar: TRectangle;
     pathLimpar: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);
     procedure recDropZoneDragOver(Sender: TObject; const Data: TDragObject; const Point: TPointF; var Operation: TDragOperation);

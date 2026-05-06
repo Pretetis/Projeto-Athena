@@ -69,25 +69,6 @@ object FrameFuncionarios: TFrameFuncionarios
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
           OnClick = recBtnAddFuncionarioClick
-          object pathAddDocumento: TPath
-            Align = Left
-            Data.Path = {
-              06000000000000000000000000000000000000000000C0410000C04100000000
-              0000A0400000404101000000000098410000404100000000000040410000A040
-              010000000000404100009841}
-            Fill.Kind = None
-            Margins.Left = 10.000000000000000000
-            Margins.Bottom = 2.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 33.000000000000000000
-            Size.Height = 43.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xFFCBD5E1
-            Stroke.Thickness = 3.000000000000000000
-            Stroke.Cap = Round
-            Stroke.Join = Round
-            WrapMode = Fit
-          end
           object lbBtnAddFuncionario: TLabel
             Align = Client
             StyledSettings = []
@@ -102,6 +83,39 @@ object FrameFuncionarios: TFrameFuncionarios
             TextSettings.HorzAlign = Center
             Text = 'Novo Colaborador'
             TabOrder = 1
+          end
+          object imgAdicionar: TImage
+            MultiResBitmap = <
+              item
+                Width = 56
+                Height = 56
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
+                  1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  0144494441546843EDD8314EC3401005D0F9534085220A948A8A0350230A240A
+                  6E10BA5C8133E40C5C211D47A0A3E0001C808A025C910B783E4514618D825823
+                  D961A3FF3AFF1DC9FAD2DAD2AE99888888EC2DE46028117143F2D6CC0CC083BB
+                  3FE6996A913C20B9E2B755441CE6B921780E8640F2DACC269D6802E0A2F33C98
+                  510A0238CA99999DE46008A314DC2515AC9D0AD64E056BA782B553C1DAED7DC1
+                  5EE7C1883807709CF3DF90BC02B048D902C053372B41F2D3DD5F72FE93A28211
+                  7146F2D9DDA7796D1722A20170E9EEAF792D2BDAA200E6FFA59C9999BB4F01CC
+                  73BE4D51C19A151524B98C8826E7BB12110DC965CEB729FA06376AFCC98C82E4
+                  AC73E1B431CB734328DAA23553C1DAA960ED54B0762A583B15AC9D0A4A019268
+                  DBF67D738C68DBF68364AFA3DA5F8DF2125B9F254F49DED9FA0AE4DEDDDFF28C
+                  888888482F5FE1CB921BA5EA2FFA0000000049454E44AE426082}
+              end>
+            Align = Left
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 10.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 37.000000000000000000
+            Size.PlatformDefault = False
+            object FillRGBEffect1: TFillRGBEffect
+              Color = xFFE0E0E0
+            end
           end
         end
       end
@@ -146,31 +160,6 @@ object FrameFuncionarios: TFrameFuncionarios
           Stroke.Thickness = 0.500000000000000000
           XRadius = 14.000000000000000000
           YRadius = 14.000000000000000000
-          object pathBusca: TPath
-            Align = Left
-            Data.Path = {
-              10000000000000000000A8410000A84101000000AE478541AE47854100000000
-              00003041000040400200000044B17641000040400200000000009841779DD240
-              020000000000984100003041020000000000984144B176410200000044B17641
-              0000984102000000000030410000984102000000779DD2400000984102000000
-              0000404044B176410200000002004040000030410200000004004040749DD240
-              020000007A9DD240FCFF3F400200000001003041020040400300000000003041
-              00004040}
-            Fill.Kind = None
-            Margins.Left = 8.000000000000000000
-            Margins.Top = 8.000000000000000000
-            Margins.Right = 8.000000000000000000
-            Margins.Bottom = 8.000000000000000000
-            Position.X = 8.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Width = 33.000000000000000000
-            Size.Height = 24.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xF064748B
-            Stroke.Thickness = 2.000000000000000000
-            Stroke.Join = Round
-            WrapMode = Fit
-          end
           object edtBuscaFuncionarios: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
@@ -192,6 +181,23 @@ object FrameFuncionarios: TFrameFuncionarios
             OnTimer = tmrBuscaTimer
             Left = 259
             Top = 26
+          end
+          object gpBusca: TGlyph
+            Margins.Left = 8.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 8.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Align = Left
+            Position.X = 8.000000000000000000
+            Position.Y = 5.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            ImageIndex = 6
+            Images = DesignSystem.ilIconesSimples
+            object FillRGBEffect4: TFillRGBEffect
+              Color = xF064748B
+            end
           end
         end
         object recBtnAtivos: TRectangle

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Effects, FMX.Controls.Presentation, FMX.Objects, FMX.Edit,
-  System.JSON, uRequests, FMX.ListBox;
+  System.JSON, uRequests, FMX.ListBox, FMX.Filter.Effects, System.ImageList, FMX.ImgList;
 
 type
   TFrameDocumentos = class(TFrame)
@@ -42,7 +42,6 @@ type
     layBtnValidade: TLayout;
     recBtnValidos: TRectangle;
     lbBtnValidos: TLabel;
-    pathFiltroValidade: TPath;
     lbTituloValidade: TLabel;
     recBtnAExpirar: TRectangle;
     lbBtnAExpirar: TLabel;
@@ -50,7 +49,6 @@ type
     lbBtnExpirados: TLabel;
     layFiltroAtivos: TLayout;
     layTituloFiltroAtivos: TLayout;
-    PathFiltroAtivos: TPath;
     layTituloAtivos: TLabel;
     Layout4: TLayout;
     recBtnAtivos: TRectangle;
@@ -59,9 +57,7 @@ type
     lbBtnDesativados: TLabel;
     layBtnAddDocumento: TLayout;
     recBtnAddDocumento: TRectangle;
-    pathAddDocumento: TPath;
     lbBtnAddDocumento: TLabel;
-    pathBusca: TPath;
     edtBuscaDocumentos: TEdit;
     layTituloPlanilha: TLayout;
     lbTituloPlanilhaAlerta: TLabel;
@@ -74,6 +70,14 @@ type
     HorzScrollBox1: THorzScrollBox;
     layCabecalhoPlanilha: TLayout;
     vscrollboxLinhaPlanilha: TScrollBox;
+    Glyph1: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    Glyph2: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
+    gpBusca: TGlyph;
+    FillRGBEffect4: TFillRGBEffect;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
 
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
@@ -82,6 +86,8 @@ type
     procedure FrameResize(Sender: TObject);
     procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
     procedure edtBuscaDocumentosChangeTracking(Sender: TObject);
+    procedure Glyph2Changed(Sender: TObject);
+    procedure imgAdicionarClick(Sender: TObject);
 
   private
     FReq: TModuloRequest;

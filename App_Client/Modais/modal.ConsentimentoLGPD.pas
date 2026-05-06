@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.WebBrowser, FMX.Effects, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts;
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.WebBrowser, FMX.Effects, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Filter.Effects;
 
 type
   TFrameModalConsentimentoLGPD = class(TFrame)
@@ -14,14 +14,12 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     Layout3: TLayout;
     Layout1: TLayout;
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     recBtnSalvar: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -32,6 +30,10 @@ type
     cbFoto: TCheckBox;
     Layout5: TLayout;
     cbConsentimentoTotal: TCheckBox;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure recBtnSalvarClick(Sender: TObject);
     procedure recBtnCancelarDocumentoClick(Sender: TObject);
   private

@@ -7,7 +7,7 @@ uses
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Effects, FMX.Edit, FMX.Objects, FMX.Controls.Presentation,
 
-  uRequests;
+  uRequests, FMX.Filter.Effects;
 
 type
   TFrameAlterarFuncionario = class(TFrame)
@@ -17,7 +17,6 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     layFuncionario: TLayout;
     lbNomeFuncionario: TLabel;
@@ -46,7 +45,6 @@ type
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     Rectangle3: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -61,6 +59,10 @@ type
     pathBtnAivo: TPath;
     recLimpar: TRectangle;
     pathLimpar: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure FecharModalClick(Sender: TObject);
     procedure recBtnAtivoClick(Sender: TObject);
     procedure recBtnDesativarFuncClick(Sender: TObject);

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Effects, FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts,
-  uRequests, System.JSON;
+  uRequests, System.JSON, FMX.Filter.Effects;
 
 type
   TFrameModalAdicionarMaquina = class(TFrame)
@@ -16,7 +16,6 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     layOpcoes: TLayout;
     layFuncionario: TLayout;
     lbNomeFuncionario: TLabel;
@@ -45,12 +44,15 @@ type
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     recBtnSalvar: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
     recLimpar: TRectangle;
     pathLimpar: TPath;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure recBtnSalvarClick(Sender: TObject);
     procedure recDropZoneClick(Sender: TObject);
     procedure recDropZoneDragDrop(Sender: TObject; const Data: TDragObject; const Point: TPointF);

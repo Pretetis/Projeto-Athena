@@ -8,7 +8,7 @@ uses
   FMX.Layouts, FMX.Edit, FMX.Effects, FMX.Objects, FMX.Controls.Presentation,
   System.JSON,
 
-  uRequests, modal.AdicionarFuncionario;
+  uRequests, modal.AdicionarFuncionario, FMX.ImgList, FMX.Filter.Effects;
 
 type
   TFrameFuncionarios = class(TFrame)
@@ -18,13 +18,11 @@ type
     lbTitulo: TLabel;
     layBtnAddFuncionario: TLayout;
     recBtnAddFuncionario: TRectangle;
-    pathAddDocumento: TPath;
     lbBtnAddFuncionario: TLabel;
     LayDadosDocs: TLayout;
     recFiltroDados: TRectangle;
     ShadowEffect2: TShadowEffect;
     recBuscaFuncionarios: TRectangle;
-    pathBusca: TPath;
     edtBuscaFuncionarios: TEdit;
     tmrBusca: TTimer;
     vsbContainerVerticalCards: TVertScrollBox;
@@ -33,6 +31,10 @@ type
     lbBtnAtivos: TLabel;
     recBtnDesativados: TRectangle;
     lbBtnDesativados: TLabel;
+    imgAdicionar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
+    gpBusca: TGlyph;
+    FillRGBEffect4: TFillRGBEffect;
     procedure recBtnAddFuncionarioClick(Sender: TObject);
     procedure FrameResize(Sender: TObject);
     procedure edtBuscaFuncionariosChangeTracking(Sender: TObject);

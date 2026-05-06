@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, uRequests;
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, uRequests, FMX.Effects, FMX.Filter.Effects, FMX.ImgList;
 
 type
   TFrameLinhaPlanilhaDocumento = class(TFrame)
@@ -22,15 +22,17 @@ type
     recLinhaStatus: TRectangle;
     layLinhaStatus: TLayout;
     recInfoLinhaStatus: TRectangle;
-    pathStatus: TPath;
     recLinhaVencimento: TRectangle;
     lbInfoVencimento: TLabel;
     recLinhaVisualizar: TRectangle;
     recBtnVisualizar: TRectangle;
     lbBtnVisualizar: TLabel;
     recBtnDownload: TRectangle;
-    pathDownload: TPath;
     recFundoLinha: TRectangle;
+    gpStatus: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    gpDownload: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
     procedure FrameResize(Sender: TObject);
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recBtnDownloadClick(Sender: TObject);
@@ -199,13 +201,14 @@ begin
 
     vDiferencaDias := Trunc(vDataVencimento) - Trunc(Date);
 
+     gpStatus.Images := DesignSystem.ilIconesLinhas;
     // --- LÓGICA: VALIDO ---
     if vDiferencaDias >= 31 then
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Green400;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Green100;
-        pathStatus.Stroke.Color         := TThemeColors.Green800;
-        pathStatus.Data.Data            := TThemeIcons.Valido;
+        gpStatus.ImageIndex := 3;
+        FillRGBEffect1.Color := TThemeColors.Green800;
     end
 
     // --- LÓGICA: A EXPIRAR (FUTURO) ---
@@ -213,8 +216,8 @@ begin
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Yellow500;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Yellow100;
-        pathStatus.Stroke.Color         := TThemeColors.Yellow600;
-        pathStatus.Data.Data            := TThemeIcons.Expirando;
+        gpStatus.ImageIndex := 1;
+        FillRGBEffect1.Color := TThemeColors.Yellow600;
     end
 
     // --- LÓGICA: EXPIRADO (HOJE OU PASSADO) ---
@@ -222,8 +225,8 @@ begin
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Red500;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Red100;
-        pathStatus.Stroke.Color         := TThemeColors.Red600;
-        pathStatus.Data.Data            := TThemeIcons.Expirado;
+        gpStatus.ImageIndex := 0;
+        FillRGBEffect1.Color := TThemeColors.Red600;
     end;
 end;
 

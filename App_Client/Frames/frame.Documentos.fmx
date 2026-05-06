@@ -69,25 +69,6 @@ object FrameDocumentos: TFrameDocumentos
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
           OnClick = recBtnAddDocumentoClick
-          object pathAddDocumento: TPath
-            Align = Left
-            Data.Path = {
-              06000000000000000000000000000000000000000000C0410000C04100000000
-              0000A0400000404101000000000098410000404100000000000040410000A040
-              010000000000404100009841}
-            Fill.Kind = None
-            Margins.Left = 10.000000000000000000
-            Margins.Bottom = 2.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 33.000000000000000000
-            Size.Height = 43.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xFFCBD5E1
-            Stroke.Thickness = 3.000000000000000000
-            Stroke.Cap = Round
-            Stroke.Join = Round
-            WrapMode = Fit
-          end
           object lbBtnAddDocumento: TLabel
             Align = Client
             StyledSettings = []
@@ -102,6 +83,40 @@ object FrameDocumentos: TFrameDocumentos
             TextSettings.HorzAlign = Center
             Text = 'Novo Documento'
             TabOrder = 1
+          end
+          object imgAdicionar: TImage
+            MultiResBitmap = <
+              item
+                Width = 56
+                Height = 56
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
+                  1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  014A494441546843EDD8314A03511006E09959D04A8285A4B2F200D662215878
+                  83D8E50A9E2167F00AE93C829D8507F00056169ACA1C60DFFC1621B80C115F84
+                  DD38E1FFBAFDDFC0F2C3DB85F744888888686F690CFAE2EE37006E454454F5C1
+                  CC1EE34C5A000E002CF16DE9EE8771AE0F16833E00B8169151271AA9EA45E7B9
+                  37831454D5A39889C8490CFA3048C15D62C1EC58303B16CC8E05B363C1ECF6BE
+                  E056E741773F57D5E398FF06C095AACE423653D5A76E5603C0A799BDC4FC2755
+                  05DDFDCCDD9F9BA619C7B55D28A52CCCECD2CC5EE35A54B5455575FA5FCA8988
+                  344D3356D569CC37A92A9859554100F352CA22E6BB524A590098C77C93AA6F70
+                  2DE34F661000269D0BA7B5499CEB43D516CD8C05B363C1EC58303B16CC8E05B3
+                  6341AA0040DBB67D5F1F23DAB6FD00B0D551EDAF067989ACCE92A700EE647505
+                  726F666F7186888888682B5FB4DD921558AFA9AE0000000049454E44AE426082}
+              end>
+            Align = Left
+            HitTest = False
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 10.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 37.000000000000000000
+            Size.PlatformDefault = False
+            object FillRGBEffect3: TFillRGBEffect
+              Color = xFFE0E0E0
+            end
           end
         end
       end
@@ -129,7 +144,7 @@ object FrameDocumentos: TFrameDocumentos
           Distance = 2.000000000000000000
           Direction = 45.000000000000000000
           Softness = 0.500000000000000000
-          Opacity = 0.400000005960464500
+          Opacity = 0.400000005960464400
           ShadowColor = claBlack
         end
         object recBuscaDocumentos: TRectangle
@@ -148,31 +163,6 @@ object FrameDocumentos: TFrameDocumentos
           Stroke.Thickness = 0.500000000000000000
           XRadius = 14.000000000000000000
           YRadius = 14.000000000000000000
-          object pathBusca: TPath
-            Align = Left
-            Data.Path = {
-              10000000000000000000A8410000A84101000000AE478541AE47854100000000
-              00003041000040400200000044B17641000040400200000000009841779DD240
-              020000000000984100003041020000000000984144B176410200000044B17641
-              0000984102000000000030410000984102000000779DD2400000984102000000
-              0000404044B176410200000002004040000030410200000004004040749DD240
-              020000007A9DD240FCFF3F400200000001003041020040400300000000003041
-              00004040}
-            Fill.Kind = None
-            Margins.Left = 8.000000000000000000
-            Margins.Top = 8.000000000000000000
-            Margins.Right = 8.000000000000000000
-            Margins.Bottom = 8.000000000000000000
-            Position.X = 8.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Width = 33.000000000000000000
-            Size.Height = 24.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xF064748B
-            Stroke.Thickness = 2.000000000000000000
-            Stroke.Join = Round
-            WrapMode = Fit
-          end
           object edtBuscaDocumentos: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
@@ -193,6 +183,23 @@ object FrameDocumentos: TFrameDocumentos
             OnTimer = tmrBuscaTimer
             Left = 347
             Top = 130
+          end
+          object gpBusca: TGlyph
+            Margins.Left = 8.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 8.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Align = Left
+            Position.X = 8.000000000000000000
+            Position.Y = 5.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            ImageIndex = 6
+            Images = DesignSystem.ilIconesSimples
+            object FillRGBEffect4: TFillRGBEffect
+              Color = xF064748B
+            end
           end
         end
         object layBotoesFiltro: TLayout
@@ -259,33 +266,6 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 1
-                  object pathFiltroValidade: TPath
-                    Align = Left
-                    Data.Path = {
-                      24000000000000000000000000000000000000000000C0410000C04100000000
-                      000020410000A041020000003EFF1F413408A34102000000446C2341F2CDA541
-                      0200000002D92841F128A7410100000002D94841F128AF410200000090C05041
-                      8E22B14102000000BE5C5A413A88AF4102000000F94F5E417394AB4102000000
-                      616C5F41E377AA41020000004C0060411D3EA9410200000000006041FFFFA741
-                      0100000000006041FEFF5F4102000000FE006041A811584102000000B4F36241
-                      486C504102000000D34568410C8B4A410100000085EBAD41A470954002000000
-                      58E1B041F951884002000000009FB041C32B6840020000005557AD41267D5040
-                      020000003FE0AB41EEE845400200000043F9A94188094040020000000000A841
-                      00004040010000000000404000004040020000005EA71C404403404002000000
-                      A602004048AD5C4002000000EA050040F50280400200000061070040A3ED8740
-                      0200000050E705401C908F400200000011831040A3709540010000005EBA1741
-                      438B4A4102000000700C1D418C6C50410200000014FF1F41F311584102000000
-                      000020410000604103000000000020410000A041}
-                    Fill.Kind = None
-                    Margins.Bottom = 2.000000000000000000
-                    Size.Width = 33.000000000000000000
-                    Size.Height = 23.000000000000000000
-                    Size.PlatformDefault = False
-                    Stroke.Color = xFF0F172A
-                    Stroke.Thickness = 1.799999952316284000
-                    Stroke.Join = Round
-                    WrapMode = Fit
-                  end
                   object lbTituloValidade: TLabel
                     Align = Client
                     StyledSettings = []
@@ -299,6 +279,20 @@ object FrameDocumentos: TFrameDocumentos
                     TextSettings.FontColor = xFF0F172A
                     Text = 'Filtrar por Status'
                     TabOrder = 1
+                  end
+                  object Glyph1: TGlyph
+                    Margins.Top = 1.500000000000000000
+                    Margins.Bottom = 1.500000000000000000
+                    Align = Left
+                    Position.Y = 1.500000000000000000
+                    Size.Width = 33.000000000000000000
+                    Size.Height = 22.000000000000000000
+                    Size.PlatformDefault = False
+                    ImageIndex = 0
+                    Images = DesignSystem.ilIconesSimples
+                    object FillRGBEffect1: TFillRGBEffect
+                      Color = xFF0F172A
+                    end
                   end
                 end
                 object layBtnValidade: TLayout
@@ -321,7 +315,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -351,7 +345,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -381,7 +375,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -411,7 +405,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -443,33 +437,6 @@ object FrameDocumentos: TFrameDocumentos
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 1
-                  object PathFiltroAtivos: TPath
-                    Align = Left
-                    Data.Path = {
-                      24000000000000000000000000000000000000000000C0410000C04100000000
-                      000020410000A041020000003EFF1F413408A34102000000446C2341F2CDA541
-                      0200000002D92841F128A7410100000002D94841F128AF410200000090C05041
-                      8E22B14102000000BE5C5A413A88AF4102000000F94F5E417394AB4102000000
-                      616C5F41E377AA41020000004C0060411D3EA9410200000000006041FFFFA741
-                      0100000000006041FEFF5F4102000000FE006041A811584102000000B4F36241
-                      486C504102000000D34568410C8B4A410100000085EBAD41A470954002000000
-                      58E1B041F951884002000000009FB041C32B6840020000005557AD41267D5040
-                      020000003FE0AB41EEE845400200000043F9A94188094040020000000000A841
-                      00004040010000000000404000004040020000005EA71C404403404002000000
-                      A602004048AD5C4002000000EA050040F50280400200000061070040A3ED8740
-                      0200000050E705401C908F400200000011831040A3709540010000005EBA1741
-                      438B4A4102000000700C1D418C6C50410200000014FF1F41F311584102000000
-                      000020410000604103000000000020410000A041}
-                    Fill.Kind = None
-                    Margins.Bottom = 2.000000000000000000
-                    Size.Width = 33.000000000000000000
-                    Size.Height = 23.000000000000000000
-                    Size.PlatformDefault = False
-                    Stroke.Color = xFF0F172A
-                    Stroke.Thickness = 1.799999952316284000
-                    Stroke.Join = Round
-                    WrapMode = Fit
-                  end
                   object layTituloAtivos: TLabel
                     Align = Client
                     StyledSettings = []
@@ -483,6 +450,21 @@ object FrameDocumentos: TFrameDocumentos
                     TextSettings.FontColor = xFF0F172A
                     Text = 'Filtrar por Status'
                     TabOrder = 1
+                  end
+                  object Glyph2: TGlyph
+                    Margins.Top = 1.500000000000000000
+                    Margins.Bottom = 1.500000000000000000
+                    Align = Left
+                    Position.Y = 1.500000000000000000
+                    Size.Width = 33.000000000000000000
+                    Size.Height = 22.000000000000000000
+                    Size.PlatformDefault = False
+                    ImageIndex = 0
+                    Images = DesignSystem.ilIconesSimples
+                    OnChanged = Glyph2Changed
+                    object FillRGBEffect2: TFillRGBEffect
+                      Color = xFF0F172A
+                    end
                   end
                 end
                 object Layout4: TLayout
@@ -505,7 +487,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -535,7 +517,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -565,7 +547,7 @@ object FrameDocumentos: TFrameDocumentos
                     Size.Height = 35.000000000000000000
                     Size.PlatformDefault = False
                     Stroke.Color = xFF64748B
-                    Stroke.Thickness = 0.400000005960464500
+                    Stroke.Thickness = 0.400000005960464400
                     XRadius = 10.000000000000000000
                     YRadius = 10.000000000000000000
                     OnClick = BtnFiltroClick
@@ -607,7 +589,7 @@ object FrameDocumentos: TFrameDocumentos
         Distance = 2.000000000000000000
         Direction = 45.000000000000000000
         Softness = 0.500000000000000000
-        Opacity = 0.400000005960464500
+        Opacity = 0.400000005960464400
         ShadowColor = claBlack
       end
       object layTituloPlanilha: TLayout
@@ -797,7 +779,7 @@ object FrameDocumentos: TFrameDocumentos
                 Margins.Top = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
                 Sides = [Right]
-                Size.Width = 235.455627441406300000
+                Size.Width = 235.455627441406200000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 Stroke.Color = xFF64748B
@@ -806,7 +788,7 @@ object FrameDocumentos: TFrameDocumentos
                   Align = Client
                   StyledSettings = [Size]
                   Margins.Left = 20.000000000000000000
-                  Size.Width = 215.455627441406300000
+                  Size.Width = 215.455627441406200000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Family = 'Roboto'
@@ -822,7 +804,7 @@ object FrameDocumentos: TFrameDocumentos
                 Margins.Top = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
                 Sides = [Right]
-                Size.Width = 235.455627441406300000
+                Size.Width = 235.455627441406200000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 Stroke.Color = xFF64748B
@@ -831,7 +813,7 @@ object FrameDocumentos: TFrameDocumentos
                   Align = Client
                   StyledSettings = [Size]
                   Margins.Left = 20.000000000000000000
-                  Size.Width = 215.455627441406300000
+                  Size.Width = 215.455627441406200000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Family = 'Roboto'

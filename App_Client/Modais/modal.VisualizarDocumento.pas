@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.WebBrowser, FMX.ExtCtrls;
+  FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.WebBrowser, FMX.ExtCtrls, FMX.ImgList, FMX.Effects, FMX.Filter.Effects;
 
 type
   TFrameVisualizarDocumento = class(TFrame)
@@ -14,14 +14,12 @@ type
     layTitulo: TLayout;
     lbTitulo: TLabel;
     Line1: TLine;
-    pathCancelarDocumento: TPath;
     layIconeValido: TLayout;
     pathIcone: TPath;
     recIcone: TRectangle;
     layFechar: TLayout;
     lbFuncMaq: TLabel;
     layDownload: TLayout;
-    pathDownload: TPath;
     imgVisualizacao: TImageViewer;
     layOpcoes: TLayout;
     layOpcoesCentro: TLayout;
@@ -33,6 +31,12 @@ type
     pathProximo: TPath;
     cirAnterior: TCircle;
     pathAnterior: TPath;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
+    gpDownload: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
+    Image1: TImage;
+    FillRGBEffect3: TFillRGBEffect;
     procedure layFecharClick(Sender: TObject);
     procedure layDownloadClick(Sender: TObject);
     procedure layProximoClick(Sender: TObject);

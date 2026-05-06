@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Objects, FMX.Layouts, FMX.Controls.Presentation;
+  FMX.Objects, FMX.Layouts, FMX.Controls.Presentation, FMX.Effects, FMX.Filter.Effects, System.ImageList, FMX.ImgList;
 
 type
   TFrameLinhaPlanilhaAlerta = class(TFrame)
@@ -23,16 +23,18 @@ type
     Layout1: TLayout;
     layLinhaStatus: TLayout;
     recInfoLinhaStatus: TRectangle;
-    pathStatus: TPath;
     lbInfoTipoDoc: TLabel;
     Layout2: TLayout;
     lbFuncaoFuncMaq: TLabel;
     recBtnVisualizar: TRectangle;
     recFundoLinha: TRectangle;
     recBtnDownload: TRectangle;
-    pathDownload: TPath;
     recBtnAlterarDoc: TRectangle;
     pathBtnAlterar: TPath;
+    gpStatus: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    gpDownload: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recBtnDownloadClick(Sender: TObject);
     procedure recBtnAlterarDocClick(Sender: TObject);
@@ -194,14 +196,17 @@ begin
 
     vDiferencaDias := Trunc(vDataVencimento) - Trunc(Date);
 
+    gpStatus.Images := DesignSystem.ilIconesLinhas;
+
     // --- LÓGICA: A EXPIRAR ---
     if vDiferencaDias > 0 then
     begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Yellow500;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Yellow100;
         lbInfoStatus.FontColor          := TThemeColors.Yellow600;
-        pathStatus.Stroke.Color         := TThemeColors.Yellow600;
-        pathStatus.Data.Data            := TThemeIcons.Expirando;
+
+        gpStatus.ImageIndex := 1;
+        FillRGBEffect1.Color := TThemeColors.Yellow600;
 
         if vDiferencaDias = 1 then
             lbInfoStatus.Text := 'A EXPIRAR EM 1 DIA'
@@ -215,8 +220,9 @@ begin
         recInfoLinhaStatus.Stroke.Color := TThemeColors.Red500;
         recInfoLinhaStatus.Fill.Color   := TThemeColors.Red100;
         lbInfoStatus.FontColor          := TThemeColors.Red600;
-        pathStatus.Stroke.Color         := TThemeColors.Red600;
-        pathStatus.Data.Data            := TThemeIcons.Expirado;
+
+        gpStatus.ImageIndex := 0;
+        FillRGBEffect1.Color := TThemeColors.Red600;
 
         if vDiferencaDias = 0 then
             lbInfoStatus.Text := 'EXPIRADO HOJE'

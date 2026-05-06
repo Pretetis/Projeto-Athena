@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Effects, FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts;
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, FMX.Effects, FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Filter.Effects;
 
 type
   TFrameModalConfiguracoesFuncionario = class(TFrame)
@@ -14,7 +14,6 @@ type
     lbTitulo: TLabel;
     Line1: TLine;
     layFecharModal: TLayout;
-    pathFecharModal: TPath;
     laySenha: TLayout;
     laySenhaAtual: TLayout;
     lbSenhaAtual: TLabel;
@@ -34,7 +33,6 @@ type
     recBtnCancelarDocumento: TRectangle;
     lbBtnCancelarDocumento: TLabel;
     Rectangle3: TRectangle;
-    Path2: TPath;
     Label1: TLabel;
     recOverlay: TRectangle;
     BlurEffect1: TBlurEffect;
@@ -43,6 +41,10 @@ type
     lbConsentimentoLGPD: TLabel;
     laySenhaCenter: TLayout;
     lbConfirmarSenha: TLabel;
+    imgAdicionar: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgFechar: TImage;
+    FillRGBEffect1: TFillRGBEffect;
     procedure recBtnSalvarClick(Sender: TObject); // Vincule ao botão Salvar (Rectangle1 ou Rectangle2)
     procedure recBtnCancelarDocumentoClick(Sender: TObject); // Vincule ao botão Cancelar
   private

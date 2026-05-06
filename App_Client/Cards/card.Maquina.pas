@@ -8,7 +8,7 @@ uses
   FMX.Objects, FMX.Controls.Presentation, FMX.Effects, FMX.Layouts, System.Threading,
   System.Net.HttpClient, System.Net.HttpClientComponent, System.Net.URLClient,
 
-  uParametros;
+  uParametros, FMX.Filter.Effects, FMX.ImgList;
 type
   TFrameCardMaquina = class(TFrame)
     recFundo: TRectangle;
@@ -18,17 +18,20 @@ type
     lbNomeMaquina: TLabel;
     layInfos: TLayout;
     lbChapa: TLabel;
-    pathChapa: TPath;
     lbModelo: TLabel;
-    pathSetor: TPath;
     layFinalMaior: TLayout;
     recFundoCinza: TRectangle;
     recBtnVisualizar: TRectangle;
     lbBtnVisualizar: TLabel;
-    pathBtnVisualizar: TPath;
     ShadowEffect2: TShadowEffect;
     recBtnEditarFlutuante: TRectangle;
     Label1: TLabel;
+    gpChapa: TGlyph;
+    FillRGBEffect2: TFillRGBEffect;
+    gpSetor: TGlyph;
+    FillRGBEffect1: TFillRGBEffect;
+    gbVisualizar: TGlyph;
+    FillRGBEffect3: TFillRGBEffect;
     procedure recBtnEditarFlutuanteClick(Sender: TObject);
     procedure recBtnVisualizarClick(Sender: TObject);
     procedure recFundoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -120,6 +123,8 @@ begin
       end;
     end);
 end;
+
+
 
 procedure TFrameCardMaquina.recBtnEditarFlutuanteClick(Sender: TObject);
 var

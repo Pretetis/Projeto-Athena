@@ -8,7 +8,7 @@ uses
   FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, IdHTTP, FMX.Effects,
   // Units do Projeto Athena
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
-  frame.Funcionarios, frame.Maquina, frame.TelaFuncionario;
+  frame.Funcionarios, frame.Maquina, frame.TelaFuncionario, FMX.Filter.Effects;
 
 type
   TfMenuMobile  = class(TForm)
@@ -21,13 +21,10 @@ type
     lbMaquinas: TLabel;
     Path2: TPath;
     recBtnFuncionarios: TRectangle;
-    pathFuncionarios: TPath;
     lbFuncionarios: TLabel;
     recBtnDocumentos: TRectangle;
-    pathDocumentos: TPath;
     lbDocumentos: TLabel;
     recBtnDashboard: TRectangle;
-    pathDashboard: TPath;
     lbDashboard: TLabel;
     Layout4: TLayout;
     Layout5: TLayout;
@@ -47,10 +44,19 @@ type
     Line3: TLine;
     Line4: TLine;
     Line5: TLine;
+    Image1: TImage;
+    FillRGBEffect1: TFillRGBEffect;
+    Image2: TImage;
+    FillRGBEffect2: TFillRGBEffect;
+    Image3: TImage;
+    FillRGBEffect3: TFillRGBEffect;
+    imgConfig: TImage;
+    FillRGBEffect4: TFillRGBEffect;
     procedure MenuBtnClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure imgConfigClick(Sender: TObject);
   private
     { Gerenciamento SPA Mobile }
     FFrameAtual: TFrame;
@@ -87,76 +93,67 @@ uses
   ============================================================================== }
 procedure TfMenuMobile.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
-  // Intercepta o botão voltar nativo do Android
-  if Key = vkHardwareBack then
-  begin
-    // Se NÃO for Admin/RH (Ou seja, é o nível 3 - Funcionário Comum)
-    if (mNivelAcesso <> 0) and (mNivelAcesso <> 1) then
+    if Key = vkHardwareBack then
     begin
-      // Ele não tem menu para voltar. Anulamos a tecla para ele não sair da tela de perfil.
-      Key := 0;
-    end
-    else
-    begin
-      // Níveis 0 e 1 (Admin/RH) - Tem permissão para voltar ao menu
+        // Se NÃO for Admin/RH (Ou seja, é o nível 3 - Funcionário Comum)
+        if (mNivelAcesso <> 0) and (mNivelAcesso <> 1) then
+        begin
+            // Ele não tem menu para voltar. Anulamos a tecla para ele não sair da tela de perfil.
+            Key := 0;
+        end
+        else
+        begin
+            // Níveis 0 e 1 (Admin/RH) - Tem permissão para voltar ao menu
+            if layHostName.Visible then
+            begin
+                FecharTelaAtual;
 
-      // Verifica se existe alguma tela aberta (layHostName visível)
-      if layHostName.Visible then
-      begin
-        FecharTelaAtual; // Destrói o frame e esconde o host
+                layMenu.Visible := True;
 
-        // Garante que o layout do menu volte a ficar visível
-        layMenu.Visible := True;
+                Key := 0;
+            end
+            else
+            begin
 
-        // Zera a chave para o aplicativo não fechar (voltou apenas de tela)
-        Key := 0;
-      end
-      else
-      begin
-        // Se layHostName NÃO está visível, o usuário já está no Menu principal.
-        // Como não estamos zerando a Key (Key := 0) aqui, o Android fará o
-        // comportamento padrão, que é fechar/minimizar o aplicativo.
-      end;
+            end;
+        end;
     end;
-  end;
 end;
 
 procedure TfMenuMobile.FormShow(Sender: TObject);
 begin
-  IniciarCatalogos;
-  CarregarDadosPerfil;
+    IniciarCatalogos;
+    CarregarDadosPerfil;
 
-  if mPrimeiroAcesso then
-  begin
-    // CORREÇÃO: Passando o layPrincipal como container do modal
-    TFrameModalConfiguracoesFuncionario.Exibir(Self, layHostName,
-      procedure
-      begin
-        // O que acontece quando ele troca a senha com sucesso? A vida segue!
-      end
-    );
-  end;
+    if mPrimeiroAcesso then
+    begin
+        TFrameModalConfiguracoesFuncionario.Exibir(Self, layHostName,
+          procedure
+          begin
 
-  if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
-  begin
-    // Fluxo Normal (Admin/RH)
-    layHostName.Visible := False;
-    layMenu.Visible := True;
-    // Opcional: MenuBtnClick(recBtnDashboard);
-  end
-  else
-  begin
-    // Fluxo Restrito (Funcionário Comum)
-    layMenu.Visible := False; // Esconde o menu lateral/inferior inteiro!
+          end
+        );
+    end;
 
-    // Traz o container de telas para a frente e deixa sempre visível
-    layHostName.Visible := True;
-    layHostName.BringToFront;
-    //MenuBtnClick(recBtnEmpresas);
+    if (mNivelAcesso = 0) or (mNivelAcesso = 1) then
+    begin
+        // Fluxo Normal (Admin/RH)
+        layHostName.Visible := False;
+        layMenu.Visible := True;
+        // Opcional: MenuBtnClick(recBtnDashboard);
+    end
+    else
+    begin
+        // Fluxo Restrito (Funcionário Comum)
+        layMenu.Visible := False;
 
-    // Carrega direto a tela do funcionário
-    CarregarFuncionarioIndividual;
-  end;
+        // Traz o container de telas para a frente e deixa sempre visível
+        layHostName.Visible := True;
+        layHostName.BringToFront;
+
+        // Carrega direto a tela do funcionário
+        CarregarFuncionarioIndividual;
+    end;
 end;
 
 procedure TfMenuMobile.FormResize(Sender: TObject);
@@ -164,18 +161,19 @@ var
   Margem: Single;
 begin
   // Calcula 20% da largura atual da tela
-  Margem := Self.Width * 0.1;
-
-  // Aplica a margem em todos os botões do menu
-//  Layout4.Margins.Left := Margem;
-//  Layout5.Margins.Left := Margem;
-//  Layout6.Margins.Left := Margem;
-//  //Layout7.Margins.Left := Margem;
-//  Layout8.Margins.Left := Margem;
+  Margem := Self.Width * 0.05;
 
   lbMenu.Margins.Left := Self.Width * 0.1;
-
   layTitulo.Margins.Top := Self.Width * 0.07;
+
+  recBtnMaquinas.Margins.Right     := Margem;
+  recBtnMaquinas.Margins.Left      := Margem;
+  recBtnDashboard.Margins.Right    := Margem;
+  recBtnDashboard.Margins.Left     := Margem;
+  recBtnDocumentos.Margins.Right   := Margem;
+  recBtnDocumentos.Margins.Left    := Margem;
+  recBtnFuncionarios.Margins.Right := Margem;
+  recBtnFuncionarios.Margins.Left  := Margem;
 end;
 
 procedure TfMenuMobile.FecharTelaAtual;
@@ -207,13 +205,11 @@ var
   Rec: TRectangle;
   NomeComponente: string;
 begin
-  // 1. Descobrimos o nome do componente clicado de forma segura
   if Sender is TComponent then
     NomeComponente := TComponent(Sender).Name
   else
-    Exit; // Se não for um componente válido, aborta
+    Exit;
 
-  // 2. Regra visual (SÓ acontece se quem chamou foi um TRectangle)
   if Sender is TRectangle then
   begin
     Rec := TRectangle(Sender);
@@ -226,7 +222,6 @@ begin
     FBotaoAtivo.Fill.Kind := TBrushKind.Solid;
   end;
 
-  // 3. Roteamento para as telas (Funciona para Rectangle ou Layout)
   if NomeComponente = 'recBtnDashboard' then
     CarregarDashboard
   else if NomeComponente = 'recBtnDocumentos' then
@@ -331,6 +326,16 @@ end;
 { ==============================================================================
   CATÁLOGOS E INTEGRAÇÕES
   ============================================================================== }
+
+procedure TfMenuMobile.imgConfigClick(Sender: TObject);
+begin
+    TFrameModalConfiguracoesFuncionario.Exibir(Self, layHostName,
+      procedure
+      begin
+
+      end
+    );
+end;
 
 procedure TfMenuMobile.IniciarCatalogos;
 begin

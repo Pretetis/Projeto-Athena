@@ -43,7 +43,7 @@ const
     userName = ' ';
     password = ' ';
   //Testes Computador DEV
-  endpoint = 'http://localhost:3000';
+  endpoint = 'http://192.168.0.242:3000';
 
 //    endPoint       = '';   //produção
 
