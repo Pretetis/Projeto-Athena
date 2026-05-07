@@ -1,4 +1,4 @@
-unit modal.AlterarFuncionario;
+unit modal.ColaboradorAlterar;
 
 interface
 

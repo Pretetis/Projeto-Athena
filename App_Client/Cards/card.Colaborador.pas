@@ -1,4 +1,4 @@
-unit card.Funcionario;
+unit card.Colaborador;
 
 interface
 
@@ -50,7 +50,7 @@ type
 implementation
 
 uses
-  uMenu, uMenuMobile, modal.AlterarFuncionario, IdHTTP;
+  uMenu, uMenuMobile, modal.ColaboradorAlterar, IdHTTP;
 
 {$R *.fmx}
 

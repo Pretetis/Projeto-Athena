@@ -8,7 +8,7 @@ uses
   FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, IdHTTP, FMX.Effects,
   // Units do Projeto Athena
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos,
-  frame.Funcionarios, frame.Maquina, frame.TelaFuncionario, FMX.Filter.Effects;
+  frame.Colaborador, frame.Maquina, frame.TelaFuncionario, FMX.Filter.Effects;
 
 type
   TfMenuMobile  = class(TForm)
@@ -84,7 +84,7 @@ var
 implementation
 
 uses
-  uDesignSystem, uParametros, modal.ConfiguracoesFuncionario;
+  uDesignSystem, uParametros, modal.ColaboradorConfiguracoes;
 
 {$R *.fmx}
 
@@ -267,11 +267,11 @@ end;
 
 procedure TfMenuMobile.CarregarFuncionarios;
 var
-  FrameFunc: TFrameFuncionarios;
+  FrameFunc: TFrameColaborador;
 begin
   FecharTelaAtual;
 
-  FrameFunc := TFrameFuncionarios.Create(Self);
+  FrameFunc := TFrameColaborador.Create(Self);
   FFrameAtual := FrameFunc;
 
   FFrameAtual.Parent := scrollboxContainerFrame;

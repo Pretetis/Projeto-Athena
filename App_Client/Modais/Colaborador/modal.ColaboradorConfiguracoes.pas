@@ -1,4 +1,4 @@
-unit modal.ConfiguracoesFuncionario;
+unit modal.ColaboradorConfiguracoes;
 
 interface
 

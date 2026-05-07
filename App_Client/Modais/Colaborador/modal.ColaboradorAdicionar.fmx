@@ -1,6 +1,6 @@
-object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
-  Size.Width = 521.000000000000000000
-  Size.Height = 614.000000000000000000
+object FrameModalAdicionarFuncionario: TFrameModalAdicionarFuncionario
+  Size.Width = 488.000000000000000000
+  Size.Height = 607.000000000000000000
   Size.PlatformDefault = False
   object OpenDialog1: TOpenDialog
     Left = 15
@@ -9,9 +9,9 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
   object recOverlay: TRectangle
     Align = Contents
     Fill.Color = claBlack
-    Opacity = 0.400000005960464400
-    Size.Width = 521.000000000000000000
-    Size.Height = 614.000000000000000000
+    Opacity = 0.400000005960464500
+    Size.Width = 488.000000000000000000
+    Size.Height = 607.000000000000000000
     Size.PlatformDefault = False
     Stroke.Kind = None
     object BlurEffect1: TBlurEffect
@@ -46,7 +46,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
         TextSettings.Font.Size = 20.000000000000000000
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
-        Text = 'Adicionar Nova M'#225'quina'
+        Text = 'Adicionar Novo Funcion'#225'rio'
         TabOrder = 0
       end
       object Line1: TLine
@@ -76,20 +76,20 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
               PNG = {
                 89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
                 1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                0191494441546843EDD94D6EC2400C05E0C4B943511B903808C7EAA247E8A227
-                A8D44B543D02E7008484BAE815C66FBA9948A995407EEC10A8BF65C6F13C9308
-                449265CE39E79C73CE5D472E0F5C02E021C6F8926559CCF3FC8D88BE658D2600
-                4F31C6E7B4DF2B11FDC81A55CCFC119310C21E40296BB400284308FB6A3F667E
-                973597903CD04751146B005B8B21019400B64551ACE59A29008F21845DF5A9A6
-                2BB903B094B5430158B6ECF1286B4DC85B270550B95D2D7BF76211C4A2E7289A
-                81347BA9D208A6D1C3D4988063CE9DD490A043CEB9AA3E81FBD4CE4A97E05D6A
-                66EDDC00E7D6649F596B19E41842388A63B7375CA569C8BA9B1EAE9286FC73D5
-                D270C729861BF56FE2DFBBEB5BB469B8BBF9926919EE3E7E26BA0CD0A56696FA
-                04EF533B0B43020F39E72AC6041D73EE2434026AF430A1194CB3970A8B40163D
-                07B10C62D9BB93F4E0B729C04AD60E0560D5B287FD83DFFABB89DAC6EA9F6ED3
-                959CFCDD04331F8868434427B93616119D8868C3CC07B9660AC08299BF98F9D3
-                E2CA4900CADA7E0BB9EE9C73CE39E7DC5CFD028F8861A1BB3FFF860000000049
-                454E44AE426082}
+                0198494441546843EDD9516E82401006605838438D55130FE2B1FAD023F4A127
+                68D24B343D82E7506362FAD0232CF36F1F0A899D80C2320368E77B6487D97F84
+                68842431C618638C31661C293F700D808710C2739224214DD357E7DC17AF9104
+                E03184F054EEF7E29CFBE635A288E83D94BCF77B000B5E2305C0C27BBFAFF623
+                A2375E738DE307BAC8F37C4D445B8D21012C88689BE7F99AAFA90230F7DEEFAA
+                4FB5BC923B004B5E1B0BC0B2618F39AF55C16F9D3280C8EDAAD9BB138D201A3D
+                7B910C24D94B944430891EAAFA04EC73EEA06282C69C33AA2E81BBD44E4A9BE0
+                6D6A26EDD20097D6789F496B18E4E8BD3FB263B7375CA56EC873373D5CA51CF2
+                CF552B873B0E315CAF7F13FFDE5DDFA275C3DDCD974CC370F7F133D166803635
+                93D4257897DA4988091C73CE28FA04ED73EE2024024AF45021194CB297088D40
+                1A3DA36806D1ECDD4AF9E0B72EC08AD7C602B06AD843FFC1EFF9BB89B38DC53F
+                DDBA2B39F8BB89A2280E59966D9C7327BED69773EE9465D9A6288A035F530560
+                46449F44F4A171E538FCBE84A9F69BF175638C31C61863A6EA074240607B3430
+                02B40000000049454E44AE426082}
             end>
           Align = Client
           HitTest = False
@@ -131,10 +131,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Nome da M'#225'quina:'
+          Text = 'Nome do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recFundoNomeMaquina: TRectangle
+        object recFundoNomeFunc: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -142,10 +142,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtNomeMaq: TEdit
+          object edtNomeFunc: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -157,12 +157,12 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Ex: Empilhadeira 1'
+            TextPrompt = 'Ex: Jorge Amado'
             StyledSettings = [Style, FontColor]
           end
         end
       end
-      object layTipo: TLayout
+      object layFuncao: TLayout
         Align = Top
         Margins.Top = 15.000000000000000000
         Position.Y = 85.000000000000000000
@@ -170,7 +170,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
-        object lbTipo: TLabel
+        object lbFuncao: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -181,10 +181,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Tipo de M'#225'quina:'
+          Text = 'Fun'#231#227'o do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recTipo: TRectangle
+        object recFuncao: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -192,10 +192,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtTipo: TEdit
+          object edtFuncao: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -207,12 +207,12 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Ex: Empilhadeira'
+            TextPrompt = 'Ex: Operador de Empilhadeira, Estoquista, etc...'
             StyledSettings = [Style, FontColor]
           end
         end
       end
-      object layModelo: TLayout
+      object laySetor: TLayout
         Align = Top
         Margins.Top = 15.000000000000000000
         Position.Y = 170.000000000000000000
@@ -220,7 +220,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
         Size.Height = 70.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        object lbModelo: TLabel
+        object lbSetor: TLabel
           Align = Top
           StyledSettings = [Style]
           Margins.Left = 5.000000000000000000
@@ -231,10 +231,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Modelo da M'#225'quina:'
+          Text = 'Setor do Funcion'#225'rio:'
           TabOrder = 0
         end
-        object recModelo: TRectangle
+        object recSetor: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Top = 5.000000000000000000
@@ -242,10 +242,10 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          object edtModelo: TEdit
+          object edtSetor: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -257,7 +257,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
             Size.Width = 370.000000000000000000
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Ex: Clark2000'
+            TextPrompt = 'Ex: Administrativo, Manuten'#231#227'o'
             StyledSettings = [Style, FontColor]
           end
         end
@@ -281,7 +281,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Chapa (Identifica'#231#227'o) da M'#225'quina:'
+          Text = 'Chapa (Identifica'#231#227'o) do Funcion'#225'rio:'
           TabOrder = 0
         end
         object recChapa: TRectangle
@@ -292,7 +292,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
           object edtChapa: TEdit
@@ -331,7 +331,7 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           TextSettings.Font.Family = 'Roboto'
           TextSettings.Font.Size = 14.000000000000000000
           TextSettings.FontColor = xFF0F172A
-          Text = 'Foto da M'#225'quina:'
+          Text = 'Foto do Funcion'#225'rio:'
           TabOrder = 0
         end
         object recDropZone: TRectangle
@@ -342,13 +342,13 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           Stroke.Dash = Dash
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
-          OnDragOver = recDropZoneDragOver
-          OnDragDrop = recDropZoneDragDrop
-          OnClick = recDropZoneClick
+          OnDragOver = lbInsideDropZoneDragOver
+          OnDragDrop = lbInsideDropZoneDragDrop
+          OnClick = lbInsideDropZoneClick
         end
         object lbInsideDropZone: TLabel
           Align = Client
@@ -369,12 +369,13 @@ object FrameModalAdicionarMaquina: TFrameModalAdicionarMaquina
           Fill.Color = xFFFEE2E2
           Margins.Top = 5.000000000000000000
           Margins.Right = 10.000000000000000000
+          Position.X = 8.000000000000000000
           Position.Y = 25.000000000000000000
           Size.Width = 45.000000000000000000
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.349999994039535600
+          Stroke.Thickness = 0.349999994039535500
           Stroke.Dash = Dash
           Visible = False
           XRadius = 8.000000000000000000

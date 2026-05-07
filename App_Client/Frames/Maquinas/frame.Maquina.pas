@@ -1,4 +1,4 @@
-unit frame.Funcionarios;
+unit frame.Maquina;
 
 interface
 
@@ -8,39 +8,39 @@ uses
   FMX.Layouts, FMX.Edit, FMX.Effects, FMX.Objects, FMX.Controls.Presentation,
   System.JSON,
 
-  uRequests, modal.AdicionarFuncionario, FMX.ImgList, FMX.Filter.Effects;
+  uRequests, modal.AdicionarMaquina, FMX.ImgList, FMX.Filter.Effects;
 
 type
-  TFrameFuncionarios = class(TFrame)
+  TFrameMaquinas = class(TFrame)
     recFundo: TRectangle;
     layTitulo: TLayout;
     lbSubTitulo: TLabel;
     lbTitulo: TLabel;
-    layBtnAddFuncionario: TLayout;
-    recBtnAddFuncionario: TRectangle;
+    layBtnAddMaquina: TLayout;
+    recBtnAddMaquina: TRectangle;
     lbBtnAddFuncionario: TLabel;
-    LayDadosDocs: TLayout;
+    LayDadosMaquinas: TLayout;
     recFiltroDados: TRectangle;
     ShadowEffect2: TShadowEffect;
-    recBuscaFuncionarios: TRectangle;
-    edtBuscaFuncionarios: TEdit;
+    recBuscaMaquinas: TRectangle;
+    edtBuscaMaquina: TEdit;
     tmrBusca: TTimer;
-    vsbContainerVerticalCards: TVertScrollBox;
-    flowlayCardHorzFuncionarios: TFlowLayout;
     recBtnAtivos: TRectangle;
     lbBtnAtivos: TLabel;
     recBtnDesativados: TRectangle;
     lbBtnDesativados: TLabel;
+    vsbContainerVerticalCards: TVertScrollBox;
+    flowlayCardHorzMaquina: TFlowLayout;
     imgAdicionar: TImage;
     FillRGBEffect1: TFillRGBEffect;
     gpBusca: TGlyph;
     FillRGBEffect4: TFillRGBEffect;
-    procedure recBtnAddFuncionarioClick(Sender: TObject);
     procedure FrameResize(Sender: TObject);
-    procedure edtBuscaFuncionariosChangeTracking(Sender: TObject);
+    procedure edtBuscaMaquinaChangeTracking(Sender: TObject);
     procedure tmrBuscaTimer(Sender: TObject);
-    procedure edtBuscaFuncionariosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure edtBuscaMaquinaKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
+    procedure recBtnAddMaquinaClick(Sender: TObject);
   private
     FReq: TModuloRequest;
     procedure AjustarAlturaFlowLayout;
@@ -48,21 +48,19 @@ type
     procedure BuscarDados;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure CarregarFuncionarios;
+    procedure CarregarMaquinas;
   end;
 
 implementation
 
 uses
-  uMenu, card.Funcionario, uDesignSystem, uTelaUtils, uLoading;
+  uMenu, card.Maquina, uDesignSystem, uTelaUtils, uLoading;
 
 {$R *.fmx}
 
-constructor TFrameFuncionarios.Create(AOwner: TComponent);
+constructor TFrameMaquinas.Create(AOwner: TComponent);
 begin
     inherited;
-
-    // Define o estado inicial: Botão de Ativos ligado (Verde) e Desativados desligado (Cinza)
     recBtnAtivos.Tag := 1;
     recBtnAtivos.Fill.Color := TThemeColors.Green100;
     recBtnAtivos.Fill.Kind := TBrushKind.Solid;
@@ -77,16 +75,15 @@ begin
     lbBtnDesativados.StyledSettings := lbBtnDesativados.StyledSettings - [TStyledSetting.FontColor];
     lbBtnDesativados.TextSettings.FontColor := $F064748B;
 
-    uTelaUtils.ConfigurarBotaoAnimado(recBtnAddFuncionario);
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnAddMaquina);
     uTelaUtils.ConfigurarBotaoAnimado(recBtnAtivos);
     uTelaUtils.ConfigurarBotaoAnimado(recBtnDesativados);
 end;
 
-procedure TFrameFuncionarios.BtnFiltroClick(Sender: TObject);
+procedure TFrameMaquinas.BtnFiltroClick(Sender: TObject);
 var
     Rec: TRectangle;
 
-    // Funções internas para trocar as cores exatamente como no frame de Documentos
     procedure DesligarBotao(ABotao: TRectangle; ALabel: TLabel);
     begin
         ABotao.Tag := 0;
@@ -119,7 +116,6 @@ begin
     if not (Sender is TRectangle) then Exit;
     Rec := TRectangle(Sender);
 
-    // Regra: Não deixa desligar o botão se for o único ligado. Troca de um para o outro.
     if Rec.Tag = 1 then Exit;
 
     if Rec = recBtnAtivos then
@@ -136,10 +132,10 @@ begin
     BuscarDados;
 end;
 
-procedure TFrameFuncionarios.BuscarDados;
+procedure TFrameMaquinas.BuscarDados;
 var
   LAtivoParam: string;
-  LReqFuncionario: TModuloRequest;
+  LReqMaquina: TModuloRequest;
 begin
     LAtivoParam := '';
     if recBtnAtivos.Tag = 1 then
@@ -147,28 +143,25 @@ begin
     else if recBtnDesativados.Tag = 1 then
         LAtivoParam := 'false';
 
-    TLoading.Show(Self, 'Buscando funcionários...');
+    TLoading.Show(Self, 'Buscando máquinas...');
 
-    LReqFuncionario := TModuloRequest.Create(nil, OnRequestResult);
-    LReqFuncionario.ListarFuncionarios(edtBuscaFuncionarios.Text, LAtivoParam);
+    LReqMaquina := TModuloRequest.Create(nil, OnRequestResult);
+    LReqMaquina.ListarMaquinas(edtBuscaMaquina.Text, LAtivoParam);
 end;
 
-procedure TFrameFuncionarios.CarregarFuncionarios;
+procedure TFrameMaquinas.CarregarMaquinas;
 begin
     BuscarDados;
 end;
 
-procedure TFrameFuncionarios.edtBuscaFuncionariosChangeTracking(Sender: TObject);
+procedure TFrameMaquinas.edtBuscaMaquinaChangeTracking(Sender: TObject);
 begin
     tmrBusca.Enabled := False;
-
-    if (Length(edtBuscaFuncionarios.Text) >= 3) or (Length(edtBuscaFuncionarios.Text) = 0) then
-    begin
+    if (Length(edtBuscaMaquina.Text) >= 3) or (Length(edtBuscaMaquina.Text) = 0) then
         tmrBusca.Enabled := True;
-    end;
 end;
 
-procedure TFrameFuncionarios.edtBuscaFuncionariosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+procedure TFrameMaquinas.edtBuscaMaquinaKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
     if Key = vkReturn then
     begin
@@ -177,13 +170,13 @@ begin
     end;
 end;
 
-procedure TFrameFuncionarios.tmrBuscaTimer(Sender: TObject);
+procedure TFrameMaquinas.tmrBuscaTimer(Sender: TObject);
 begin
     tmrBusca.Enabled := False;
     BuscarDados;
 end;
 
-procedure TFrameFuncionarios.FrameResize(Sender: TObject);
+procedure TFrameMaquinas.FrameResize(Sender: TObject);
 var
     LAvailableWidth: Single;
     LMinCardWidth: Single;
@@ -195,32 +188,46 @@ begin
     LAvailableWidth := vsbContainerVerticalCards.Width;
 
     LColumns := Trunc(LAvailableWidth / LMinCardWidth);
-    if LColumns < 1 then
-        LColumns := 1;
+    if LColumns < 1 then LColumns := 1;
 
-    LNewCardWidth := (LAvailableWidth - (flowlayCardHorzFuncionarios.HorizontalGap * (LColumns - 1))) / LColumns;
+    LNewCardWidth := (LAvailableWidth - (flowlayCardHorzMaquina.HorizontalGap * (LColumns - 1))) / LColumns;
 
-    flowlayCardHorzFuncionarios.BeginUpdate;
+    flowlayCardHorzMaquina.BeginUpdate;
     try
-        for I := 0 to flowlayCardHorzFuncionarios.ControlsCount - 1 do
-            flowlayCardHorzFuncionarios.Controls[I].Width := Trunc(LNewCardWidth);
+        for I := 0 to flowlayCardHorzMaquina.ControlsCount - 1 do
+            flowlayCardHorzMaquina.Controls[I].Width := Trunc(LNewCardWidth);
     finally
-        flowlayCardHorzFuncionarios.EndUpdate;
+        flowlayCardHorzMaquina.EndUpdate;
     end;
 
     AjustarAlturaFlowLayout;
 end;
 
-procedure TFrameFuncionarios.OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
+procedure TFrameMaquinas.AjustarAlturaFlowLayout;
+var
+    I: Integer;
+    LMaxHeight: Single;
+    LControl: TControl;
+begin
+    LMaxHeight := 0;
+    for I := 0 to flowlayCardHorzMaquina.ControlsCount - 1 do
+    begin
+        LControl := flowlayCardHorzMaquina.Controls[I];
+        if (LControl.Position.Y + LControl.Height) > LMaxHeight then
+            LMaxHeight := LControl.Position.Y + LControl.Height;
+    end;
+    flowlayCardHorzMaquina.Height := LMaxHeight + 20;
+end;
+
+procedure TFrameMaquinas.OnRequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
 var
     LJsonArray: TJSONArray;
     LJsonObj: TJSONObject;
-    LCard: TFrameCardFuncionario;
+    LCard: TFrameCardMaquina;
     I: Integer;
-    LIdFuncionario: string;
+    LIdMaquina: string;
 begin
-    if AContext <> ctxListarFuncionarios then
-      Exit;
+    if AContext <> ctxListarMaquinas then Exit;
 
     if AStatusCode = 200 then
     begin
@@ -228,38 +235,37 @@ begin
         if Assigned(LJsonArray) then
         begin
             try
-                flowlayCardHorzFuncionarios.BeginUpdate;
+                flowlayCardHorzMaquina.BeginUpdate;
                 try
-                    for I := flowlayCardHorzFuncionarios.ControlsCount - 1 downto 0 do
+                    for I := flowlayCardHorzMaquina.ControlsCount - 1 downto 0 do
                     begin
-                        flowlayCardHorzFuncionarios.Controls[I].DisposeOf;
+                        flowlayCardHorzMaquina.Controls[I].DisposeOf;
                     end;
 
                     for I := 0 to LJsonArray.Count - 1 do
                     begin
                         LJsonObj := LJsonArray.Items[I] as TJSONObject;
 
-                        LCard := TFrameCardFuncionario.Create(Self);
-                        LCard.Name := 'CardFunc_' + I.ToString;
+                        LCard := TFrameCardMaquina.Create(Self);
+                        LCard.Name := 'CardMaq_' + I.ToString;
 
-                        LCard.lbNomeFuncionario.Text := LJsonObj.GetValue<string>('nome', 'Sem Nome');
-                        LCard.lbCargo.Text := LJsonObj.GetValue<string>('funcao', 'Sem Função');
+                        LCard.lbNomeMaquina.Text := LJsonObj.GetValue<string>('nome', 'Sem Nome');
+                        LCard.lbTipo.Text := LJsonObj.GetValue<string>('tipo', 'Sem Função');
                         LCard.lbChapa.Text := LJsonObj.GetValue<string>('chapa', 'S/C');
-
-                        LCard.lbSetor.Text := LJsonObj.GetValue<string>('setor', 'Operacional');
+                        LCard.lbModelo.Text := LJsonObj.GetValue<string>('modelo', 'Não Declarado');
                         LCard.FIsAtivo := LJsonObj.GetValue<Boolean>('ativo', True);
-                        LCard.FOnRecarregarLista := CarregarFuncionarios;
+                        LCard.FOnRecarregarLista := CarregarMaquinas;
 
-                        LIdFuncionario := LJsonObj.GetValue<string>('_id', '');
-                        if LIdFuncionario <> '' then
+                        LIdMaquina := LJsonObj.GetValue<string>('_id', '');
+                        if LIdMaquina <> '' then
                         begin
-                            LCard.CarregarFotoAssincrona(LIdFuncionario);
+                            LCard.CarregarFotoAssincrona(LIdMaquina);
                         end;
 
-                        LCard.Parent := flowlayCardHorzFuncionarios;
+                        LCard.Parent := flowlayCardHorzMaquina;
                     end;
                 finally
-                    flowlayCardHorzFuncionarios.EndUpdate;
+                    flowlayCardHorzMaquina.EndUpdate;
                 end;
                 FrameResize(Self);
             finally
@@ -269,36 +275,19 @@ begin
     end;
 end;
 
-procedure TFrameFuncionarios.recBtnAddFuncionarioClick(Sender: TObject);
+procedure TFrameMaquinas.recBtnAddMaquinaClick(Sender: TObject);
 var
-    LModal: TFrameModalAdicionarFuncionario;
+    LModal: TFrameModalAdicionarMaquina;
 begin
     fMenu.EfeitoBlur.Enabled := True;
-    LModal := TFrameModalAdicionarFuncionario.Create(Self);
-
+    LModal := TFrameModalAdicionarMaquina.Create(Self);
     LModal.Parent := Application.MainForm;
     LModal.Align := TAlignLayout.Contents;
-    LModal.OnSalvoComSucesso := CarregarFuncionarios;
+
+    LModal.OnSalvoComSucesso := CarregarMaquinas;
+
     LModal.BringToFront;
     LModal.CarregarChapa;
-end;
-
-procedure TFrameFuncionarios.AjustarAlturaFlowLayout;
-var
-    I: Integer;
-    LMaxHeight: Single;
-    LControl: TControl;
-begin
-    LMaxHeight := 0;
-
-    for I := 0 to flowlayCardHorzFuncionarios.ControlsCount - 1 do
-    begin
-        LControl := flowlayCardHorzFuncionarios.Controls[I];
-        if (LControl.Position.Y + LControl.Height) > LMaxHeight then
-            LMaxHeight := LControl.Position.Y + LControl.Height;
-    end;
-
-    flowlayCardHorzFuncionarios.Height := LMaxHeight + 20;
 end;
 
 end.

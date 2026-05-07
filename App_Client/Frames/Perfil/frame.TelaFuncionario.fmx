@@ -146,7 +146,7 @@ object fTelaFuncionario: TfTelaFuncionario
         Distance = 2.000000000000000000
         Direction = 45.000000000000000000
         Softness = 0.500000000000000000
-        Opacity = 0.400000005960464400
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
       object recBuscaDocumentos: TRectangle
@@ -222,7 +222,7 @@ object fTelaFuncionario: TfTelaFuncionario
         Distance = 2.000000000000000000
         Direction = 45.000000000000000000
         Softness = 0.500000000000000000
-        Opacity = 0.400000005960464400
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
       object layCabecalhoPlanilhaAlerta: TLayout
@@ -311,7 +311,7 @@ object fTelaFuncionario: TfTelaFuncionario
               Margins.Top = 10.000000000000000000
               Margins.Bottom = 10.000000000000000000
               Sides = [Right]
-              Size.Width = 129.142883300781200000
+              Size.Width = 129.142883300781300000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF64748B
@@ -320,7 +320,7 @@ object fTelaFuncionario: TfTelaFuncionario
                 Align = Client
                 StyledSettings = [Size]
                 Margins.Left = 20.000000000000000000
-                Size.Width = 109.142883300781200000
+                Size.Width = 109.142883300781300000
                 Size.Height = 30.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Family = 'Roboto'

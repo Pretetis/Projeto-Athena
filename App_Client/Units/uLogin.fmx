@@ -21,7 +21,7 @@ object fLogin: TfLogin
   object layCentral: TLayout
     Align = Center
     Margins.Bottom = 10.000000000000000000
-    Size.Width = 300.000000000000000000
+    Size.Width = 350.000000000000000000
     Size.Height = 310.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
@@ -53,7 +53,7 @@ object fLogin: TfLogin
       StyledSettings = [Family]
       Margins.Top = 5.000000000000000000
       Position.Y = 70.000000000000000000
-      Size.Width = 300.000000000000000000
+      Size.Width = 350.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       TextSettings.Font.Size = 26.000000000000000000
@@ -115,7 +115,7 @@ object fLogin: TfLogin
       Margins.Right = 10.000000000000000000
       Position.X = 10.000000000000000000
       Position.Y = 5.000000000000000000
-      Size.Width = 280.000000000000000000
+      Size.Width = 330.000000000000000000
       Size.Height = 60.000000000000000000
       Size.PlatformDefault = False
     end
@@ -129,7 +129,7 @@ object fLogin: TfLogin
       Margins.Bottom = 5.000000000000000000
       Position.X = 10.000000000000000000
       Position.Y = 115.000000000000000000
-      Size.Width = 280.000000000000000000
+      Size.Width = 330.000000000000000000
       Size.Height = 45.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF102E4E
@@ -147,7 +147,7 @@ object fLogin: TfLogin
         Margins.Top = 6.000000000000000000
         Margins.Right = 6.000000000000000000
         Margins.Bottom = 6.000000000000000000
-        Size.Width = 268.000000000000000000
+        Size.Width = 318.000000000000000000
         Size.Height = 33.000000000000000000
         Size.PlatformDefault = False
         TextPrompt = 'Usu'#225'rio'
@@ -159,7 +159,7 @@ object fLogin: TfLogin
           Fill.Color = claWhite
           Margins.Top = -110.000000000000000000
           Position.Y = -110.000000000000000000
-          Size.Width = 268.000000000000000000
+          Size.Width = 318.000000000000000000
           Size.Height = 100.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF102E4E
@@ -171,7 +171,7 @@ object fLogin: TfLogin
             Margins.Top = 2.000000000000000000
             Margins.Right = 2.000000000000000000
             Margins.Bottom = 2.000000000000000000
-            Size.Width = 264.000000000000000000
+            Size.Width = 314.000000000000000000
             Size.Height = 96.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'transparentlistboxstyle'
@@ -181,7 +181,7 @@ object fLogin: TfLogin
             DefaultItemStyles.ItemStyle = ''
             DefaultItemStyles.GroupHeaderStyle = ''
             DefaultItemStyles.GroupFooterStyle = ''
-            Viewport.Width = 264.000000000000000000
+            Viewport.Width = 314.000000000000000000
             Viewport.Height = 96.000000000000000000
           end
         end
@@ -197,7 +197,7 @@ object fLogin: TfLogin
       Margins.Bottom = 15.000000000000000000
       Position.X = 10.000000000000000000
       Position.Y = 170.000000000000000000
-      Size.Width = 280.000000000000000000
+      Size.Width = 330.000000000000000000
       Size.Height = 45.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF102E4E
@@ -218,7 +218,7 @@ object fLogin: TfLogin
         Margins.Top = 6.000000000000000000
         Margins.Right = 6.000000000000000000
         Margins.Bottom = 6.000000000000000000
-        Size.Width = 268.000000000000000000
+        Size.Width = 318.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         TextPrompt = 'Senha'

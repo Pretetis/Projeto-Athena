@@ -232,8 +232,10 @@ begin
             Self.DisposeOf;
         end
         else
+        begin
             TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro ao enviar documento: ' + AJsonContent);
             btnSalvar.Enabled := True;
+        end;
     end;
 end;
 

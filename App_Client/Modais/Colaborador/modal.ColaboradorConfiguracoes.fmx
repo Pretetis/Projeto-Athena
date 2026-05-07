@@ -9,7 +9,7 @@ object FrameModalConfiguracoesFuncionario: TFrameModalConfiguracoesFuncionario
   object recOverlay: TRectangle
     Align = Contents
     Fill.Color = claBlack
-    Opacity = 0.400000005960464400
+    Opacity = 0.400000005960464500
     Size.Width = 452.000000000000000000
     Size.Height = 533.000000000000000000
     Size.PlatformDefault = False
@@ -140,7 +140,7 @@ object FrameModalConfiguracoesFuncionario: TFrameModalConfiguracoesFuncionario
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFF64748B
-            Stroke.Thickness = 0.349999994039535600
+            Stroke.Thickness = 0.349999994039535500
             XRadius = 8.000000000000000000
             YRadius = 8.000000000000000000
             object edtConfirmarSenha: TEdit
@@ -208,7 +208,7 @@ object FrameModalConfiguracoesFuncionario: TFrameModalConfiguracoesFuncionario
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFF64748B
-            Stroke.Thickness = 0.349999994039535600
+            Stroke.Thickness = 0.349999994039535500
             XRadius = 8.000000000000000000
             YRadius = 8.000000000000000000
             object edtNovaSenha: TEdit
@@ -257,7 +257,7 @@ object FrameModalConfiguracoesFuncionario: TFrameModalConfiguracoesFuncionario
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFF64748B
-            Stroke.Thickness = 0.349999994039535600
+            Stroke.Thickness = 0.349999994039535500
             XRadius = 8.000000000000000000
             YRadius = 8.000000000000000000
             object edtSenhaAtual: TEdit

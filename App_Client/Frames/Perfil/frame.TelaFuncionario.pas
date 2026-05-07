@@ -73,7 +73,7 @@ type
 implementation
 
 uses
-  frame.LinhaTelaFuncionario, uDesignSystem, System.IOUtils, System.DateUtils, IdHTTP,
+  frame.TelaFuncionario_LinhaTabelaFuncionario, uDesignSystem, System.IOUtils, System.DateUtils, IdHTTP,
   uLoading;
 {$R *.fmx}
 

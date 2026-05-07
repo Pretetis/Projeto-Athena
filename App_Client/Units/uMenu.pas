@@ -8,7 +8,7 @@ uses
   FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Effects,
   frame.Menu_Dashboard, frame.Documentos, uRequests, uCatalogos, IdHTTP,
 
-  frame.Funcionarios, frame.Maquina, frame.TelaFuncionario;
+  frame.Colaborador, frame.Maquina, frame.TelaFuncionario;
 
 type
   TfMenu = class(TForm)
@@ -56,7 +56,7 @@ type
   private
     FFrameDashboard: TFrameMenuDashboard;
     FFrameDocumentos: TFrameDocumentos;
-    FFrameFuncionarios: TFrameFuncionarios;
+    FFrameFuncionarios: TFrameColaborador;
     FFrameMaquinas: TFrameMaquinas;
     FFrameFuncionario: TfTelaFuncionario;
     FBotaoAtivo: TRectangle;
@@ -77,7 +77,7 @@ implementation
 
 uses
 
-  uDesignSystem, uParametros, modal.ConfiguracoesFuncionario;
+  uDesignSystem, uParametros, modal.ColaboradorConfiguracoes;
 
 {$R *.fmx}
 {$R *.LgXhdpiPh.fmx ANDROID}
@@ -295,7 +295,7 @@ begin
 
     if not Assigned(FFrameFuncionarios) then
     begin
-        FFrameFuncionarios := TFrameFuncionarios.Create(Self);
+        FFrameFuncionarios := TFrameColaborador.Create(Self);
         FFrameFuncionarios.Parent := layContainer;
         FFrameFuncionarios.Align := TAlignLayout.Client;
     end;

@@ -14,7 +14,7 @@ object FrameCardFuncionario: TFrameCardFuncionario
     Size.Width = 356.000000000000000000
     Size.Height = 206.000000000000000000
     Size.PlatformDefault = False
-    Stroke.Thickness = 0.400000005960464400
+    Stroke.Thickness = 0.400000005960464500
     XRadius = 14.000000000000000000
     YRadius = 14.000000000000000000
     OnMouseUp = recFundoMouseUp
@@ -205,7 +205,7 @@ object FrameCardFuncionario: TFrameCardFuncionario
       Distance = 2.000000000000000000
       Direction = 45.000000000000000000
       Softness = 0.500000000000000000
-      Opacity = 0.400000005960464400
+      Opacity = 0.400000005960464500
       ShadowColor = claBlack
     end
     object recBtnEditarFlutuante: TRectangle

@@ -1,7 +1,8 @@
-object FrameMaquinas: TFrameMaquinas
+object FrameColaborador: TFrameColaborador
   Size.Width = 1220.000000000000000000
   Size.Height = 800.000000000000000000
   Size.PlatformDefault = False
+  OnResize = FrameResize
   object recFundo: TRectangle
     Align = Client
     Fill.Color = xF0F8FAFC
@@ -30,7 +31,7 @@ object FrameMaquinas: TFrameMaquinas
         TextSettings.Font.Size = 14.000000000000000000
         TextSettings.FontColor = xF064748B
         TextSettings.WordWrap = False
-        Text = 'Cadastre m'#225'quinas e gerencie seus documentos.'
+        Text = 'Cadastre colaboradores e gerencie seus documentos.'
         TabOrder = 1
       end
       object lbTitulo: TLabel
@@ -44,17 +45,17 @@ object FrameMaquinas: TFrameMaquinas
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.FontColor = xFF0F172A
         TextSettings.WordWrap = False
-        Text = 'Gest'#227'o de M'#225'quinas'
+        Text = 'Gest'#227'o de Colaboradores'
         TabOrder = 0
       end
-      object layBtnAddMaquina: TLayout
+      object layBtnAddFuncionario: TLayout
         Align = MostRight
         Position.X = 888.000000000000000000
         Size.Width = 297.000000000000000000
         Size.Height = 80.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        object recBtnAddMaquina: TRectangle
+        object recBtnAddFuncionario: TRectangle
           Align = VertCenter
           Fill.Color = xFF4F46E5
           Margins.Left = 35.000000000000000000
@@ -67,7 +68,7 @@ object FrameMaquinas: TFrameMaquinas
           Stroke.Kind = None
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
-          OnClick = recBtnAddMaquinaClick
+          OnClick = recBtnAddFuncionarioClick
           object lbBtnAddFuncionario: TLabel
             Align = Client
             StyledSettings = []
@@ -80,7 +81,7 @@ object FrameMaquinas: TFrameMaquinas
             TextSettings.Font.StyleExt = {00070000000000000004000000}
             TextSettings.FontColor = xFFCBD5E1
             TextSettings.HorzAlign = Center
-            Text = 'Nova M'#225'quina'
+            Text = 'Novo Colaborador'
             TabOrder = 1
           end
           object imgAdicionar: TImage
@@ -91,17 +92,17 @@ object FrameMaquinas: TFrameMaquinas
                 PNG = {
                   89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
                   1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  014A494441546843EDD8314A03511006E09959D04A8285A4B2F200D662215878
-                  83D8E50A9E2167F00AE93C829D8507F00056169ACA1C60DFFC1621B80C115F84
-                  DD38E1FFBAFDDFC0F2C3DB85F744888888686F690CFAE2EE37006E454454F5C1
-                  CC1EE34C5A000E002CF16DE9EE8771AE0F16833E00B8169151271AA9EA45E7B9
-                  37831454D5A39889C8490CFA3048C15D62C1EC58303B16CC8E05B363C1ECF6BE
-                  E056E741773F57D5E398FF06C095AACE423653D5A76E5603C0A799BDC4FC2755
-                  05DDFDCCDD9F9BA619C7B55D28A52CCCECD2CC5EE35A54B5455575FA5FCA8988
-                  344D3356D569CC37A92A9859554100F352CA22E6BB524A590098C77C93AA6F70
-                  2DE34F661000269D0BA7B5499CEB43D516CD8C05B363C1EC58303B16CC8E05B3
-                  6341AA0040DBB67D5F1F23DAB6FD00B0D551EDAF067989ACCE92A700EE647505
-                  726F666F7186888888682B5FB4DD921558AFA9AE0000000049454E44AE426082}
+                  013D494441546843EDD8314EC3401005D0F95B2C158A28502AAA1C809A0A8982
+                  1B842E57E00C39035748C711E8380267A020A948BB2EE653048435B2840338D6
+                  46FF75FE1AC9FED26AA5B1998888881C2DC46028EE7E4BF2CECC0CC0634AE929
+                  CE548B6426B9E5B7ADBB9FC4B921A4180C81E48D994D5AD104C055EB79300729
+                  08E0346666761E83211CA4E09854B0762A583B15AC9D0AD64E056B77F405F7DA
+                  07DDFD12C059CC7F42F21AC032644B00CFEDAC0F92EF29A59798FF89BBCF4A29
+                  EBD63E37AA52CADADD67F13BBBF43AA2001639E769CCC792739E0258C4BC4BAF
+                  8235EB5590E4AA699A4DCCC7D234CD86E42AE65D74C9FC0792F37851909CC7B9
+                  21F43AA23553C1DAA960ED54B0762A583B15AC9D0A4A0F24514A79FB5A233E7F
+                  7FECB5AAFDD6415E62BB5DF282E4BDED7E813CA4945EE38C888888C85E3E005C
+                  E41B6944D271390000000049454E44AE426082}
               end>
             Align = Left
             Margins.Left = 10.000000000000000000
@@ -119,7 +120,7 @@ object FrameMaquinas: TFrameMaquinas
         end
       end
     end
-    object LayDadosMaquinas: TLayout
+    object LayDadosDocs: TLayout
       Align = Top
       Margins.Left = 35.000000000000000000
       Margins.Right = 35.000000000000000000
@@ -142,10 +143,10 @@ object FrameMaquinas: TFrameMaquinas
           Distance = 2.000000000000000000
           Direction = 45.000000000000000000
           Softness = 0.500000000000000000
-          Opacity = 0.400000005960464500
+          Opacity = 0.400000005960464400
           ShadowColor = claBlack
         end
-        object recBuscaMaquinas: TRectangle
+        object recBuscaFuncionarios: TRectangle
           Align = Client
           Fill.Kind = None
           Margins.Left = 15.000000000000000000
@@ -159,7 +160,7 @@ object FrameMaquinas: TFrameMaquinas
           Stroke.Thickness = 0.500000000000000000
           XRadius = 14.000000000000000000
           YRadius = 14.000000000000000000
-          object edtBuscaMaquina: TEdit
+          object edtBuscaFuncionarios: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -169,14 +170,15 @@ object FrameMaquinas: TFrameMaquinas
             Size.Width = 881.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Buscar por chapa ou nome da m'#225'quina'
+            TextPrompt = 'Buscar por chapa ou nome do colaborador'
             StyledSettings = [Style, FontColor]
-            OnChangeTracking = edtBuscaMaquinaChangeTracking
-            OnKeyDown = edtBuscaMaquinaKeyDown
+            OnChangeTracking = edtBuscaFuncionariosChangeTracking
+            OnKeyDown = edtBuscaFuncionariosKeyDown
           end
           object tmrBusca: TTimer
             Enabled = False
             Interval = 300
+            OnTimer = tmrBuscaTimer
             Left = 259
             Top = 26
           end
@@ -210,7 +212,7 @@ object FrameMaquinas: TFrameMaquinas
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.400000005960464500
+          Stroke.Thickness = 0.400000005960464400
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
           OnClick = BtnFiltroClick
@@ -239,7 +241,7 @@ object FrameMaquinas: TFrameMaquinas
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF64748B
-          Stroke.Thickness = 0.400000005960464500
+          Stroke.Thickness = 0.400000005960464400
           XRadius = 10.000000000000000000
           YRadius = 10.000000000000000000
           OnClick = BtnFiltroClick
@@ -270,7 +272,7 @@ object FrameMaquinas: TFrameMaquinas
       ShowScrollBars = False
       Viewport.Width = 1150.000000000000000000
       Viewport.Height = 620.000000000000000000
-      object flowlayCardHorzMaquina: TFlowLayout
+      object flowlayCardHorzFuncionarios: TFlowLayout
         Align = Top
         Size.Width = 1150.000000000000000000
         Size.Height = 50.000000000000000000

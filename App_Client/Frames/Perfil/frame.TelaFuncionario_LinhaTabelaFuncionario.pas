@@ -1,4 +1,4 @@
-unit frame.LinhaTelaFuncionario;
+unit frame.TelaFuncionario_LinhaTabelaFuncionario;
 
 interface
 

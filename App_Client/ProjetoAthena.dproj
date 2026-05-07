@@ -216,74 +216,9 @@
         </DCCReference>
         <DCCReference Include="Modulos\uTelaUtils.pas"/>
         <DCCReference Include="Modulos\uFormConfig.pas"/>
-        <DCCReference Include="Frames\frame.Menu_Dashboard.pas">
-            <Form>FrameMenuDashboard</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.Menu_LinhaTabelaAlerta.pas">
-            <Form>FrameLinhaPlanilhaAlerta</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.Documentos.pas">
-            <Form>FrameDocumentos</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.Documentos_LinhaTabelaDocumentos.pas">
-            <Form>FrameLinhaPlanilhaDocumento</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AdicionarDocumento.pas">
-            <Form>FrameModalEnivarDocumento</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="Modulos\uCatalogos.pas"/>
-        <DCCReference Include="Modais\modal.VisualizarDocumento.pas">
-            <Form>FrameVisualizarDocumento</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AlterarDocumento.pas">
-            <Form>FrameAlterarDocumento</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.Funcionarios.pas">
-            <Form>FrameFuncionarios</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Cards\card.Funcionario.pas">
+        <DCCReference Include="Cards\card.Colaborador.pas">
             <Form>FrameCardFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AdicionarFuncionario.pas">
-            <Form>FrameModalAdicionarFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AlterarFuncionario.pas">
-            <Form>FrameAlterarFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.Maquina.pas">
-            <Form>FrameMaquinas</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AdicionarMaquina.pas">
-            <Form>FrameModalAdicionarMaquina</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.AlterarMaquina.pas">
-            <Form>FrameModalAlterarMaquina</Form>
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
@@ -297,30 +232,95 @@
             <Form>fMenuMobile</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="Frames\frame.TelaFuncionario.pas">
-            <Form>fTelaFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Frames\frame.LinhaTelaFuncionario.pas">
-            <Form>fLinhaTelaFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.ConsentimentoLGPD.pas">
-            <Form>FrameModalConsentimentoLGPD</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Modais\modal.ConfiguracoesFuncionario.pas">
-            <Form>FrameModalConfiguracoesFuncionario</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="Modulos\uDesignSystem.pas">
             <Form>DesignSystem</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Dashboard\frame.Menu_Dashboard.pas">
+            <Form>FrameMenuDashboard</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Dashboard\frame.Menu_LinhaTabelaAlerta.pas">
+            <Form>FrameLinhaPlanilhaAlerta</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Documentos\frame.Documentos.pas">
+            <Form>FrameDocumentos</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Documentos\frame.Documentos_LinhaTabelaDocumentos.pas">
+            <Form>FrameLinhaPlanilhaDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Maquinas\frame.Maquina.pas">
+            <Form>FrameMaquinas</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Perfil\frame.TelaFuncionario.pas">
+            <Form>fTelaFuncionario</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Perfil\frame.TelaFuncionario_LinhaTabelaFuncionario.pas">
+            <Form>fLinhaTelaFuncionario</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Colaborador\modal.ColaboradorAdicionar.pas">
+            <Form>FrameModalAdicionarFuncionario</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Colaborador\modal.ColaboradorAlterar.pas">
+            <Form>FrameAlterarFuncionario</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Colaborador\modal.ColaboradorConfiguracoes.pas">
+            <Form>FrameModalConfiguracoesFuncionario</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Documento\modal.AdicionarDocumento.pas">
+            <Form>FrameModalEnivarDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Documento\modal.AlterarDocumento.pas">
+            <Form>FrameAlterarDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Documento\modal.VisualizarDocumento.pas">
+            <Form>FrameVisualizarDocumento</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\LGPD\modal.ConsentimentoLGPD.pas">
+            <Form>FrameModalConsentimentoLGPD</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Maquina\modal.AdicionarMaquina.pas">
+            <Form>FrameModalAdicionarMaquina</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Modais\Maquina\modal.AlterarMaquina.pas">
+            <Form>FrameModalAlterarMaquina</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Colaborador\frame.Colaborador.pas">
+            <Form>FrameColaborador</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <RcItem Include="..\..\..\perfil.jpg">
             <ResourceType>RCDATA</ResourceType>
@@ -387,14 +387,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Android\Release\libProjetoAthena.so" Configuration="Release" Class="ProjectOutput"/>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png" Configuration="Release" Class="Android_NotificationIcon36"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png" Configuration="Release" Class="Android_NotificationIcon24">
                     <Platform Name="Android">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Android\Release\libProjetoAthena.so" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png" Configuration="Release" Class="Android_NotificationIcon36"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png" Configuration="Debug" Class="Android_LauncherIcon72">
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
@@ -555,13 +555,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Configuration="Release" Class="Android_LauncherIcon48"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Configuration="Release" Class="Android_LauncherIcon48">
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Configuration="Release" Class="Android_LauncherIcon48"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_72x72.png" Configuration="Debug" Class="Android_NotificationIcon72">
                     <Platform Name="Android">
                         <RemoteName>ic_notification.png</RemoteName>

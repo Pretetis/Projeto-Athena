@@ -1,4 +1,4 @@
-unit modal.AdicionarFuncionario;
+unit modal.ColaboradorAdicionar;
 
 interface
 
@@ -216,8 +216,10 @@ begin
             Self.DisposeOf;
         end
         else
+        begin
           TFramePopUp.Show(Self.Root.GetObject as TForm, E, 'Erro: ' + AJsonContent);
           btnSalvar.Enabled := True;
+        end;
     end;
 end;
 
