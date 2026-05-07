@@ -186,7 +186,6 @@ begin
     if Trim(AJsonString).IsEmpty then
         Exit;
 
-    // CORREÇÃO 1: Limpar os filhos do layContainerLinhas, e não do ScrollBox!
     while layContainerLinhas.ChildrenCount > 0 do
         layContainerLinhas.Children[0].Free;
 
@@ -210,7 +209,6 @@ begin
 
                     LFrameLinha := TFrameLinhaPlanilhaAlerta.Create(Self);
 
-                    // CORREÇÃO 2: O Parent agora é o layContainerLinhas
                     LFrameLinha.Parent := layContainerLinhas;
                     LFrameLinha.Align := TAlignLayout.Top;
                     LFrameLinha.Position.Y := 99999;
@@ -248,9 +246,6 @@ begin
                 Self.Width := Self.Width + 1;
             end;
 
-            // CORREÇÃO 3: Ajustar a altura do container para o scroll vertical funcionar.
-            // 50 é a altura da sua linha (FrameLinhaPlanilhaAlerta.Height).
-            // Se você tiver alguma margem/padding, talvez precise somar aqui.
             layContainerLinhas.Height := LJsonArray.Count * 50;
 
         except
