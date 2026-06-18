@@ -92,18 +92,17 @@ object FrameDocumentos: TFrameDocumentos
                 PNG = {
                   89504E470D0A1A0A0000000D4948445200000038000000380806000000A8863B
                   1E000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  014E494441546843EDD8314A03411406E0F71E59AD2458482A2B0F602D168285
-                  37885DAEE0197206AF90CE23D85978000F6065A1A94CBDB3CC6F11169747C489
-                  B01B5FF8BF6EFF79B0FC30BB3023424444447B4B7DD0979CF30D805B1111557D
-                  30B3473F13168003002B7C5BE59C0FFD5C1FCC077D00702D22E34E3456D58BCE
-                  736F0629A8AA473E1391131FF4619082BBC482D1B160742C181D0B46C782D1ED
-                  7DC1ADCE8339E773553DF6F96F005CA9EADC6573557DEA6625007C9AD98BCF7F
-                  525430E77CD634CD73555513BFB60B29A5E56834BA34B357BFE6156D51559DFD
-                  9772222255554D5475E6F34D8A0A46565410C022A5B4F4F9AEA4949600163EDF
-                  A4E81B6C45FCC90C02C0B473E1D49AFAB93E146DD1C858303A168C8E05A363C1
-                  E858303A16A40200B4AEEBF7F61851D7F50780AD8E6A7F35C84B647D963C0570
-                  27EB2B907B337BF333444444445BF9025B019209C6AFAEB00000000049454E44
-                  AE426082}
+                  013D494441546843EDD8314EC3401005D0F95B2C158A28502AAA1C809A0A8982
+                  1B842E57E00C39035748C711E8380267A020A948BB2EE653048435B2840338D6
+                  46FF75FE1AC9FED26AA5B1998888881C2DC46028EE7E4BF2CECC0CC0634AE929
+                  CE548B6426B9E5B7ADBB9FC4B921A4180C81E48D994D5AD104C055EB79300729
+                  08E0346666761E83211CA4E09854B0762A583B15AC9D0AD64E056B77F405F7DA
+                  07DDFD12C059CC7F42F21AC032644B00CFEDAC0F92EF29A59798FF89BBCF4A29
+                  EBD63E37AA52CADADD67F13BBBF43AA2001639E769CCC792739E0258C4BC4BAF
+                  8235EB5590E4AA699A4DCCC7D234CD86E42AE65D74C9FC0792F37851909CC7B9
+                  21F43AA23553C1DAA960ED54B0762A583B15AC9D0A4A0F24514A79FB5A233E7F
+                  7FECB5AAFDD6415E62BB5DF282E4BDED7E813CA4945EE38C888888C85E3E005C
+                  E41B6944D271390000000049454E44AE426082}
               end>
             Align = Left
             HitTest = False
@@ -247,6 +246,11 @@ object FrameDocumentos: TFrameDocumentos
                   Column = 1
                   Control = layFiltroAtivos
                   Row = 0
+                end
+                item
+                  Column = 2
+                  Control = layFiltroData
+                  Row = 0
                 end>
               RowCollection = <
                 item
@@ -261,7 +265,7 @@ object FrameDocumentos: TFrameDocumentos
                 Size.Width = 420.000000000000000000
                 Size.Height = 70.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 1
+                TabOrder = 2
                 object layTituloFiltroValidade: TLayout
                   Align = Top
                   Size.Width = 420.000000000000000000
@@ -432,7 +436,7 @@ object FrameDocumentos: TFrameDocumentos
                 Size.Width = 350.000000000000000000
                 Size.Height = 70.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 0
+                TabOrder = 1
                 object layTituloFiltroAtivos: TLayout
                   Align = Top
                   Size.Width = 350.000000000000000000
@@ -563,6 +567,122 @@ object FrameDocumentos: TFrameDocumentos
                       TextSettings.HorzAlign = Center
                       Text = 'Todos'
                       TabOrder = 0
+                    end
+                  end
+                end
+              end
+              object layFiltroData: TLayout
+                Align = Client
+                Anchors = []
+                Size.Width = 350.000000000000000000
+                Size.Height = 70.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object layTituloFiltroData: TLayout
+                  Align = Top
+                  Size.Width = 350.000000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 1
+                  object lbTituloFiltroData: TLabel
+                    Align = Client
+                    StyledSettings = []
+                    Margins.Left = 12.000000000000000000
+                    Size.Width = 305.000000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Roboto'
+                    TextSettings.Font.Size = 14.000000000000000000
+                    TextSettings.Font.StyleExt = {00070000000000000004000000}
+                    TextSettings.FontColor = xFF0F172A
+                    Text = 'Filtrar por Data'
+                    TabOrder = 1
+                  end
+                  object Glyph3: TGlyph
+                    Margins.Top = 1.500000000000000000
+                    Margins.Bottom = 1.500000000000000000
+                    Align = Left
+                    Position.Y = 1.500000000000000000
+                    Size.Width = 33.000000000000000000
+                    Size.Height = 22.000000000000000000
+                    Size.PlatformDefault = False
+                    ImageIndex = 0
+                    Images = DesignSystem.ilIconesSimples
+                    object FillRGBEffect5: TFillRGBEffect
+                      Color = xFF0F172A
+                    end
+                  end
+                end
+                object Layout3: TLayout
+                  Align = Client
+                  Anchors = []
+                  Size.Width = 350.000000000000000000
+                  Size.Height = 45.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object edtDataInicio: TDateEdit
+                    Date = 46182.000000000000000000
+                    OnChange = edtDataInicioCheckChanged
+                    OnCheckChanged = edtDataInicioCheckChanged
+                    Align = Left
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 8.000000000000000000
+                    Margins.Right = 5.000000000000000000
+                    Margins.Bottom = 8.000000000000000000
+                    Position.X = 65.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 90.000000000000000000
+                    Size.Height = 29.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 1
+                  end
+                  object edtDataFim: TDateEdit
+                    Date = 46182.000000000000000000
+                    OnChange = edtDataInicioCheckChanged
+                    OnCheckChanged = edtDataInicioCheckChanged
+                    Align = Left
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 8.000000000000000000
+                    Margins.Right = 5.000000000000000000
+                    Margins.Bottom = 8.000000000000000000
+                    Position.X = 170.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 90.000000000000000000
+                    Size.Height = 29.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 2
+                  end
+                  object recBtnFiltroData: TRectangle
+                    Align = Left
+                    Fill.Color = xFFF8FAFC
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 5.000000000000000000
+                    Margins.Right = 5.000000000000000000
+                    Margins.Bottom = 5.000000000000000000
+                    Position.X = 10.000000000000000000
+                    Position.Y = 5.000000000000000000
+                    Size.Width = 40.000000000000000000
+                    Size.Height = 35.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Color = xFF64748B
+                    Stroke.Thickness = 0.400000005960464500
+                    XRadius = 10.000000000000000000
+                    YRadius = 10.000000000000000000
+                    OnClick = recBtnFiltroDataClick
+                    object Glyph4: TGlyph
+                      Margins.Left = 5.000000000000000000
+                      Margins.Top = 5.000000000000000000
+                      Margins.Right = 5.000000000000000000
+                      Margins.Bottom = 5.000000000000000000
+                      Align = Client
+                      Size.Width = 30.000000000000000000
+                      Size.Height = 25.000000000000000000
+                      Size.PlatformDefault = False
+                      ImageIndex = 1
+                      Images = DesignSystem.ilIconesSimples
+                      object FillRGBEffect6: TFillRGBEffect
+                        Color = xF064748B
+                      end
                     end
                   end
                 end
@@ -861,8 +981,9 @@ object FrameDocumentos: TFrameDocumentos
         TabOrder = 2
         OnViewportPositionChange = vscrollboxLinhaPlanilhaViewportPositionChange
         Viewport.Width = 1150.000000000000000000
-        Viewport.Height = 395.000000000000000000
+        Viewport.Height = 379.000000000000000000
         object layContainerLinhas: TLayout
+          Position.X = 8.000000000000000000
           Position.Y = 8.000000000000000000
           Size.Width = 1150.000000000000000000
           Size.Height = 50.000000000000000000

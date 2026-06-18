@@ -154,7 +154,7 @@ begin
 
   // 2. Dispara a busca. A thread é criada internamente no uRequests.
   // O TLoading.Hide e o .Free serão chamados automaticamente pelo CallbackFimDaThread do uRequests.
-  LReqDoc.PesquisarDocumentos(LBusca, '', 'true');
+  LReqDoc.PesquisarDocumentos(LBusca, '', 'true', '', '');
 end;
 
 procedure TfTelaFuncionario.OnRequestDocumentosResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);

@@ -50,7 +50,7 @@ router.get('/resumo/status', async (req, res) => {
 // 2. ROTA DE PESQUISA AVANÇADA DE DOCUMENTOS
 router.get('/pesquisa', async (req, res) => {
   try {
-    const { busca, status, ativo } = req.query;
+    const { busca, status, ativo, dataInicio, dataFim } = req.query;
     const matchInicial = { $and: [] };
 
     if (ativo) {
@@ -73,6 +73,31 @@ router.get('/pesquisa', async (req, res) => {
       if (statusArray.includes('expirado')) orConditions.push({ dataValidade: { $lt: hoje } });
 
       if (orConditions.length > 0) matchInicial.$and.push({ $or: orConditions });
+    }
+
+    // Filtro por intervalo de datas de validade (dataInicio / dataFim)
+    if (dataInicio || dataFim) {
+      const filtroData = {};
+
+      if (dataInicio) {
+        const inicio = new Date(dataInicio);
+        if (!isNaN(inicio)) {
+          inicio.setHours(0, 0, 0, 0);
+          filtroData.$gte = inicio;
+        }
+      }
+
+      if (dataFim) {
+        const fim = new Date(dataFim);
+        if (!isNaN(fim)) {
+          fim.setHours(23, 59, 59, 999);
+          filtroData.$lte = fim;
+        }
+      }
+
+      if (Object.keys(filtroData).length > 0) {
+        matchInicial.$and.push({ dataValidade: filtroData });
+      }
     }
 
     const queryPrimeiroEstagio = matchInicial.$and.length > 0 ? matchInicial : {};

@@ -45,7 +45,7 @@ type
     procedure ConferirUsuarios(ACallback: TProc<TJSONArray>);
     procedure EditarAlarme(AAlrID, Status: Integer; Programador: string);
     procedure ListarDocumentosVencer;
-    procedure PesquisarDocumentos(ABusca: string; AStatus: string = ''; AAtivo: string = '');
+    procedure PesquisarDocumentos(ABusca, AStatus, AAtivo, ADataInicio, ADataFim: string);
     procedure EnviarDocumento(AEntidadeId, AEntidadeTipo, ATipoDoc, ANomeDoc: string; ADataValidade: TDate; ACaminhoArquivo: string);
     procedure CarregarCatalogoFuncionarios;
     procedure CarregarCatalogoMaquinas;
@@ -288,7 +288,7 @@ begin
     );
 end;
 
-procedure TModuloRequest.PesquisarDocumentos(ABusca, AStatus, AAtivo: string);
+procedure TModuloRequest.PesquisarDocumentos(ABusca, AStatus, AAtivo, ADataInicio, ADataFim: string);
 begin
     FContexto := ctxPesquisarDocumentos;
     ResetarComponentesRest;
@@ -305,6 +305,12 @@ begin
 
     if Trim(AAtivo) <> '' then
       FRESTRequest.AddParameter('ativo', AAtivo, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(ADataInicio) <> '' then
+      FRESTRequest.AddParameter('dataInicio', ADataInicio, TRESTRequestParameterKind.pkQUERY);
+
+    if Trim(ADataFim) <> '' then
+      FRESTRequest.AddParameter('dataFim', ADataFim, TRESTRequestParameterKind.pkQUERY);
 
     TLoading.ExecuteThread(
       procedure
@@ -1104,6 +1110,5 @@ begin
     CallbackFimDaThread
   );
 end;
-
 
 end.

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Layouts, FMX.Effects, FMX.Controls.Presentation, FMX.Objects, FMX.Edit,
-  System.JSON, uRequests, FMX.ListBox, FMX.Filter.Effects, System.ImageList, FMX.ImgList;
+  System.JSON, uRequests, FMX.ListBox, FMX.Filter.Effects, System.ImageList, FMX.ImgList, FMX.DateTimeCtrls;
 
 type
   TFrameDocumentos = class(TFrame)
@@ -78,6 +78,17 @@ type
     FillRGBEffect4: TFillRGBEffect;
     imgAdicionar: TImage;
     FillRGBEffect3: TFillRGBEffect;
+    layFiltroData: TLayout;
+    layTituloFiltroData: TLayout;
+    lbTituloFiltroData: TLabel;
+    Glyph3: TGlyph;
+    FillRGBEffect5: TFillRGBEffect;
+    Layout3: TLayout;
+    edtDataInicio: TDateEdit;
+    edtDataFim: TDateEdit;
+    recBtnFiltroData: TRectangle;
+    Glyph4: TGlyph;
+    FillRGBEffect6: TFillRGBEffect;
 
     procedure edtBuscaDocumentosKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure BtnFiltroClick(Sender: TObject);
@@ -86,6 +97,8 @@ type
     procedure FrameResize(Sender: TObject);
     procedure vscrollboxLinhaPlanilhaViewportPositionChange(Sender: TObject; const OldViewportPosition, NewViewportPosition: TPointF; const ContentSizeChanged: Boolean);
     procedure edtBuscaDocumentosChangeTracking(Sender: TObject);
+    procedure recBtnFiltroDataClick(Sender: TObject);
+    procedure edtDataInicioCheckChanged(Sender: TObject);
 
   private
     FReq: TModuloRequest;
@@ -145,6 +158,20 @@ begin
     uTelaUtils.ConfigurarBotaoAnimado(recBtnAtivos);
     uTelaUtils.ConfigurarBotaoAnimado(recBtnDesativados);
     uTelaUtils.ConfigurarBotaoAnimado(recBtnTodosativosDesa);
+
+    recBtnFiltroData.Tag := 0;
+    recBtnFiltroData.Fill.Color := TThemeColors.Slate50;
+    recBtnFiltroData.Stroke.Color := TThemeColors.Slate500;
+//    lbBtnFiltroData.StyledSettings := lbBtnFiltroData.StyledSettings - [TStyledSetting.FontColor];
+//    lbBtnFiltroData.TextSettings.FontColor := $F064748B;
+//    lbBtnFiltroData.Text := 'Filtrar por Data';
+
+    // Registra a animação padrão do sistema
+    uTelaUtils.ConfigurarBotaoAnimado(recBtnFiltroData);
+
+    // Desabilita os inputs inicialmente para evitar confusão visual
+    edtDataInicio.Enabled := False;
+    edtDataFim.Enabled := False;
 
     BuscarDados;
 end;
@@ -306,16 +333,17 @@ end;
 
 procedure TFrameDocumentos.BuscarDados;
 var
-  LStatusParam, LAtivoParam: string;
-  LReqDoc: TModuloRequest;
+    LStatusParam, LAtivoParam: string;
+    LDataInicioParam, LDataFimParam: string;
+    LReqDoc: TModuloRequest;
 begin
     LStatusParam := '';
 
     // Se a flag "Todos" estiver Tag=0, quer dizer que temos que ler o Trio
     if recBtnTodosStatus.Tag = 0 then
     begin
-        if recBtnValidos.Tag = 1 then LStatusParam := LStatusParam + 'valido,';
-        if recBtnAExpirar.Tag = 1 then LStatusParam := LStatusParam + 'a_expirar,';
+        if recBtnValidos.Tag   = 1 then LStatusParam := LStatusParam + 'valido,';
+        if recBtnAExpirar.Tag  = 1 then LStatusParam := LStatusParam + 'a_expirar,';
         if recBtnExpirados.Tag = 1 then LStatusParam := LStatusParam + 'expirado,';
 
         if LStatusParam <> '' then
@@ -326,10 +354,22 @@ begin
     if recBtnAtivos.Tag = 1 then LAtivoParam := 'true'
     else if recBtnDesativados.Tag = 1 then LAtivoParam := 'false';
 
+    LDataInicioParam := '';
+    LDataFimParam := '';
+
+    if recBtnFiltroData.Tag = 1 then
+    begin
+        if Assigned(edtDataInicio) and (Trim(edtDataInicio.Text) <> '') then
+            LDataInicioParam := FormatDateTime('yyyy-mm-dd', edtDataInicio.Date);
+
+        if Assigned(edtDataFim) and (Trim(edtDataFim.Text) <> '') then
+            LDataFimParam := FormatDateTime('yyyy-mm-dd', edtDataFim.Date);
+    end;
+
     TLoading.Show(Self, 'Buscando documentos...');
 
     LReqDoc := TModuloRequest.Create(nil, RequestResult);
-    LReqDoc.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam);
+    LReqDoc.PesquisarDocumentos(edtBuscaDocumentos.Text, LStatusParam, LAtivoParam, LDataInicioParam, LDataFimParam);
 end;
 
 procedure TFrameDocumentos.edtBuscaDocumentosChangeTracking(Sender: TObject);
@@ -351,20 +391,25 @@ begin
     end;
 end;
 
+procedure TFrameDocumentos.edtDataInicioCheckChanged(Sender: TObject);
+begin
+    BuscarDados;
+end;
+
 procedure TFrameDocumentos.FrameResize(Sender: TObject);
 const
-  LARGURA_MINIMA = 1150;
+    LARGURA_MINIMA = 1150;
 begin
-  if Self.Width >= LARGURA_MINIMA then
-  begin
-    layCabecalhoPlanilha.Width := Self.Width - 70;
-    layContainerLinhas.Width   := layCabecalhoPlanilha.Width;
-  end
-  else
-  begin
-    layCabecalhoPlanilha.Width := LARGURA_MINIMA;
-    layContainerLinhas.Width   := LARGURA_MINIMA;
-  end;
+    if Self.Width >= LARGURA_MINIMA then
+    begin
+        layCabecalhoPlanilha.Width := Self.Width - 70;
+        layContainerLinhas.Width   := layCabecalhoPlanilha.Width;
+    end
+    else
+    begin
+        layCabecalhoPlanilha.Width := LARGURA_MINIMA;
+        layContainerLinhas.Width   := LARGURA_MINIMA;
+    end;
 end;
 
 procedure TFrameDocumentos.LimparTabela;
@@ -388,6 +433,40 @@ begin
     LModal.Parent := Application.MainForm;
     LModal.Align := TAlignLayout.Contents;
     LModal.BringToFront;
+end;
+
+procedure TFrameDocumentos.recBtnFiltroDataClick(Sender: TObject);
+begin
+    if recBtnFiltroData.Tag = 0 then
+    begin
+        // LIGA O FILTRO (Muda para Indigo/Azul)
+        recBtnFiltroData.Tag := 1;
+        recBtnFiltroData.Fill.Color := TThemeColors.Indigo100;
+        recBtnFiltroData.Stroke.Color := TThemeColors.Indigo600;
+//        lbBtnFiltroData.TextSettings.FontColor := TThemeColors.Indigo700;
+//        lbBtnFiltroData.Text := 'Filtro de Data: Ativo';
+
+        // Ativa os componentes para interação
+        edtDataInicio.Enabled := True;
+        edtDataFim.Enabled := True;
+    end
+    else
+    begin
+        // DESLIGA O FILTRO (Volta para o Cinza)
+        recBtnFiltroData.Tag := 0;
+        recBtnFiltroData.Fill.Color := TThemeColors.Slate50;
+        recBtnFiltroData.Stroke.Color := TThemeColors.Slate500;
+//        lbBtnFiltroData.TextSettings.FontColor := $F064748B;
+//        lbBtnFiltroData.Text := 'Filtrar por Data';
+
+        // Desativa os componentes
+        edtDataInicio.Enabled := False;
+        edtDataFim.Enabled := False;
+        BuscarDados;
+    end;
+
+    // Executa a busca atualizando os dados na API
+//    BuscarDados;
 end;
 
 procedure TFrameDocumentos.RequestResult(Sender: TObject; const AJsonContent: string; AStatusCode: Integer; AContext: TContextoRequest);
@@ -443,7 +522,6 @@ begin
                         layContainerLinhas.RecalcSize;
                         Self.Width := Self.Width - 1;
                         Self.Width := Self.Width + 1;
-
                     end;
                 finally
                     LJsonArray.Free;

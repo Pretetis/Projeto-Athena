@@ -144,29 +144,29 @@ begin
                             TModuloRequest.Create(Self, RetornoRequest).BuscarTermoConsentimentoLGPD(
                               procedure(BSucesso: Boolean; BMsg, BTexto: string)
                               begin
-                                if BSucesso then
-                                begin
-                                    TFrameModalConsentimentoLGPD.Exibir(Self, layCentral, BTexto,
+                                  if BSucesso then
+                                  begin
+                                      TFrameModalConsentimentoLGPD.Exibir(Self, layCentral, BTexto,
                                       procedure(AceitouFoto: Boolean)
-                                      begin
-                                        TModuloRequest.Create(Self, RetornoRequest).EnviarAceiteLGPD(mIdFuncionario, AceitouFoto,
-                                          procedure(LgpdSucesso: Boolean; LgpdMsg: string)
                                           begin
-                                            if LgpdSucesso then
-                                              AbrirSistemaPrincipal
-                                            else
-                                              TFramePopUp.Show(Self, E, 'Erro ao gravar aceite: ' + LgpdMsg);
+                                            TModuloRequest.Create(Self, RetornoRequest).EnviarAceiteLGPD(mIdFuncionario, AceitouFoto,
+                                              procedure(LgpdSucesso: Boolean; LgpdMsg: string)
+                                              begin
+                                                  if LgpdSucesso then
+                                                      AbrirSistemaPrincipal
+                                                  else
+                                                      TFramePopUp.Show(Self, E, 'Erro ao gravar aceite: ' + LgpdMsg);
+                                              end
+                                            );
+                                          end,
+                                          procedure
+                                          begin
+                                              TFramePopUp.Show(Self, A, 'O aceite dos termos da LGPD é obrigatório para acessar o aplicativo.');
                                           end
-                                        );
-                                      end,
-                                      procedure
-                                      begin
-                                        TFramePopUp.Show(Self, A, 'O aceite dos termos da LGPD é obrigatório para acessar o aplicativo.');
-                                      end
-                                    );
-                                end
-                                else
-                                    TFramePopUp.Show(Self, E, 'Erro de comunicação ao buscar LGPD: ' + BMsg);
+                                      );
+                                  end
+                                  else
+                                      TFramePopUp.Show(Self, E, 'Erro de comunicação ao buscar LGPD: ' + BMsg);
                               end
                             );
                         end
@@ -282,7 +282,7 @@ end;
 
 procedure TfLogin.FormDestroy(Sender: TObject);
 begin
-  FListaUsuariosCache.Free;
+    FListaUsuariosCache.Free;
 end;
 
 procedure TfLogin.SalvarCredenciaisOffline(AUsuario, ASenha, ANome: string);
